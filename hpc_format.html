@@ -1,0 +1,1172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Holistic Progress Card - S D Memorial Sr. Sec. School</title>
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-navy: #1a3a52;
+            --secondary-blue: #2c5f7f;
+            --accent-gold: #c9a961;
+            --light-cream: #fdfbf7;
+            --border-grey: #d4d4d4;
+            --text-dark: #2d2d2d;
+        }
+
+        body {
+            font-family: 'Work Sans', sans-serif;
+            background: var(--light-cream);
+            color: var(--text-dark);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        /* Header Section */
+        .header {
+            background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 1px, transparent 1px);
+            background-size: 30px 30px;
+            opacity: 0.3;
+        }
+
+        .header h1 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 2.2em;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: 0.5px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .header .subtitle {
+            font-size: 1.3em;
+            font-weight: 600;
+            opacity: 0.95;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Content Area */
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-navy);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid var(--accent-gold);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 6px;
+            height: 30px;
+            background: var(--accent-gold);
+            border-radius: 3px;
+        }
+
+        /* General Information */
+        .info-grid {
+            background: white;
+            padding: 25px;
+            border: 2px solid var(--border-grey);
+            border-radius: 6px;
+        }
+
+        .info-row {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            margin-bottom: 15px;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .info-row-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 15px;
+        }
+
+        .info-row-half {
+            display: grid;
+            grid-template-columns: 120px 1fr;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: var(--secondary-blue);
+        }
+
+        .info-input {
+            border: 1px solid var(--border-grey);
+            border-radius: 4px;
+            padding: 10px 12px;
+            min-height: 40px;
+            background: rgba(232, 241, 245, 0.1);
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        thead {
+            background: var(--primary-navy);
+            color: white;
+        }
+
+        th {
+            padding: 14px 12px;
+            text-align: left;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.9em;
+        }
+
+        td {
+            padding: 12px;
+            border: 1px solid var(--border-grey);
+            background: white;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: rgba(42, 95, 127, 0.03);
+        }
+
+        tbody tr:nth-child(even) {
+            background: rgba(232, 241, 245, 0.3);
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: rgba(42, 95, 127, 0.05);
+        }
+
+        td.subject-name {
+            font-weight: 600;
+            color: var(--primary-navy);
+        }
+
+        td.input-cell {
+            background: linear-gradient(to right, transparent 0%, rgba(201, 169, 97, 0.05) 100%);
+            min-width: 80px;
+            text-align: center;
+        }
+
+        /* Grid Layout for Co-Scholastic */
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .skill-card {
+            border: 2px solid var(--border-grey);
+            border-radius: 6px;
+            padding: 20px;
+            background: linear-gradient(to bottom right, white 0%, rgba(232, 241, 245, 0.2) 100%);
+        }
+
+        .skill-card h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3em;
+            color: var(--secondary-blue);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .skill-header {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 10px 0;
+            font-weight: 600;
+            color: var(--primary-navy);
+            border-bottom: 2px solid var(--accent-gold);
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .skill-header .header-label:first-child {
+            text-align: left;
+        }
+
+        .skill-item {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(212, 212, 212, 0.4);
+            align-items: center;
+        }
+
+        .skill-item:last-child {
+            border-bottom: none;
+        }
+
+        .skill-name {
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .achievement-box {
+            text-align: center;
+            padding: 8px;
+            background: rgba(201, 169, 97, 0.08);
+            border: 1px solid var(--border-grey);
+            border-radius: 4px;
+            font-weight: 500;
+            min-height: 36px;
+        }
+
+        /* Personality Development */
+        .personality-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .personality-card {
+            border: 2px solid var(--border-grey);
+            border-radius: 6px;
+            padding: 18px;
+            background: white;
+        }
+
+        .personality-card h4 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.15em;
+            color: var(--primary-navy);
+            margin-bottom: 12px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid var(--accent-gold);
+        }
+
+        .personality-header {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr;
+            padding: 8px 0;
+            font-weight: 600;
+            color: var(--primary-navy);
+            border-bottom: 2px solid var(--accent-gold);
+            margin-bottom: 5px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .personality-header .header-label:first-child {
+            text-align: left;
+        }
+
+        .personality-item {
+            display: grid;
+            grid-template-columns: 3fr 1fr 1fr;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(212, 212, 212, 0.3);
+            font-size: 0.9em;
+            align-items: center;
+        }
+
+        .personality-item:last-child {
+            border-bottom: none;
+        }
+
+        /* Feedback Sections */
+        .feedback-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .feedback-card {
+            border: 2px solid var(--secondary-blue);
+            border-radius: 6px;
+            padding: 20px;
+            background: linear-gradient(to bottom, white 0%, rgba(232, 241, 245, 0.15) 100%);
+        }
+
+        .feedback-card h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.4em;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+        }
+
+        .feedback-row {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            margin-bottom: 12px;
+            align-items: start;
+        }
+
+        .feedback-label {
+            font-weight: 600;
+            color: var(--secondary-blue);
+            padding: 8px 0;
+        }
+
+        .feedback-input {
+            border: 1px solid var(--border-grey);
+            border-radius: 4px;
+            padding: 8px 12px;
+            min-height: 40px;
+            background: white;
+        }
+
+        /* Signature Section */
+        .signature-section {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 15px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 2px solid var(--border-grey);
+        }
+
+        .signature-box {
+            text-align: center;
+            padding: 15px 10px;
+        }
+
+        .signature-line {
+            height: 50px;
+            border-bottom: 2px solid var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .signature-label {
+            font-size: 0.9em;
+            font-weight: 600;
+            color: var(--secondary-blue);
+        }
+
+        /* Grading Framework */
+        .grading-section {
+            background: linear-gradient(to bottom right, rgba(232, 241, 245, 0.4) 0%, rgba(255, 255, 255, 1) 100%);
+            padding: 30px;
+            border-radius: 6px;
+            margin-top: 40px;
+            border: 2px solid var(--border-grey);
+        }
+
+        .grading-section h3 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.6em;
+            color: var(--primary-navy);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .grading-grid {
+            display: grid;
+            grid-template-columns: 80px 120px 1fr;
+            gap: 1px;
+            background: var(--border-grey);
+            border: 1px solid var(--border-grey);
+            margin-bottom: 25px;
+        }
+
+        .grading-cell {
+            padding: 12px;
+            background: white;
+            font-size: 0.9em;
+        }
+
+        .grading-header {
+            background: var(--primary-navy);
+            color: white;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .grade-label {
+            font-weight: 700;
+            font-size: 1.1em;
+            color: var(--primary-navy);
+            text-align: center;
+        }
+
+        .grade-range {
+            font-weight: 600;
+            color: var(--secondary-blue);
+            text-align: center;
+        }
+
+        .evaluation-levels {
+            margin-top: 25px;
+        }
+
+        .evaluation-levels h4 {
+            font-family: 'Crimson Pro', serif;
+            font-size: 1.3em;
+            color: var(--primary-navy);
+            margin-bottom: 15px;
+        }
+
+        .level-item {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            gap: 15px;
+            padding: 12px;
+            margin-bottom: 10px;
+            background: white;
+            border-left: 4px solid var(--accent-gold);
+            border-radius: 4px;
+        }
+
+        .level-label {
+            font-weight: 700;
+            font-size: 1.2em;
+            color: var(--primary-navy);
+            text-align: center;
+            align-self: center;
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                padding: 0;
+            }
+
+            .container {
+                box-shadow: none;
+                border-radius: 0;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+
+            @page {
+                margin: 1cm;
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .grid-2col {
+                grid-template-columns: 1fr;
+            }
+
+            .personality-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .feedback-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .signature-section {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .info-row {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row-split {
+                grid-template-columns: 1fr;
+            }
+
+            .info-row-half {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>S D Memorial Sr. Sec. School, Gurugram</h1>
+            <div class="subtitle">Holistic Progress Card</div>
+        </div>
+
+        <div class="content">
+            <!-- GENERAL INFORMATION -->
+            <div class="section">
+                <h2 class="section-title">General Information</h2>
+                <div class="info-grid">
+                    <div class="info-row">
+                        <div class="info-label">Student Name:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row-split">
+                        <div class="info-row-half">
+                            <div class="info-label">Roll No.:</div>
+                            <div class="info-input"></div>
+                        </div>
+                        <div class="info-row-half">
+                            <div class="info-label">Adm No.:</div>
+                            <div class="info-input"></div>
+                        </div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Class / Section:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Date of Birth:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Address:</div>
+                        <div class="info-input" style="min-height: 60px;"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Phone:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Mother/Guardian Name:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Mother's Occupation:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Father/Guardian Name:</div>
+                        <div class="info-input"></div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Father's Occupation:</div>
+                        <div class="info-input"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ATTENDANCE RECORD -->
+            <div class="section">
+                <h2 class="section-title">Attendance Record</h2>
+                <div style="overflow-x: auto;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Months</th>
+                                <th>Apr</th>
+                                <th>May</th>
+                                <th>June</th>
+                                <th>Jul</th>
+                                <th>Aug</th>
+                                <th>Sept</th>
+                                <th>Oct</th>
+                                <th>Nov</th>
+                                <th>Dec</th>
+                                <th>Jan</th>
+                                <th>Feb</th>
+                                <th>Mar</th>
+                                <th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="font-weight: 600;">No. of Working days</td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">No. of Days Present</td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">% of attendance</td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                                <td class="input-cell"></td>
+                            </tr>
+                            <tr>
+                                <td style="font-weight: 600;">If attendance is low then reason</td>
+                                <td colspan="13" class="input-cell"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- SCHOLASTIC DOMAINS -->
+            <div class="section">
+                <h2 class="section-title">Scholastic Domains</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th rowspan="2">Subjects</th>
+                            <th colspan="2">Periodic Assessment</th>
+                            <th colspan="2">Subject Enrichment Activities</th>
+                            <th colspan="2">Internal Assessment</th>
+                            <th colspan="2">Terminal Assessment</th>
+                        </tr>
+                        <tr>
+                            <th>Term I</th>
+                            <th>Term II</th>
+                            <th>Term I</th>
+                            <th>Term II</th>
+                            <th>Term I</th>
+                            <th>Term II</th>
+                            <th>Term I</th>
+                            <th>Term II</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="subject-name">English</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">Hindi</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">Mathematics</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">Science</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">Social Science</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">ICT</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">Sanskrit</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                        <tr>
+                            <td class="subject-name">General Knowledge</td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                            <td class="input-cell"></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- CO-SCHOLASTIC DOMAINS -->
+            <div class="section">
+                <h2 class="section-title">Co-Scholastic Domains</h2>
+                
+                <div class="grid-2col">
+                    <!-- Physical Education -->
+                    <div class="skill-card">
+                        <h3>Physical Education</h3>
+                        <div class="skill-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Physical Fitness</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Muscular Strength</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Agility & Balance</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Stamina</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Visual Art -->
+                    <div class="skill-card">
+                        <h3>Visual Art</h3>
+                        <div class="skill-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Creative Expression</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Fine Motor Skills</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Reflecting, Responding and Analyzing</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Use of Technique</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Performing Art - Dance -->
+                    <div class="skill-card">
+                        <h3>Performing Art - Dance</h3>
+                        <div class="skill-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Posture</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Expression</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Rhythm</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Overall Performance</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Performing Art - Music -->
+                    <div class="skill-card">
+                        <h3>Performing Art - Music</h3>
+                        <div class="skill-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Rhythm</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Pitch</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Melody (Sings in Tune)</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="skill-item">
+                            <span class="skill-name">Overall Performance</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PERSONALITY DEVELOPMENT SKILLS -->
+            <div class="section">
+                <h2 class="section-title">Personality Development Skills</h2>
+                
+                <div class="personality-grid">
+                    <!-- Social Skills -->
+                    <div class="personality-card">
+                        <h4>Social Skills</h4>
+                        <div class="personality-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="personality-item">
+                            <span>Maintains cordial relationship with peers and adults</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Demonstrates teamwork and cooperation</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Respects school property and personal belongings</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Emotional Skill -->
+                    <div class="personality-card">
+                        <h4>Emotional Skill</h4>
+                        <div class="personality-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="personality-item">
+                            <span>Shows sensitivity towards rules and norms</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Demonstrates self-regulation of emotions and behaviour</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Displays empathy and concern for others</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Work Habit -->
+                    <div class="personality-card">
+                        <h4>Work Habit</h4>
+                        <div class="personality-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="personality-item">
+                            <span>Maintains regularity and punctuality</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Demonstrates responsible citizenship</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Shows care and concern for the environment</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+
+                    <!-- Health & Wellness -->
+                    <div class="personality-card">
+                        <h4>Health & Wellness</h4>
+                        <div class="personality-header">
+                            <span class="header-label">Sub-Skills</span>
+                            <span class="header-label">Term I</span>
+                            <span class="header-label">Term II</span>
+                        </div>
+                        <div class="personality-item">
+                            <span>Follows good hygiene practices</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Maintains cleanliness of self and surroundings</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                        <div class="personality-item">
+                            <span>Demonstrates resilience and positive coping skills</span>
+                            <div class="achievement-box"></div>
+                            <div class="achievement-box"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FEEDBACK SECTIONS -->
+            <div class="section">
+                <div class="feedback-grid">
+                    <!-- Learner's Profile -->
+                    <div class="feedback-card">
+                        <h3>Learner's Profile by the Teacher</h3>
+                        <div class="feedback-input" style="min-height: 120px;"></div>
+                    </div>
+
+                    <!-- Parent's Feedback -->
+                    <div class="feedback-card">
+                        <h3>Parent's Feedback</h3>
+                        <div class="feedback-row">
+                            <div class="feedback-label">My child enjoys participating in…</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                        <div class="feedback-row">
+                            <div class="feedback-label">My child can be supported for…</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                        <div class="feedback-row">
+                            <div class="feedback-label">Any additional observations</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                    </div>
+
+                    <!-- Self-Assessment -->
+                    <div class="feedback-card">
+                        <h3>Self-Assessment</h3>
+                        <div class="feedback-row">
+                            <div class="feedback-label">Activities I enjoy the most</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                        <div class="feedback-row">
+                            <div class="feedback-label">Activities I find challenging</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                        <div class="feedback-row">
+                            <div class="feedback-label">Activities I enjoy doing with my friends</div>
+                            <div class="feedback-input"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SIGNATURE SECTION -->
+            <div class="signature-section">
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Class Teacher</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Parents</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Block Incharge</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Vice Principal</div>
+                </div>
+                <div class="signature-box">
+                    <div class="signature-line"></div>
+                    <div class="signature-label">Principal</div>
+                </div>
+            </div>
+
+            <!-- GRADING FRAMEWORK -->
+            <div class="grading-section">
+                <h3>Assessment & Grading Framework</h3>
+                
+                <div class="grading-grid">
+                    <div class="grading-cell grading-header">Grade</div>
+                    <div class="grading-cell grading-header">Marks Range in %</div>
+                    <div class="grading-cell grading-header">Achievement Level</div>
+                    
+                    <div class="grading-cell grade-label">A1</div>
+                    <div class="grading-cell grade-range">91-100</div>
+                    <div class="grading-cell">Consistently produces high-quality, innovative work; demonstrates comprehensive conceptual understanding, critical and creative thinking, and independent application of knowledge in complex situations.</div>
+                    
+                    <div class="grading-cell grade-label">A2</div>
+                    <div class="grading-cell grade-range">81 – 90</div>
+                    <div class="grading-cell">Produces high-quality work; shows extensive understanding of concepts and applies learning independently in familiar and unfamiliar situations.</div>
+                    
+                    <div class="grading-cell grade-label">B1</div>
+                    <div class="grading-cell grade-range">71 – 80</div>
+                    <div class="grading-cell">Produces generally high-quality work; demonstrates secure understanding and applies knowledge with occasional support.</div>
+                    
+                    <div class="grading-cell grade-label">B2</div>
+                    <div class="grading-cell grade-range">61 – 70</div>
+                    <div class="grading-cell">Produces good quality work; shows basic understanding and requires support in unfamiliar situations.</div>
+                    
+                    <div class="grading-cell grade-label">C1</div>
+                    <div class="grading-cell grade-range">51 – 60</div>
+                    <div class="grading-cell">Produces acceptable work; shows basic understanding with gaps and requires regular support.</div>
+                    
+                    <div class="grading-cell grade-label">C2</div>
+                    <div class="grading-cell grade-range">41 – 50</div>
+                    <div class="grading-cell">Produces limited quality work; demonstrates significant conceptual gaps and minimal application skills.</div>
+                    
+                    <div class="grading-cell grade-label">D</div>
+                    <div class="grading-cell grade-range">33 – 40</div>
+                    <div class="grading-cell">Produces very limited work; shows inadequate understanding of concepts.</div>
+                    
+                    <div class="grading-cell grade-label">E</div>
+                    <div class="grading-cell grade-range">33 & below</div>
+                    <div class="grading-cell">Not yet assessed / Needs improvement</div>
+                </div>
+
+                <div class="evaluation-levels">
+                    <h4>Evaluation Levels – Co-Scholastic & Personal Skills</h4>
+                    <div class="level-item">
+                        <div class="level-label">A</div>
+                        <div>Demonstrates clear understanding of the skill and applies it independently with confidence.</div>
+                    </div>
+                    <div class="level-item">
+                        <div class="level-label">B</div>
+                        <div>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</div>
+                    </div>
+                    <div class="level-item">
+                        <div class="level-label">C</div>
+                        <div>Requires support to understand and apply the skill effectively.</div>
+                    </div>
+                </div>
+
+                <div class="evaluation-levels" style="margin-top: 25px;">
+                    <h4>Evaluation Levels: Physical Education</h4>
+                    <div class="level-item">
+                        <div class="level-label">A</div>
+                        <div>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</div>
+                    </div>
+                    <div class="level-item">
+                        <div class="level-label">B</div>
+                        <div>Participates adequately in physical activities with moderate proficiency.</div>
+                    </div>
+                    <div class="level-item">
+                        <div class="level-label">C</div>
+                        <div>Requires support and encouragement to participate effectively in physical activities.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

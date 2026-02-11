@@ -46,7 +46,9 @@ CREATE TABLE sections (
   id SERIAL PRIMARY KEY,
   class_id INT NOT NULL,
   section_name VARCHAR(10) NOT NULL,
-  CONSTRAINT fk_sections_class FOREIGN KEY (class_id) REFERENCES classes(id)
+  class_teacher_id INT,
+  CONSTRAINT fk_sections_class FOREIGN KEY (class_id) REFERENCES classes(id),
+  CONSTRAINT fk_sections_teacher FOREIGN KEY (class_teacher_id) REFERENCES users(id)
 );
 
 CREATE TABLE subjects (

@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "db:deploy": "node scripts/deploy-db.js",
-    "db:users": "node scripts/deploy-users.js"
+    "db:users": "node scripts/deploy-users.js",
+    "db:migrate": "node scripts/migrate-add-teacher-column.js"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",

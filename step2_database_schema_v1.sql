@@ -61,6 +61,7 @@ CREATE TABLE class_subjects (
   class_id INT NOT NULL,
   subject_id INT NOT NULL,
   academic_year_id INT NOT NULL,
+  max_marks INTEGER DEFAULT 100,
   is_active BOOLEAN DEFAULT TRUE,
   CONSTRAINT fk_cs_class FOREIGN KEY (class_id) REFERENCES classes(id),
   CONSTRAINT fk_cs_subject FOREIGN KEY (subject_id) REFERENCES subjects(id),

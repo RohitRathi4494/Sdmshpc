@@ -15,7 +15,9 @@ interface PrintPageProps {
     };
 }
 
+
 export default async function PrintReportPage({ params, searchParams }: PrintPageProps) {
+    // Force update for Vercel deployment
     const internalToken = process.env.PDF_INTERNAL_TOKEN;
 
     // Allow fallback if env var is not set (for safety during transition), but ideally should match

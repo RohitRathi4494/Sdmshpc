@@ -470,7 +470,7 @@ export default function StudentsPage() {
                         student={editingStudent}
                         sections={activeTab === 'list' && filterClassId ? sections.filter(s => s.class_id === filterClassId) : []}
                         academicYearId={academicYear?.id}
-                        onSave={async (updatedData) => {
+                        onSave={async (updatedData: any) => {
                             try {
                                 const token = localStorage.getItem('hpc_token') || '';
                                 await ApiClient.put(`/admin/students/${editingStudent.id}`, updatedData, token);

@@ -2,8 +2,10 @@
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { getStudentReportData } from '@/app/lib/report-service';
-import fs from 'fs';
-import path from 'path';
+
+import { PRINT_STYLES } from '@/app/lib/print-styles';
+// import fs from 'fs'; 
+// import path from 'path'; 
 
 interface PrintPageProps {
     params: {
@@ -14,7 +16,6 @@ interface PrintPageProps {
         academic_year_id?: string;
     };
 }
-
 
 export default async function PrintReportPage({ params, searchParams }: PrintPageProps) {
     // Force update for Vercel deployment
@@ -45,14 +46,8 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
         return notFound();
     }
 
-    // Read CSS file for inlining
-    const cssPath = path.join(process.cwd(), 'public', 'print.css');
-    let cssContent = '';
-    try {
-        cssContent = fs.readFileSync(cssPath, 'utf8');
-    } catch (err) {
-        console.error("Failed to read print.css", err);
-    }
+    // Use constant for styles
+    const cssContent = PRINT_STYLES;
 
     // --- Helpers ---
     const getScholasticScore = (subjectName: string, componentName: string, termName: string) => {

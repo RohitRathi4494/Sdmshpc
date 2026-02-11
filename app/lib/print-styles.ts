@@ -1,5 +1,5 @@
 
-export const PRINT_STYLES = \`
+export const PRINT_STYLES = `
 @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Work+Sans:wght@400;500;600;700&display=swap');
 
 :root {

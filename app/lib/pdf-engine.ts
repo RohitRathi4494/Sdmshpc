@@ -52,7 +52,11 @@ export async function generatePdf(studentId: number, academicYearId: number): Pr
 
         return Buffer.from(pdfBuffer);
     } catch (error) {
-        console.error("PDF Engine Error:", error);
+        console.error("PDF Engine Error Detail:", error);
+        if (error instanceof Error) {
+            console.error("Message:", error.message);
+            console.error("Stack:", error.stack);
+        }
         throw error;
     } finally {
         if (browser) {

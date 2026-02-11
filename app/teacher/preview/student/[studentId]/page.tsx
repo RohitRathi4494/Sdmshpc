@@ -40,9 +40,13 @@ export default function ReportPreviewPage() {
                 body: JSON.stringify({ academic_year_id: 1 })
             });
 
-            if (!response.ok) throw new Error('PDF generation failed');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'PDF generation failed');
+            }
 
             const blob = await response.blob();
+            // ... (rest is same)
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
@@ -52,9 +56,9 @@ export default function ReportPreviewPage() {
             window.URL.revokeObjectURL(url);
             document.body.removeChild(a);
 
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            alert('Failed to generate PDF');
+            alert(`Failed to generate PDF: ${e.message}`);
         } finally {
             setGenerating(false);
         }

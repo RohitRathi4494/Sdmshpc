@@ -3,6 +3,8 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+import Image from 'next/image';
+
 export default function LoginPage() {
     const router = useRouter();
     const [username, setUsername] = useState('');
@@ -51,9 +53,17 @@ export default function LoginPage() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-gray-800">SDMS EduPulse</h1>
-                    <p className="text-gray-600">Holistic Progress Card System</p>
+                <div className="flex flex-col items-center mb-6">
+                    <div className="relative w-24 h-24 mb-4">
+                        <Image
+                            src="/school_logo.png"
+                            alt="School Logo"
+                            fill
+                            className="object-contain"
+                            priority
+                        />
+                    </div>
+                    <h1 className="text-2xl font-bold text-blue-700">SDMS EduPulse</h1>
                 </div>
 
                 {error && (

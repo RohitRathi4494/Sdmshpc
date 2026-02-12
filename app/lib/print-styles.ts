@@ -203,14 +203,14 @@ table {
 
 /* Specific compact style for huge attendance table */
 .attendance-table {
-    font-size: 0.75em !important;
+    font-size: 0.85em !important; /* Increased from 0.75em */
     table-layout: fixed;
     width: 100%;
 }
 
 .attendance-table th, 
 .attendance-table td {
-    padding: 3px 1px !important;
+    padding: 4px 2px !important; /* Slightly increased padding */
     overflow: hidden;
     white-space: nowrap;
 }
@@ -218,7 +218,7 @@ table {
 .attendance-table td:first-child {
     white-space: normal !important; /* Allow wrapping for row headers */
     line-height: 1.1;
-    padding: 3px 4px !important;
+    padding: 4px 5px !important;
     text-align: left;
 }
 

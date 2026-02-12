@@ -174,6 +174,13 @@ table {
     white-space: nowrap;
 }
 
+.attendance-table td:first-child {
+    white-space: normal !important; /* Allow wrapping for row headers */
+    line-height: 1.1;
+    padding: 3px 4px !important;
+    text-align: left;
+}
+
 .attendance-table .input-cell {
     min-width: auto !important;
 }
@@ -246,7 +253,7 @@ td.input-cell {
 
 .skill-header {
     display: grid;
-    grid-template-columns: 2fr 50px 50px; /* Match skill-item columns */
+    grid-template-columns: 3fr 1fr 1fr; /* Match Personality (was 2fr 50px 50px) */
     gap: 10px;
     padding: 8px 0;
     font-weight: 600;
@@ -263,7 +270,7 @@ td.input-cell {
 
 .skill-item {
     display: grid;
-    grid-template-columns: 2fr 50px 50px; /* Fixed columns for grades */
+    grid-template-columns: 3fr 1fr 1fr; /* Match Personality */
     gap: 10px;
     padding: 8px 0;
     border-bottom: 1px solid rgba(212, 212, 212, 0.4);
@@ -282,12 +289,14 @@ td.input-cell {
     padding-right: 5px;
 }
 
+.achievement-box {
     display: flex; /* Flex to center content */
     align-items: center;
     justify-content: center;
     width: 40px; /* Fixed width */
     height: 30px; /* Fixed height */
     padding: 0;
+    margin: 0 auto; /* Center within grid column */
     border: 1px solid var(--border-grey);
     border-radius: 4px;
     font-weight: 600;

@@ -406,17 +406,6 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                         </div>
                                     ))}
                                 </div>
-
-                                {/* Peer Assessment */}
-                                <div className="feedback-card">
-                                    <h3>Peer Assessment</h3>
-                                    {['My friend is good at...', 'My friend needs help with...'].map(label => (
-                                        <div className="feedback-row" key={label}>
-                                            <div className="feedback-label">{label}</div>
-                                            <div className="feedback-input"></div>
-                                        </div>
-                                    ))}
-                                </div>
                             </div>
                         </div>
 

@@ -34,10 +34,11 @@ body {
 }
 
 /* Header Section */
+/* Header Section */
 .header {
     background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%) !important;
     color: white !important;
-    padding: 25px 30px; /* Increased vertical padding to fill space */
+    padding: 30px; /* Uniform padding */
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -45,31 +46,11 @@ body {
     print-color-adjust: exact;
 }
 
-.header h1 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 2.4em; /* Larger Title */
-    font-weight: 700;
-    margin-bottom: 10px;
-    letter-spacing: 0.5px;
-    position: relative;
-    z-index: 1;
-    color: white;
-}
-
-.header .subtitle {
-    font-size: 1.4em;
-    font-weight: 600;
-    opacity: 0.95;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    position: relative;
-    z-index: 1;
-    color: white;
-}
+/* ... */
 
 /* Content Area */
 .content {
-    padding: 20px 30px; /* Balanced side padding */
+    padding: 20px 30px 30px 30px; /* Top reduced slightly (header spacing), Right/Bottom/Left uniform 30px */
     height: 100%;
 }
 

@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "School ERP - HPC",
-    description: "Holistic Progress Card System",
+    title: "School ERP - SDMS EduPulse",
+    description: "Next-gen School ERP with Holistic Progress Card",
 };
 
 export default function RootLayout({

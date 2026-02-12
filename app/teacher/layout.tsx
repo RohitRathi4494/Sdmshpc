@@ -49,7 +49,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
             {/* Sidebar */}
             <aside className={`bg-white shadow-md transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
                 <div className="p-4 flex items-center justify-between border-b">
-                    <h1 className={`font-bold text-xl text-blue-600 ${!isSidebarOpen && 'hidden'}`}>HPC Teacher</h1>
+                    <h1 className={`font-bold text-xl text-blue-600 ${!isSidebarOpen && 'hidden'}`}>SDMS EduPulse Teacher</h1>
                     <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-gray-100 rounded">
                         {isSidebarOpen ? '◀' : '▶'}
                     </button>

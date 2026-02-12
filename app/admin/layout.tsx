@@ -42,8 +42,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Sidebar */}
             <aside className={`bg-gray-900 text-white shadow-xl transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
                 <div className="p-4 flex items-center justify-between border-b border-gray-700">
-                    <h1 className={`font-bold text-xl text-indigo-400 ${!isSidebarOpen && 'hidden'}`}>HPC Admin</h1>
-                    <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-gray-800 rounded text-gray-400">
+                    <h1 className={`font-bold text-xl text-indigo-400 ${!isSidebarOpen && 'hidden'}`}>SDMS EduPulse Admin</h1>
+                    <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-gray-700 rounded text-gray-400">
                         {isSidebarOpen ? '◀' : '▶'}
                     </button>
                 </div>

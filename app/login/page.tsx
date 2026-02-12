@@ -50,9 +50,9 @@ export default function LoginPage() {
 
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-md">
+            <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <div className="text-center mb-8">
-                    <h1 className="text-2xl font-bold text-gray-800">School ERP</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">SDMS EduPulse</h1>
                     <p className="text-gray-600">Holistic Progress Card System</p>
                 </div>
 

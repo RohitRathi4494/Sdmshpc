@@ -210,14 +210,14 @@ td.input-cell {
 .grid-2col {
     display: grid;
     grid-template-columns: 1fr; /* Stacked (Single Column) */
-    gap: 20px;
-    margin-bottom: 25px;
+    gap: 10px; /* Reduced gap */
+    margin-bottom: 15px; /* Reduced margin */
 }
 
 .skill-card {
     border: 2px solid var(--border-grey);
     border-radius: 8px;
-    padding: 15px; /* More padding */
+    padding: 8px 12px; /* Reduced padding significantly */
     background: white;
     break-inside: avoid;
     height: 100%; /* Fill available height */
@@ -225,10 +225,10 @@ td.input-cell {
 
 .skill-card h3 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.2em;
+    font-size: 1.1em; /* Reduced size */
     color: var(--secondary-blue) !important;
-    margin: 0 0 12px 0;
-    padding-bottom: 8px;
+    margin: 0 0 6px 0; /* Reduced margin */
+    padding-bottom: 4px;
     border-bottom: 2px solid var(--accent-gold) !important;
 }
 
@@ -236,13 +236,13 @@ td.input-cell {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr; /* Match Personality (was 2fr 50px 50px) */
     gap: 10px;
-    padding: 8px 0;
+    padding: 4px 0; /* Reduced padding */
     font-weight: 600;
     color: var(--primary-navy) !important;
     border-bottom: 2px solid var(--accent-gold) !important;
-    margin-bottom: 8px;
+    margin-bottom: 4px; /* Reduced margin */
     text-align: center;
-    font-size: 0.9em;
+    font-size: 0.85em; /* Smaller font */
 }
 
 .skill-header .header-label:first-child {
@@ -253,10 +253,10 @@ td.input-cell {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr; /* Match Personality */
     gap: 10px;
-    padding: 8px 0;
+    padding: 4px 0; /* Reduced padding */
     border-bottom: 1px solid rgba(212, 212, 212, 0.4);
     align-items: center;
-    font-size: 0.9em;
+    font-size: 0.85em; /* Smaller font */
 }
 
 .skill-item:last-child {
@@ -274,28 +274,29 @@ td.input-cell {
     display: flex; /* Flex to center content */
     align-items: center;
     justify-content: center;
-    width: 40px; /* Fixed width */
-    height: 30px; /* Fixed height */
+    width: 30px; /* Reduced width */
+    height: 24px; /* Reduced height */
     padding: 0;
     margin: 0 auto; /* Center within grid column */
     border: 1px solid var(--border-grey);
     border-radius: 4px;
     font-weight: 600;
     background: #fdfdfd;
+    font-size: 0.9em;
 }
 
 /* Personality Development */
 .personality-grid {
     display: grid;
     grid-template-columns: 1fr; /* Stacked (Single Column) */
-    gap: 20px;
-    margin-bottom: 25px;
+    gap: 10px; /* Reduced gap */
+    margin-bottom: 15px; /* Reduced margin */
 }
 
 .personality-card {
     border: 2px solid var(--border-grey);
     border-radius: 8px;
-    padding: 15px;
+    padding: 8px 12px; /* Reduced padding */
     background: white;
     break-inside: avoid;
     height: 100%;
@@ -305,21 +306,21 @@ td.input-cell {
     font-family: 'Crimson Pro', serif;
     font-size: 1.1em;
     color: var(--primary-navy) !important;
-    margin: 0 0 10px 0;
-    padding-bottom: 6px;
+    margin: 0 0 6px 0; /* Reduced margin */
+    padding-bottom: 4px;
     border-bottom: 2px solid var(--accent-gold) !important;
 }
 
 .personality-header {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr;
-    padding: 8px 0;
+    padding: 4px 0; /* Reduced padding */
     font-weight: 600;
     color: var(--primary-navy) !important;
     border-bottom: 2px solid var(--accent-gold) !important;
-    margin-bottom: 8px;
+    margin-bottom: 4px; /* Reduced margin */
     text-align: center;
-    font-size: 0.9em;
+    font-size: 0.85em; /* Smaller font */
 }
 
 .personality-header .header-label:first-child {
@@ -329,9 +330,9 @@ td.input-cell {
 .personality-item {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr;
-    padding: 8px 0;
+    padding: 4px 0; /* Reduced padding */
     border-bottom: 1px solid rgba(212, 212, 212, 0.3);
-    font-size: 0.9em;
+    font-size: 0.85em; /* Smaller font */
     align-items: center;
 }
 

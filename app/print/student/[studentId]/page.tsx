@@ -233,7 +233,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
 
                         {/* CO-SCHOLASTIC DOMAINS */}
                     </div>
-                    <PageBreak />
+
 
                     {/* PAGE 3: Co-Scholastic + Personality (Stacked) */}
                     <div className="content">

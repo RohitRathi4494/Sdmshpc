@@ -230,7 +230,7 @@ export default function ScholasticEntryPage() {
                 <p className="font-bold">Assessment Structure:</p>
                 <ul className="list-disc ml-5 mt-1">
                     {components.map(c => (
-                        <li key={c.id}>{c.component_name}: Max {c.max_marks} Marks</li>
+                        <li key={c.id}>{c.component_name}: Max {COMPONENT_MAX_MARKS[c.component_name] || c.max_marks} Marks</li>
                     ))}
                 </ul>
             </div>

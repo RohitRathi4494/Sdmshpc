@@ -123,6 +123,15 @@ export default function ReportPreviewPage() {
                 </div>
 
                 <div className="content">
+                    {/* Header with Logo */}
+                    <div className="header">
+                        <img src="/school_logo.png" className="header-logo" alt="School Logo" />
+                        <div className="header-text">
+                            <h1>S D Memorial Sr. Sec. School, Gurugram</h1>
+                            <div className="subtitle">Holistic Progress Card</div>
+                        </div>
+                    </div>
+
                     {/* GENERAL INFORMATION */}
                     <div className="section">
                         <h2 className="section-title">General Information</h2>

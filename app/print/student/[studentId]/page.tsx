@@ -90,8 +90,11 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 <div className="container">
                     {/* PAGE 1: Student Info + Attendance */}
                     <div className="header">
-                        <h1>S D Memorial Sr. Sec. School, Gurugram</h1>
-                        <div className="subtitle">Holistic Progress Card</div>
+                        <img src="/school_logo.png" className="header-logo" alt="School Logo" />
+                        <div className="header-text">
+                            <h1>S D Memorial Sr. Sec. School, Gurugram</h1>
+                            <div className="subtitle">Holistic Progress Card</div>
+                        </div>
                     </div>
 
                     <div className="content">

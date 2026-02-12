@@ -11,11 +11,25 @@ export const PRINT_STYLES = `
     --text-dark: #2d2d2d;
 }
 
+@page {
+    size: A4;
+    margin: 0.25in; /* 0.25 inch margins */
+}
+
+:root {
+    --primary-navy: #1a3a52;
+    --secondary-blue: #2c5f7f;
+    --accent-gold: #c9a961;
+    --light-cream: #fdfbf7;
+    --border-grey: #d4d4d4;
+    --text-dark: #2d2d2d;
+}
+
 body {
     font-family: 'Work Sans', sans-serif;
     background: white;
     color: var(--text-dark);
-    line-height: 1.3; /* Tighter line height to save space */
+    line-height: 1.3;
     margin: 0;
     padding: 0;
     -webkit-print-color-adjust: exact;
@@ -23,11 +37,11 @@ body {
 }
 
 .container {
-    width: 100%; /* Auto width to fit printable area */
+    width: 100%;
     max-width: 100%;
     min-height: 297mm;
     margin: 0 auto;
-    padding: 0; /* Let page margin handle spacing */
+    padding: 0;
     box-sizing: border-box;
     background: white;
     overflow: hidden;
@@ -48,13 +62,13 @@ body {
     align-items: center;
     justify-content: center;
     gap: 15px;
-    text-align: left;
+    text-align: center; /* Center align text */
 }
 
 .header-logo {
-    height: 90px; /* Slightly smaller to save space */
+    height: 90px;
     width: auto;
-    background: transparent; /* Remove white bg */
+    background: transparent;
     padding: 0;
     border-radius: 0;
     box-shadow: none;
@@ -63,7 +77,7 @@ body {
 .header-text {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center; /* Center align text blocks */
 }
 
 .header h1 {

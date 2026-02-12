@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import { getActiveAcademicYear } from '../lib/actions';
 
 // Mock Auth Context for this implementation since we don't have full Auth Provider
 // In real app, this wraps the app.
@@ -11,8 +12,17 @@ const USER_ROLE_KEY = 'hpc_role';
 
 export default function TeacherLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
+    const [academicYear, setAcademicYear] = useState('...');
     const pathname = usePathname();
     const router = useRouter();
+
+    useEffect(() => {
+        const fetchYear = async () => {
+            const year = await getActiveAcademicYear();
+            setAcademicYear(year);
+        };
+        fetchYear();
+    }, []);
 
     // Basic auth check
     useEffect(() => {
@@ -76,17 +86,18 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                     <h2 className="text-lg font-semibold text-gray-800">
                         {navItems.find(i => i.href === pathname)?.label || 'Assessment'}
                     </h2>
-                    <div className="flex items-center space-x-4">
-                        <span className="text-sm text-gray-500">Academic Year: 2024-2025</span>
-                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                            T
-                        </div>
-                    </div>
-                </header>
-                <div className="p-6">
-                    {children}
+                    <span className="text-sm text-gray-500">Academic Year: {academicYear}</span>
                 </div>
-            </main>
-        </div>
+                <div className="flex items-center space-x-4">
+                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                        T
+                    </div>
+                </div>
+            </header>
+            <div className="p-6">
+                {children}
+            </div>
+        </main>
+        </div >
     );
 }

@@ -268,7 +268,7 @@ export default function ReportPreviewPage() {
 
                     {/* PHYSICAL EDUCATION (Split from Co-Scholastic) */}
                     <div className="section">
-                        <h2 className="section-title">Co-Scholastic Domains: Physical Education</h2>
+                        <h2 className="section-title">Co-Scholastic Domains</h2>
                         <table>
                             <thead>
                                 <tr>
@@ -295,7 +295,7 @@ export default function ReportPreviewPage() {
 
                     {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
                     <div className="section">
-                        <h2 className="section-title">Co-Scholastic Domains: Arts Education</h2>
+                        <h2 className="section-title">Co-Scholastic Domains</h2>
                         <table>
                             <thead>
                                 <tr>

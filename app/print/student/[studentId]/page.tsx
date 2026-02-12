@@ -236,7 +236,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
 
                         {/* PHYSICAL EDUCATION (Split from Co-Scholastic) */}
                         <div className="section">
-                            <h2 className="section-title">Co-Scholastic Domains: Physical Education</h2>
+                            <h2 className="section-title">Co-Scholastic Domains</h2>
                             <table>
                                 <thead>
                                     <tr>
@@ -269,7 +269,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                     <div className="content">
                         {/* CO-SCHOLASTIC DOMAINS */}
                         <div className="section">
-                            <h2 className="section-title">Co-Scholastic Domains: Arts Education</h2>
+                            <h2 className="section-title">Co-Scholastic Domains</h2>
                             <table>
                                 <thead>
                                     <tr>

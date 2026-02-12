@@ -374,30 +374,76 @@ td.input-cell {
 
 .grading-grid {
     display: grid;
-    grid-template-columns: 60px 100px 1fr; /* Slightly tighter columns */
-    gap: 1px;
-    background: var(--border-grey);
-    border: 1px solid var(--border-grey);
-    margin-bottom: 15px; /* Reduced margin */
-    font-size: 0.85em; /* Slightly smaller font */
+    grid-template-columns: 60px 100px 1fr;
+    gap: 0; /* Remove gap for collapse effect */
+    border: 1px solid var(--text-dark); /* Outer border */
+    margin-bottom: 15px;
+    font-size: 0.85em;
 }
 
 .grading-cell {
-    padding: 5px 8px; /* Compact padding */
+    padding: 5px 8px;
     background: white;
     display: flex;
     align-items: center;
     justify-content: center;
+    border-bottom: 1px solid var(--text-dark); /* Inner borders */
+    border-right: 1px solid var(--text-dark);
 }
 
 .grading-cell:nth-child(3n) {
-    justify-content: flex-start; /* Align description text to left */
+    justify-content: flex-start;
     text-align: left;
+    border-right: none; /* No right border for last column */
+}
+
+/* Remove bottom border for last row */
+.grading-grid > :nth-last-child(-n+3) {
+    border-bottom: none;
 }
 
 .grading-header {
     background: var(--primary-navy) !important;
     color: white !important;
+    font-weight: 700;
+}
+
+.grade-label, .grade-range {
+    font-weight: 600;
+    color: var(--primary-navy) !important;
+}
+
+/* Evaluation Levels */
+.evaluation-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.evaluation-levels h4 {
+    font-family: 'Crimson Pro', serif;
+    font-size: 1.1em;
+    font-weight: 700; /* Bold heading */
+    color: var(--primary-navy) !important;
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--accent-gold);
+    padding-bottom: 4px;
+}
+
+.level-item {
+    display: grid;
+    grid-template-columns: 30px 1fr;
+    gap: 10px;
+    margin-bottom: 8px;
+    font-size: 0.85em;
+    align-items: start;
+}
+
+.level-label {
+    font-weight: 700;
+    color: var(--secondary-blue) !important;
+    text-align: center;
+}
     font-weight: 600;
     text-align: center;
     padding: 8px; /* Reduced padding */

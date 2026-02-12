@@ -15,7 +15,7 @@ body {
     font-family: 'Work Sans', sans-serif;
     background: white;
     color: var(--text-dark);
-    line-height: 1.4; /* Reduced line height */
+    line-height: 1.5; /* Increased for better filling */
     margin: 0;
     padding: 0;
     -webkit-print-color-adjust: exact;
@@ -30,13 +30,14 @@ body {
     box-sizing: border-box;
     background: white;
     overflow: hidden;
+    position: relative;
 }
 
 /* Header Section */
 .header {
     background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%) !important;
     color: white !important;
-    padding: 15px 25px; /* Reduced padding */
+    padding: 25px 30px; /* Increased vertical padding to fill space */
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -46,9 +47,9 @@ body {
 
 .header h1 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.8em; /* Reduced size */
+    font-size: 2.4em; /* Larger Title */
     font-weight: 700;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     letter-spacing: 0.5px;
     position: relative;
     z-index: 1;
@@ -56,7 +57,7 @@ body {
 }
 
 .header .subtitle {
-    font-size: 1.1em; /* Reduced size */
+    font-size: 1.4em;
     font-weight: 600;
     opacity: 0.95;
     letter-spacing: 2px;
@@ -68,33 +69,34 @@ body {
 
 /* Content Area */
 .content {
-    padding: 15px 25px; /* Reduced padding to fit wider tables */
+    padding: 20px 30px; /* Balanced side padding */
+    height: 100%;
 }
 
 .section {
-    margin-bottom: 20px; /* Reduced margin */
+    margin-bottom: 35px; /* Generous spacing between sections */
     page-break-inside: avoid;
 }
 
 .section-title {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.3em; /* Reduced size */
+    font-size: 1.6em;
     font-weight: 700;
     color: var(--primary-navy) !important;
-    margin-bottom: 10px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid var(--accent-gold) !important;
+    margin-bottom: 20px;
+    padding-bottom: 8px;
+    border-bottom: 3px solid var(--accent-gold) !important;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
 }
 
 .section-title::before {
     content: '';
-    width: 5px;
-    height: 20px;
+    width: 8px;
+    height: 30px;
     background: var(--accent-gold) !important;
-    border-radius: 2px;
+    border-radius: 4px;
     display: inline-block;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -103,58 +105,59 @@ body {
 /* General Information */
 .info-grid {
     background: white;
-    padding: 10px; /* Reduced padding */
+    padding: 20px;
     border: 2px solid var(--border-grey);
-    border-radius: 6px;
+    border-radius: 8px;
 }
 
 .info-row {
     display: grid;
-    grid-template-columns: 180px 1fr; /* Compact labels */
-    margin-bottom: 8px;
+    grid-template-columns: 220px 1fr;
+    margin-bottom: 15px; /* More vertical space */
     align-items: center;
-    gap: 10px;
-    font-size: 0.9em; /* Smaller font */
+    gap: 15px;
+    font-size: 1em;
 }
 
 .info-row-split {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 8px;
+    gap: 30px;
+    margin-bottom: 15px;
 }
 
 .info-row-half {
     display: grid;
-    grid-template-columns: 90px 1fr;
-    gap: 8px;
+    grid-template-columns: 120px 1fr;
+    gap: 15px;
     align-items: center;
-    font-size: 0.9em;
+    font-size: 1em;
 }
 
 .info-label {
     font-weight: 600;
     color: var(--secondary-blue) !important;
+    font-size: 1.05em;
 }
 
 .info-input {
     border: 1px solid var(--border-grey);
     border-radius: 4px;
-    padding: 4px 8px;
-    min-height: 24px; /* Reduced height */
+    padding: 8px 12px;
+    min-height: 40px; /* Taller input boxes */
     background: rgba(232, 241, 245, 0.1);
     display: flex;
     align-items: center;
+    font-size: 1.1em;
 }
 
 /* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 15px;
-    font-size: 0.75em; /* Smaller font for table content */
+    margin-bottom: 25px;
+    font-size: 0.9em; /* Standard readable size */
     box-shadow: none;
-    page-break-inside: auto; /* Allow rows to break if needed, but prefer section break */
 }
 
 thead {
@@ -162,21 +165,20 @@ thead {
     color: white !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
-    display: table-header-group; /* Repeat headers on new page */
 }
 
 th {
-    padding: 6px 4px; /* Tighter padding */
+    padding: 10px 8px; /* Comfortable padding */
     text-align: center;
     font-weight: 600;
-    letter-spacing: 0.3px;
+    letter-spacing: 0.5px;
     border: 1px solid #000;
     color: white !important;
-    font-size: 1.1em; /* Slightly larger relative to cell text */
+    font-size: 1em;
 }
 
 td {
-    padding: 4px 2px; /* Tighter padding */
+    padding: 8px 6px; /* Comfortable padding */
     border: 1px solid var(--border-grey);
     background: white;
     text-align: center;
@@ -187,49 +189,53 @@ td.subject-name {
     font-weight: 600;
     color: var(--primary-navy) !important;
     text-align: left;
-    padding-left: 8px;
+    padding-left: 15px;
+    font-size: 1em;
 }
 
 td.input-cell {
-    min-width: 40px; /* Reduced min-width */
+    min-width: 50px;
     text-align: center;
+    font-weight: 500;
+    font-size: 1.1em;
 }
 
 /* Grid Layout for Co-Scholastic */
 .grid-2col {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
 .skill-card {
     border: 2px solid var(--border-grey);
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 8px;
+    padding: 15px; /* More padding */
     background: white;
     break-inside: avoid;
+    height: 100%; /* Fill available height */
 }
 
 .skill-card h3 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1em;
+    font-size: 1.2em;
     color: var(--secondary-blue) !important;
-    margin: 0 0 8px 0;
-    padding-bottom: 4px;
+    margin: 0 0 12px 0;
+    padding-bottom: 8px;
     border-bottom: 2px solid var(--accent-gold) !important;
 }
 
 .skill-header {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    padding: 4px 0;
+    padding: 8px 0;
     font-weight: 600;
     color: var(--primary-navy) !important;
-    border-bottom: 1px solid var(--accent-gold) !important;
-    margin-bottom: 4px;
+    border-bottom: 2px solid var(--accent-gold) !important;
+    margin-bottom: 8px;
     text-align: center;
-    font-size: 0.75em;
+    font-size: 0.9em;
 }
 
 .skill-header .header-label:first-child {
@@ -239,10 +245,10 @@ td.input-cell {
 .skill-item {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr;
-    padding: 4px 0;
+    padding: 8px 0;
     border-bottom: 1px solid rgba(212, 212, 212, 0.4);
     align-items: center;
-    font-size: 0.75em;
+    font-size: 0.9em;
 }
 
 .skill-item:last-child {
@@ -253,53 +259,55 @@ td.input-cell {
     font-weight: 500;
     color: var(--text-dark);
     text-align: left;
-    line-height: 1.2;
+    padding-right: 5px;
 }
 
 .achievement-box {
     text-align: center;
-    padding: 2px;
+    padding: 4px;
     border: 1px solid var(--border-grey);
     border-radius: 4px;
-    font-weight: 500;
-    min-height: 18px;
+    font-weight: 600;
+    min-height: 24px;
+    background: #fdfdfd;
 }
 
 /* Personality Development */
 .personality-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 20px;
+    margin-bottom: 25px;
 }
 
 .personality-card {
     border: 2px solid var(--border-grey);
-    border-radius: 6px;
-    padding: 8px;
+    border-radius: 8px;
+    padding: 15px;
     background: white;
     break-inside: avoid;
+    height: 100%;
 }
 
 .personality-card h4 {
     font-family: 'Crimson Pro', serif;
-    font-size: 0.95em;
+    font-size: 1.1em;
     color: var(--primary-navy) !important;
-    margin: 0 0 6px 0;
-    padding-bottom: 3px;
+    margin: 0 0 10px 0;
+    padding-bottom: 6px;
     border-bottom: 2px solid var(--accent-gold) !important;
 }
 
 .personality-header {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr;
-    padding: 4px 0;
+    padding: 8px 0;
     font-weight: 600;
     color: var(--primary-navy) !important;
-    border-bottom: 1px solid var(--accent-gold) !important;
-    margin-bottom: 4px;
+    border-bottom: 2px solid var(--accent-gold) !important;
+    margin-bottom: 8px;
     text-align: center;
-    font-size: 0.75em;
+    font-size: 0.9em;
 }
 
 .personality-header .header-label:first-child {
@@ -309,9 +317,9 @@ td.input-cell {
 .personality-item {
     display: grid;
     grid-template-columns: 3fr 1fr 1fr;
-    padding: 4px 0;
+    padding: 8px 0;
     border-bottom: 1px solid rgba(212, 212, 212, 0.3);
-    font-size: 0.75em;
+    font-size: 0.9em;
     align-items: center;
 }
 
@@ -323,44 +331,44 @@ td.input-cell {
 .feedback-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 15px;
-    margin-bottom: 15px;
+    gap: 25px;
+    margin-bottom: 25px;
 }
 
 .feedback-card {
     border: 2px solid var(--secondary-blue) !important;
-    border-radius: 6px;
-    padding: 12px;
+    border-radius: 8px;
+    padding: 20px;
     background: white;
     break-inside: avoid;
 }
 
 .feedback-card h3 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.1em;
+    font-size: 1.4em;
     color: var(--primary-navy) !important;
-    margin: 0 0 8px 0;
+    margin: 0 0 15px 0;
 }
 
 .feedback-row {
     display: grid;
-    grid-template-columns: 140px 1fr;
-    margin-bottom: 6px;
+    grid-template-columns: 180px 1fr;
+    margin-bottom: 12px;
     align-items: start;
-    font-size: 0.8em;
+    font-size: 0.95em;
 }
 
 .feedback-label {
     font-weight: 600;
     color: var(--secondary-blue) !important;
-    padding: 3px 0;
+    padding: 6px 0;
 }
 
 .feedback-input {
     border: 1px solid var(--border-grey);
     border-radius: 4px;
-    padding: 3px 6px;
-    min-height: 22px;
+    padding: 6px 10px;
+    min-height: 35px;
     background: white;
 }
 
@@ -368,26 +376,26 @@ td.input-cell {
 .signature-section {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
-    gap: 10px;
-    margin-top: 15px;
-    padding-top: 15px;
+    gap: 20px;
+    margin-top: 30px;
+    padding-top: 30px;
     border-top: 2px solid var(--border-grey);
     page-break-inside: avoid;
 }
 
 .signature-box {
     text-align: center;
-    padding: 8px 4px;
+    padding: 10px 5px;
 }
 
 .signature-line {
-    height: 35px;
+    height: 50px;
     border-bottom: 2px solid var(--text-dark);
-    margin-bottom: 4px;
+    margin-bottom: 8px;
 }
 
 .signature-label {
-    font-size: 0.75em;
+    font-size: 0.9em;
     font-weight: 600;
     color: var(--secondary-blue) !important;
 }
@@ -395,33 +403,33 @@ td.input-cell {
 /* Grading Framework */
 .grading-section {
     background: white;
-    padding: 12px;
-    border-radius: 6px;
-    margin-top: 15px;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 25px;
     border: 2px solid var(--border-grey);
     page-break-inside: avoid;
 }
 
 .grading-section h3 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.1em;
+    font-size: 1.4em;
     color: var(--primary-navy) !important;
-    margin-bottom: 12px;
+    margin-bottom: 20px;
     text-align: center;
 }
 
 .grading-grid {
     display: grid;
-    grid-template-columns: 50px 90px 1fr;
+    grid-template-columns: 70px 120px 1fr;
     gap: 1px;
     background: var(--border-grey);
     border: 1px solid var(--border-grey);
-    margin-bottom: 12px;
-    font-size: 0.75em;
+    margin-bottom: 20px;
+    font-size: 0.9em;
 }
 
 .grading-cell {
-    padding: 6px;
+    padding: 10px;
     background: white;
 }
 
@@ -430,12 +438,14 @@ td.input-cell {
     color: white !important;
     font-weight: 600;
     text-align: center;
+    padding: 12px;
 }
 
 .grade-label {
     font-weight: 700;
     color: var(--primary-navy) !important;
     text-align: center;
+    font-size: 1.1em;
 }
 
 .grade-range {
@@ -445,31 +455,31 @@ td.input-cell {
 }
 
 .evaluation-levels {
-    margin-top: 12px;
-    font-size: 0.75em;
+    margin-top: 20px;
+    font-size: 0.9em;
 }
 
 .evaluation-levels h4 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1em;
+    font-size: 1.2em;
     color: var(--primary-navy) !important;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
 .level-item {
     display: grid;
-    grid-template-columns: 35px 1fr;
-    gap: 8px;
-    padding: 6px;
-    margin-bottom: 4px;
+    grid-template-columns: 50px 1fr;
+    gap: 15px;
+    padding: 10px;
+    margin-bottom: 8px;
     background: white;
-    border-left: 3px solid var(--accent-gold) !important;
-    border-radius: 3px;
+    border-left: 5px solid var(--accent-gold) !important;
+    border-radius: 4px;
 }
 
 .level-label {
     font-weight: 700;
-    font-size: 1em;
+    font-size: 1.3em;
     color: var(--primary-navy) !important;
     text-align: center;
     align-self: center;

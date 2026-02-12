@@ -234,15 +234,9 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                             </table>
                         </div>
 
-                        {/* CO-SCHOLASTIC DOMAINS */}
-                    </div>
-
-
-                    {/* PAGE 3: Co-Scholastic + Personality (Stacked) */}
-                    <div className="content">
-                        {/* CO-SCHOLASTIC DOMAINS */}
+                        {/* PHYSICAL EDUCATION (Split from Co-Scholastic) */}
                         <div className="section">
-                            <h2 className="section-title">Co-Scholastic Domains</h2>
+                            <h2 className="section-title">Co-Scholastic Domains: Physical Education</h2>
                             <table>
                                 <thead>
                                     <tr>
@@ -263,6 +257,28 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                             <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
+                    </div>
+
+
+                    {/* PAGE 3: Co-Scholastic + Personality (Stacked) */}
+                    <div className="content">
+                        {/* CO-SCHOLASTIC DOMAINS */}
+                        <div className="section">
+                            <h2 className="section-title">Co-Scholastic Domains: Arts Education</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
 
                                     {/* Visual Art */}
                                     <tr>

@@ -86,18 +86,17 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                     <h2 className="text-lg font-semibold text-gray-800">
                         {navItems.find(i => i.href === pathname)?.label || 'Assessment'}
                     </h2>
-                    <span className="text-sm text-gray-500">Academic Year: {academicYear}</span>
-                </div>
-                <div className="flex items-center space-x-4">
-                    <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
-                        T
+                    <div className="flex items-center space-x-4">
+                        <span className="text-sm text-gray-500">Academic Year: {academicYear}</span>
+                        <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white font-bold">
+                            T
+                        </div>
                     </div>
+                </header>
+                <div className="p-6">
+                    {children}
                 </div>
-            </header>
-            <div className="p-6">
-                {children}
-            </div>
-        </main>
-        </div >
+            </main>
+        </div>
     );
 }

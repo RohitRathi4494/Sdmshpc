@@ -196,7 +196,7 @@ export default function ScholasticEntryPage() {
                                                 <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                     <input
                                                         type="number"
-                                                        placeholder={`/${comp.max_marks}`}
+                                                        placeholder=""
                                                         className="block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
                                                         value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
                                                         onChange={(e) => {

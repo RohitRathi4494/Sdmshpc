@@ -10,7 +10,11 @@
     "db:deploy": "node scripts/deploy-db.js",
     "db:users": "node scripts/deploy-users.js",
     "db:migrate": "node scripts/migrate-add-teacher-column.js",
+    "db:migrate": "node scripts/migrate-add-teacher-column.js",
     "db:migrate:maxmarks": "node scripts/migrate-add-max-marks.js"
+  },
+  "engines": {
+    "node": "18.x"
   },
   "dependencies": {
     "@sparticuz/chromium": "119.0.0",

@@ -252,14 +252,14 @@ td {
 }
 
 .compact-table {
-    font-size: 0.85em; /* Slightly smaller text */
+    /* Font size standard */
 }
 
 .compact-table td, 
 .compact-table th {
-    padding: 3px 4px !important; /* Minimal padding */
+    padding: 3px 4px !important; /* Minimal padding only */
     height: auto !important;
-    border: 1px solid #000 !important; /* Force crisp borders for compact tables */
+    /* Border inherits from glboal td */
 }
 
 .compact-section {

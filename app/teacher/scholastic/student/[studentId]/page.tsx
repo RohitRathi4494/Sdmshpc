@@ -41,6 +41,13 @@ const TERMS = [
     { id: 2, name: 'Term II' },
 ];
 
+const COMPONENT_MAX_MARKS: Record<string, number> = {
+    'Periodic Assessment': 30,
+    'Subject Enrichment Activities': 5,
+    'Internal Assessment': 5,
+    'Terminal Assessment': 60
+};
+
 export default function ScholasticEntryPage() {
     const params = useParams();
     const studentId = parseInt(params.studentId as string);
@@ -64,6 +71,7 @@ export default function ScholasticEntryPage() {
                     ApiClient.get<AssessmentComponent[]>('/teacher/assessment-components', token)
                 ]);
 
+                // console.log('Components Data:', componentsData); // Debug log removed
                 setReportData(report);
                 setComponents(componentsData);
 
@@ -102,8 +110,9 @@ export default function ScholasticEntryPage() {
         if (field === 'marks') {
             const component = components.find(c => c.id === componentId);
             if (component && typeof value === 'number') {
-                if (value < 0 || value > component.max_marks) {
-                    alert(`Marks for ${component.component_name} must be between 0 and ${component.max_marks}`);
+                const maxMarks = COMPONENT_MAX_MARKS[component.component_name] || component.max_marks;
+                if (value < 0 || value > maxMarks) {
+                    alert(`Marks for ${component.component_name} must be between 0 and ${maxMarks}`);
                     return;
                 }
             }
@@ -168,7 +177,7 @@ export default function ScholasticEntryPage() {
                             {components.map(comp => (
                                 <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
                                     {comp.component_name} <br />
-                                    <span className="text-gray-400 font-normal">({comp.max_marks} Marks)</span>
+                                    <span className="text-gray-400 font-normal">({COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks} Marks)</span>
                                 </th>
                             ))}
                         </tr>
@@ -203,7 +212,7 @@ export default function ScholasticEntryPage() {
                                                             const val = e.target.value;
                                                             handleScoreChange(subject.id, comp.id, term.id, 'marks', val === '' ? '' : parseFloat(val));
                                                         }}
-                                                        max={comp.max_marks}
+                                                        max={COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks}
                                                         min={0}
                                                     />
                                                 </td>

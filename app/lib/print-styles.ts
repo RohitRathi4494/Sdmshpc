@@ -431,26 +431,30 @@ td.input-cell {
 /* Evaluation Levels */
 .evaluation-wrapper {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
+    grid-template-columns: 1fr; /* Stack vertically */
+    gap: 15px; /* Reduced gap */
+}
+
+.evaluation-box {
+    margin-bottom: 5px;
 }
 
 .evaluation-levels h4 {
     font-family: 'Crimson Pro', serif;
     font-size: 1.1em;
-    font-weight: 700; /* Bold heading */
+    font-weight: 700;
     color: var(--primary-navy) !important;
-    margin-bottom: 10px;
+    margin-bottom: 5px; /* Compact margin */
     border-bottom: 2px solid var(--accent-gold);
-    padding-bottom: 4px;
+    padding-bottom: 2px;
 }
 
 .level-item {
     display: grid;
     grid-template-columns: 30px 1fr;
     gap: 10px;
-    margin-bottom: 8px;
-    font-size: 0.85em;
+    margin-bottom: 4px; /* Very compact item spacing */
+    font-size: 0.9em; /* Standard font size */
     align-items: start;
 }
 

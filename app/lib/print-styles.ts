@@ -109,7 +109,7 @@ body {
 
 .info-row-half {
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 220px 1fr; /* Match info-row label width for alignment */
     gap: 15px;
     align-items: center;
     font-size: 1em;

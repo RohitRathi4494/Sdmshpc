@@ -13,7 +13,7 @@ export const PRINT_STYLES = `
 
 @page {
     size: A4;
-    margin: 0.25in; /* 0.25 inch margins */
+    margin: 0.10in; /* 0.25 inch margins */
 }
 
 :root {
@@ -82,7 +82,7 @@ body {
 
 .header h1 {
     font-family: 'Crimson Pro', serif;
-    font-size: 2.2em; /* Reduced to fit one line */
+    font-size: 2em; /* Reduced to fit one line */
     font-weight: 700;
     margin: 0;
     line-height: 1.1;

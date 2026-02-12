@@ -480,38 +480,45 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                 <div className="grading-cell">Not yet assessed / Needs improvement</div>
                             </div>
 
-                            <div className="evaluation-wrapper">
-                                <div className="evaluation-levels">
-                                    <h4>Evaluation Levels – Co-Scholastic & Personal Skills</h4>
-                                    <div className="level-item">
-                                        <div className="level-label">A</div>
-                                        <div>Demonstrates clear understanding of the skill and applies it independently with confidence.</div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div className="level-label">B</div>
-                                        <div>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div className="level-label">C</div>
-                                        <div>Requires support to understand and apply the skill effectively.</div>
-                                    </div>
-                                </div>
+                            {/* EVALUATION LEVELS */}
+                            <div className="section compact-section">
+                                <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
+                                <table className="compact-table">
+                                    <tbody>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                            <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
+                                        </tr>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700 }}>B</td>
+                                            <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
+                                        </tr>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700 }}>C</td>
+                                            <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
 
-                                <div className="evaluation-levels">
-                                    <h4>Evaluation Levels: Physical Education</h4>
-                                    <div className="level-item">
-                                        <div className="level-label">A</div>
-                                        <div>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div className="level-label">B</div>
-                                        <div>Participates adequately in physical activities with moderate proficiency.</div>
-                                    </div>
-                                    <div className="level-item">
-                                        <div className="level-label">C</div>
-                                        <div>Requires support and encouragement to participate effectively in physical activities.</div>
-                                    </div>
-                                </div>
+                            <div className="section compact-section">
+                                <h2 className="section-title">Evaluation Levels: Physical Education</h2>
+                                <table className="compact-table">
+                                    <tbody>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                            <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
+                                        </tr>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700 }}>B</td>
+                                            <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
+                                        </tr>
+                                        <tr style={{ background: 'var(--light-cream)' }}>
+                                            <td style={{ fontWeight: 700 }}>C</td>
+                                            <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

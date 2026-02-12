@@ -281,7 +281,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                     {/* PAGE 3: Co-Scholastic + Personality (Stacked) */}
                     <div className="content">
                         {/* CO-SCHOLASTIC DOMAINS */}
-                        <div className="section">
+                        <div className="section compact-section">
                             <h2 className="section-title">Co-Scholastic Domains</h2>
                             <table className="compact-table">
                                 <thead>
@@ -321,9 +321,9 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                         </div>
 
                         {/* PERSONALITY DEVELOPMENT */}
-                        <div className="section">
+                        <div className="section compact-section">
                             <h2 className="section-title">Personality Development Skills</h2>
-                            <table>
+                            <table className="compact-table">
                                 <thead>
                                     <tr>
                                         <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>

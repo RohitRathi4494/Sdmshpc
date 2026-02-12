@@ -307,7 +307,7 @@ export default function ReportPreviewPage() {
                     </div>
 
                     {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
-                    <div className="section">
+                    <div className="section compact-section">
                         <h2 className="section-title">Co-Scholastic Domains</h2>
                         <table className="compact-table">
                             <thead>
@@ -347,9 +347,9 @@ export default function ReportPreviewPage() {
                     </div>
 
                     {/* PERSONALITY DEVELOPMENT SKILLS */}
-                    <div className="section">
+                    <div className="section compact-section">
                         <h2 className="section-title">Personality Development Skills</h2>
-                        <table>
+                        <table className="compact-table">
                             <thead>
                                 <tr>
                                     <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>

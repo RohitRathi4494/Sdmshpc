@@ -243,6 +243,14 @@ th {
     font-size: 1em;
 }
 
+td {
+    padding: 8px 6px; /* Comfortable padding */
+    border: 1px solid var(--border-grey);
+    background: white;
+    text-align: center;
+    vertical-align: middle;
+}
+
 .compact-table {
     font-size: 0.85em; /* Slightly smaller text */
 }
@@ -251,6 +259,7 @@ th {
 .compact-table th {
     padding: 3px 4px !important; /* Minimal padding */
     height: auto !important;
+    border: 1px solid #000 !important; /* Force crisp borders for compact tables */
 }
 
 .compact-section {

@@ -240,68 +240,127 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                         {/* CO-SCHOLASTIC DOMAINS */}
                         <div className="section">
                             <h2 className="section-title">Co-Scholastic Domains</h2>
-                            <div className="grid-2col">
-                                <div className="skill-card">
-                                    <h3>Physical Education</h3>
-                                    <div className="skill-header">
-                                        <span className="header-label">Sub-Skills</span>
-                                        <span className="header-label">Term I</span>
-                                        <span className="header-label">Term II</span>
-                                    </div>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Physical Education */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Physical Education</td>
+                                    </tr>
                                     {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
-                                        <div className="skill-item" key={skill}>
-                                            <span className="skill-name">{skill}</span>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                        </div>
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
                                     ))}
-                                </div>
-                                <div className="skill-card">
-                                    <h3>Visual Art</h3>
-                                    <div className="skill-header">
-                                        <span className="header-label">Sub-Skills</span>
-                                        <span className="header-label">Term I</span>
-                                        <span className="header-label">Term II</span>
-                                    </div>
+
+                                    {/* Visual Art */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Visual Art</td>
+                                    </tr>
                                     {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
-                                        <div className="skill-item" key={skill}>
-                                            <span className="skill-name">{skill}</span>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                        </div>
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
                                     ))}
-                                </div>
-                                <div className="skill-card">
-                                    <h3>Performing Art - Dance</h3>
-                                    <div className="skill-header">
-                                        <span className="header-label">Sub-Skills</span>
-                                        <span className="header-label">Term I</span>
-                                        <span className="header-label">Term II</span>
-                                    </div>
+
+                                    {/* Performing Art - Dance */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Performing Art - Dance</td>
+                                    </tr>
                                     {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
-                                        <div className="skill-item" key={skill}>
-                                            <span className="skill-name">{skill}</span>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                        </div>
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
                                     ))}
-                                </div>
-                                <div className="skill-card">
-                                    <h3>Performing Art - Music</h3>
-                                    <div className="skill-header">
-                                        <span className="header-label">Sub-Skills</span>
-                                        <span className="header-label">Term I</span>
-                                        <span className="header-label">Term II</span>
-                                    </div>
+
+                                    {/* Performing Art - Music */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Performing Art - Music</td>
+                                    </tr>
                                     {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
-                                        <div className="skill-item" key={skill}>
-                                            <span className="skill-name">{skill}</span>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                            <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                        </div>
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
                                     ))}
-                                </div>
-                            </div>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        {/* PERSONALITY DEVELOPMENT */}
+                        <div className="section">
+                            <h2 className="section-title">Personality Development Skills</h2>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Social Skills */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Social Skills</td>
+                                    </tr>
+                                    {['Maintains cordial relationship with peers and adults', 'Demonstrates teamwork and cooperation', 'Respects school property and personal belongings'].map(skill => (
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Emotional Skills */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Emotional Skills</td>
+                                    </tr>
+                                    {['Shows sensitivity towards rules and norms', 'Demonstrates self-regulation of emotions and behaviour', 'Displays empathy and concern for others'].map(skill => (
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Work Habit */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Work Habit</td>
+                                    </tr>
+                                    {['Maintains regularity and punctuality', 'Demonstrates responsible citizenship', 'Shows care and concern for the environment'].map(skill => (
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Health & Wellness */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Health & Wellness</td>
+                                    </tr>
+                                    {['Follows good hygiene practices', 'Maintains cleanliness of self and surroundings', 'Demonstrates resilience and positive coping skills'].map(skill => (
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
 

@@ -206,139 +206,18 @@ td.input-cell {
     font-size: 1.1em;
 }
 
-/* Grid Layout for Co-Scholastic */
-.grid-2col {
-    display: grid;
-    grid-template-columns: 1fr; /* Stacked (Single Column) */
-    gap: 10px; /* Reduced gap */
-    margin-bottom: 15px; /* Reduced margin */
-}
-
-.skill-card {
-    border: 2px solid var(--border-grey);
-    border-radius: 8px;
-    padding: 8px 12px; /* Reduced padding significantly */
-    background: white;
-    break-inside: avoid;
-    height: 100%; /* Fill available height */
-}
-
-.skill-card h3 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.1em; /* Reduced size */
-    color: var(--secondary-blue) !important;
-    margin: 0 0 6px 0; /* Reduced margin */
-    padding-bottom: 4px;
-    border-bottom: 2px solid var(--accent-gold) !important;
-}
-
-.skill-header {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr; /* Match Personality (was 2fr 50px 50px) */
-    gap: 10px;
-    padding: 4px 0; /* Reduced padding */
-    font-weight: 600;
+/* Unified Table Styles for Co-Scholastic & Personality */
+.subject-header {
+    background-color: var(--light-cream) !important;
     color: var(--primary-navy) !important;
-    border-bottom: 2px solid var(--accent-gold) !important;
-    margin-bottom: 4px; /* Reduced margin */
+    font-weight: 700;
     text-align: center;
-    font-size: 0.85em; /* Smaller font */
+    padding: 8px !important;
+    border-bottom: 2px solid var(--accent-gold);
 }
 
-.skill-header .header-label:first-child {
-    text-align: left;
-}
-
-.skill-item {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr; /* Match Personality */
-    gap: 10px;
-    padding: 4px 0; /* Reduced padding */
-    border-bottom: 1px solid rgba(212, 212, 212, 0.4);
-    align-items: center;
-    font-size: 0.85em; /* Smaller font */
-}
-
-.skill-item:last-child {
-    border-bottom: none;
-}
-
-.skill-name {
-    font-weight: 500;
-    color: var(--text-dark);
-    text-align: left;
-    padding-right: 5px;
-}
-
-.achievement-box {
-    display: flex; /* Flex to center content */
-    align-items: center;
-    justify-content: center;
-    width: 30px; /* Reduced width */
-    height: 24px; /* Reduced height */
-    padding: 0;
-    margin: 0 auto; /* Center within grid column */
-    border: 1px solid var(--border-grey);
-    border-radius: 4px;
-    font-weight: 600;
-    background: #fdfdfd;
-    font-size: 0.9em;
-}
-
-/* Personality Development */
-.personality-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Stacked (Single Column) */
-    gap: 10px; /* Reduced gap */
-    margin-bottom: 15px; /* Reduced margin */
-}
-
-.personality-card {
-    border: 2px solid var(--border-grey);
-    border-radius: 8px;
-    padding: 8px 12px; /* Reduced padding */
-    background: white;
-    break-inside: avoid;
-    height: 100%;
-}
-
-.personality-card h4 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.1em;
-    color: var(--primary-navy) !important;
-    margin: 0 0 6px 0; /* Reduced margin */
-    padding-bottom: 4px;
-    border-bottom: 2px solid var(--accent-gold) !important;
-}
-
-.personality-header {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
-    padding: 4px 0; /* Reduced padding */
-    font-weight: 600;
-    color: var(--primary-navy) !important;
-    border-bottom: 2px solid var(--accent-gold) !important;
-    margin-bottom: 4px; /* Reduced margin */
-    text-align: center;
-    font-size: 0.85em; /* Smaller font */
-}
-
-.personality-header .header-label:first-child {
-    text-align: left;
-}
-
-.personality-item {
-    display: grid;
-    grid-template-columns: 3fr 1fr 1fr;
-    padding: 4px 0; /* Reduced padding */
-    border-bottom: 1px solid rgba(212, 212, 212, 0.3);
-    font-size: 0.85em; /* Smaller font */
-    align-items: center;
-}
-
-.personality-item:last-child {
-    border-bottom: none;
-}
+/* Remove obsolete grid/card styles for these sections if no longer used */
+/* But keeping generic table styles as they apply to the new tables */
 
 /* Feedback Sections */
 .feedback-grid {

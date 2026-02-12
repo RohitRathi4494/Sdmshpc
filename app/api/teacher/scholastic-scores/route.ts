@@ -8,8 +8,8 @@ const scoreSchema = z.object({
     subject_id: z.number().int().positive(),
     component_id: z.number().int().positive(),
     term_id: z.number().int().positive(),
-    grade: z.string().min(1),
-    marks: z.number().nullable().optional(),
+    // grade removed
+    marks: z.number().nullable().optional(), // Now effectively required logic-wise but keeping nullable for flexibility
     academic_year_id: z.number().int().positive(),
 });
 
@@ -35,18 +35,18 @@ export async function POST(request: Request) {
             );
         }
 
-        const { student_id, subject_id, component_id, term_id, grade, marks, academic_year_id } = result.data;
+        const { student_id, subject_id, component_id, term_id, marks, academic_year_id } = result.data;
 
         // UPSERT Logic
         const query = `
-      INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, grade, marks, academic_year_id)
-      VALUES ($1, $2, $3, $4, $5, $6, $7)
+      INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, academic_year_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
-      DO UPDATE SET grade = EXCLUDED.grade, marks = EXCLUDED.marks
+      DO UPDATE SET marks = EXCLUDED.marks
       RETURNING id
     `;
 
-        const { rows } = await db.query(query, [student_id, subject_id, component_id, term_id, grade, marks ?? null, academic_year_id]);
+        const { rows } = await db.query(query, [student_id, subject_id, component_id, term_id, marks ?? null, academic_year_id]);
 
         return NextResponse.json({
             success: true,

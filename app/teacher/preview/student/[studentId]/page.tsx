@@ -79,7 +79,7 @@ export default function ReportPreviewPage() {
 
     const renderScoreCell = (subject: string, component: string, term: string) => {
         const score = getScholasticScore(subject, component, term);
-        return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.grade || score?.marks || ''}</td>;
+        return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.marks ?? ''}</td>;
     };
 
     const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];

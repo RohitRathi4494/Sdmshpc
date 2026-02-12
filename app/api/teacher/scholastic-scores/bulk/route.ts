@@ -8,7 +8,7 @@ const bulkScoreSchema = z.array(z.object({
     subject_id: z.number().int().positive(),
     component_id: z.number().int().positive(),
     term_id: z.number().int().positive(),
-    grade: z.string().min(1),
+    // grade removed
     marks: z.number().nullable().optional(),
     academic_year_id: z.number().int().positive(),
 }));
@@ -43,10 +43,10 @@ export async function POST(request: Request) {
             await client.query('BEGIN');
 
             const query = `
-        INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, grade, marks, academic_year_id)
-        VALUES ($1, $2, $3, $4, $5, $6, $7)
+        INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, academic_year_id)
+        VALUES ($1, $2, $3, $4, $5, $6)
         ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
-        DO UPDATE SET grade = EXCLUDED.grade, marks = EXCLUDED.marks
+        DO UPDATE SET marks = EXCLUDED.marks
       `;
 
             for (const score of scores) {
@@ -55,7 +55,6 @@ export async function POST(request: Request) {
                     score.subject_id,
                     score.component_id,
                     score.term_id,
-                    score.grade,
                     score.marks ?? null,
                     score.academic_year_id
                 ]);

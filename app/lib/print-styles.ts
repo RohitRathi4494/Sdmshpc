@@ -39,7 +39,7 @@ body {
 .header {
     background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%) !important;
     color: white !important;
-    padding: 20px;
+    padding: 15px; /* Compact padding */
     position: relative;
     overflow: hidden;
     -webkit-print-color-adjust: exact;
@@ -47,17 +47,17 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 20px;
+    gap: 15px;
     text-align: left;
 }
 
 .header-logo {
-    height: 100px;
+    height: 90px; /* Slightly smaller to save space */
     width: auto;
-    background: white;
-    padding: 5px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    background: transparent; /* Remove white bg */
+    padding: 0;
+    border-radius: 0;
+    box-shadow: none;
 }
 
 .header-text {
@@ -68,18 +68,18 @@ body {
 
 .header h1 {
     font-family: 'Crimson Pro', serif;
-    font-size: 2.5em; /* Increased size */
+    font-size: 2.2em; /* Reduced to fit one line */
     font-weight: 700;
     margin: 0;
     line-height: 1.1;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
 }
 
 .subtitle {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.8em; /* Increased size */
-    margin-top: 8px;
+    font-size: 1.6em; /* Slightly reduced */
+    margin-top: 5px;
     font-weight: 600;
     opacity: 0.9;
 }
@@ -88,34 +88,34 @@ body {
 
 /* Content Area */
 .content {
-    padding: 10px 0; /* Minimal vertical padding, no horizontal (margin handles it) */
+    padding: 5px 0; /* Minimal vertical padding */
     height: 100%;
 }
 
 .section {
-    margin-bottom: 15px; /* Reduced section gap */
+    margin-bottom: 10px; /* Reduced section gap */
     page-break-inside: avoid;
 }
 
 .section-title {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.6em;
+    font-size: 1.4em; /* Slightly smaller */
     font-weight: 700;
     color: var(--primary-navy) !important;
-    margin-bottom: 20px;
-    padding-bottom: 8px;
-    border-bottom: 3px solid var(--accent-gold) !important;
+    margin-bottom: 10px; /* Reduced margin */
+    padding-bottom: 5px;
+    border-bottom: 2px solid var(--accent-gold) !important;
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 .section-title::before {
     content: '';
-    width: 8px;
-    height: 30px;
+    width: 6px;
+    height: 24px;
     background: var(--accent-gold) !important;
-    border-radius: 4px;
+    border-radius: 3px;
     display: inline-block;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
@@ -124,7 +124,7 @@ body {
 /* General Information */
 .info-grid {
     background: white;
-    padding: 20px;
+    padding: 15px; /* Reduced padding */
     border: 2px solid var(--border-grey);
     border-radius: 8px;
 }
@@ -132,17 +132,17 @@ body {
 .info-row {
     display: grid;
     grid-template-columns: 220px 1fr;
-    margin-bottom: 15px; /* More vertical space */
+    margin-bottom: 8px; /* Compact spacing */
     align-items: center;
-    gap: 15px;
+    gap: 10px;
     font-size: 1em;
 }
 
 .info-row-split {
     display: grid;
-    grid-template-columns: 1.5fr 1fr; /* Give more space to Roll No side */
-    gap: 30px;
-    margin-bottom: 15px;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 20px;
+    margin-bottom: 8px; /* Compact spacing */
 }
 
 .info-row-half {

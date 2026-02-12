@@ -126,7 +126,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                 </div>
                                 <div className="info-row">
                                     <div className="info-label">Address:</div>
-                                    <div className="info-input" style={{ minHeight: '60px' }}>{reportData.student?.address || ''}</div>
+                                    <div className="info-input" style={{ minHeight: '40px' }}>{reportData.student?.address || ''}</div>
                                 </div>
                                 <div className="info-row">
                                     <div className="info-label">Phone:</div>

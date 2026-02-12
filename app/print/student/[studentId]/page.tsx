@@ -143,47 +143,45 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                         {/* ATTENDANCE RECORD */}
                         <div className="section">
                             <h2 className="section-title">Attendance Record</h2>
-                            <div style={{ overflowX: 'auto' }}>
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Months</th>
-                                            {months.map(m => <th key={m}>{m}</th>)}
-                                            <th>Total</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td style={{ fontWeight: 600 }}>No. of Working days</td>
-                                            {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.working_days || ''}</td>)}
-                                            <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={{ fontWeight: 600 }}>No. of Days Present</td>
-                                            {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.days_present || ''}</td>)}
-                                            <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0}</td>
-                                        </tr>
-                                        <tr>
-                                            <td style={{ fontWeight: 600 }}>% of attendance</td>
-                                            {months.map(m => {
-                                                const att = getAttendance(m);
-                                                return <td key={m} className="input-cell">{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
-                                            })}
-                                            <td className="input-cell">
-                                                {(() => {
-                                                    const totalW = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0;
-                                                    const totalP = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0;
-                                                    return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
-                                                })()}
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td style={{ fontWeight: 600 }}>If attendance is low then reason</td>
-                                            <td colSpan={13} className="input-cell"></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                            <table className="attendance-table">
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '15%' }}>Months</th>
+                                        {months.map(m => <th key={m}>{m}</th>)}
+                                        <th style={{ width: '8%' }}>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.working_days || ''}</td>)}
+                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Days Present</td>
+                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.days_present || ''}</td>)}
+                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>% of attendance</td>
+                                        {months.map(m => {
+                                            const att = getAttendance(m);
+                                            return <td key={m} className="input-cell">{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
+                                        })}
+                                        <td className="input-cell">
+                                            {(() => {
+                                                const totalW = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0;
+                                                const totalP = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0;
+                                                return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
+                                            })()}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
+                                        <td colSpan={13} className="input-cell"></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                     <PageBreak />

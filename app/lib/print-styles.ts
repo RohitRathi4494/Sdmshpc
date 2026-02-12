@@ -160,6 +160,24 @@ table {
     box-shadow: none;
 }
 
+/* Specific compact style for huge attendance table */
+.attendance-table {
+    font-size: 0.75em !important;
+    table-layout: fixed;
+    width: 100%;
+}
+
+.attendance-table th, 
+.attendance-table td {
+    padding: 3px 1px !important;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.attendance-table .input-cell {
+    min-width: auto !important;
+}
+
 thead {
     background: var(--primary-navy) !important;
     color: white !important;

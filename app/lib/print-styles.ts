@@ -74,7 +74,7 @@ body {
 }
 
 .section {
-    margin-bottom: 35px; /* Generous spacing between sections */
+    margin-bottom: 20px; /* Reduced from 35px to fit Co-Scholastic on same page */
     page-break-inside: avoid;
 }
 
@@ -246,7 +246,8 @@ td.input-cell {
 
 .skill-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 50px 50px; /* Match skill-item columns */
+    gap: 10px;
     padding: 8px 0;
     font-weight: 600;
     color: var(--primary-navy) !important;
@@ -262,7 +263,8 @@ td.input-cell {
 
 .skill-item {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 2fr 50px 50px; /* Fixed columns for grades */
+    gap: 10px;
     padding: 8px 0;
     border-bottom: 1px solid rgba(212, 212, 212, 0.4);
     align-items: center;
@@ -280,13 +282,15 @@ td.input-cell {
     padding-right: 5px;
 }
 
-.achievement-box {
-    text-align: center;
-    padding: 4px;
+    display: flex; /* Flex to center content */
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Fixed width */
+    height: 30px; /* Fixed height */
+    padding: 0;
     border: 1px solid var(--border-grey);
     border-radius: 4px;
     font-weight: 600;
-    min-height: 24px;
     background: #fdfdfd;
 }
 

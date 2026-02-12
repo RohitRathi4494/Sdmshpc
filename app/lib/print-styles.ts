@@ -257,7 +257,7 @@ td {
 
 .compact-table td, 
 .compact-table th {
-    padding: 5px 4px !important; /* Slightly increased from 3px */
+    padding: 4px 4px !important; /* Adjusted to 4px as requested */
     height: auto !important;
     /* Border inherits from glboal td */
 }

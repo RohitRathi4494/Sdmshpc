@@ -413,36 +413,46 @@ td.input-cell {
 }
 
 /* Grading Framework */
+/* Grading Framework */
 .grading-section {
     background: white;
-    padding: 20px;
+    padding: 15px; /* Reduced padding */
     border-radius: 8px;
-    margin-top: 25px;
+    margin-top: 15px; /* Reduced margin */
     border: 2px solid var(--border-grey);
     page-break-inside: avoid;
+    height: 100%; /* Ensure full height usage if needed */
 }
 
 .grading-section h3 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.4em;
+    font-size: 1.3em; /* Slightly smaller */
     color: var(--primary-navy) !important;
-    margin-bottom: 20px;
+    margin-bottom: 10px; /* Reduced margin */
     text-align: center;
 }
 
 .grading-grid {
     display: grid;
-    grid-template-columns: 70px 120px 1fr;
+    grid-template-columns: 60px 100px 1fr; /* Slightly tighter columns */
     gap: 1px;
     background: var(--border-grey);
     border: 1px solid var(--border-grey);
-    margin-bottom: 20px;
-    font-size: 0.9em;
+    margin-bottom: 15px; /* Reduced margin */
+    font-size: 0.85em; /* Slightly smaller font */
 }
 
 .grading-cell {
-    padding: 10px;
+    padding: 5px 8px; /* Compact padding */
     background: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.grading-cell:nth-child(3n) {
+    justify-content: flex-start; /* Align description text to left */
+    text-align: left;
 }
 
 .grading-header {
@@ -450,7 +460,7 @@ td.input-cell {
     color: white !important;
     font-weight: 600;
     text-align: center;
-    padding: 12px;
+    padding: 8px; /* Reduced padding */
 }
 
 .grade-label {
@@ -466,32 +476,42 @@ td.input-cell {
     text-align: center;
 }
 
+/* Evaluation Wrapper for Side-by-Side */
+.evaluation-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 10px;
+}
+
 .evaluation-levels {
-    margin-top: 20px;
-    font-size: 0.9em;
+    font-size: 0.85em; /* Smaller font */
 }
 
 .evaluation-levels h4 {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: var(--primary-navy) !important;
-    margin-bottom: 12px;
+    margin-bottom: 8px; 
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
 }
 
 .level-item {
     display: grid;
-    grid-template-columns: 50px 1fr;
-    gap: 15px;
-    padding: 10px;
-    margin-bottom: 8px;
+    grid-template-columns: 40px 1fr; /* Tighter label column */
+    gap: 10px;
+    padding: 6px; /* Compact padding */
+    margin-bottom: 5px; /* Reduced margin */
     background: white;
-    border-left: 5px solid var(--accent-gold) !important;
+    border-left: 4px solid var(--accent-gold) !important;
     border-radius: 4px;
+    page-break-inside: avoid;
 }
 
 .level-label {
     font-weight: 700;
-    font-size: 1.3em;
+    font-size: 1.2em;
     color: var(--primary-navy) !important;
     text-align: center;
     align-self: center;

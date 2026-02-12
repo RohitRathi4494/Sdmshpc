@@ -209,8 +209,8 @@ td.input-cell {
 /* Grid Layout for Co-Scholastic */
 .grid-2col {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;
+    grid-template-columns: 1fr; /* Stacked (Single Column) */
+    gap: 20px;
     margin-bottom: 25px;
 }
 
@@ -287,7 +287,7 @@ td.input-cell {
 /* Personality Development */
 .personality-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* Stacked (Single Column) */
     gap: 20px;
     margin-bottom: 25px;
 }

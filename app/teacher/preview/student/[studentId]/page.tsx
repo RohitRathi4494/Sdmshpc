@@ -3,103 +3,15 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ApiClient } from '@/app/lib/api-client';
+import { PRINT_STYLES } from '@/app/lib/print-styles';
 
 export default function ReportPreviewPage() {
     const params = useParams();
-    const studentId = parseInt(params.studentId as string);
-    const [reportData, setReportData] = useState<any | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [generating, setGenerating] = useState(false);
-
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const token = localStorage.getItem('hpc_token') || undefined;
-                const report = await ApiClient.get<any>(`/reports/student/${studentId}?academic_year_id=1`, token);
-                setReportData(report);
-            } catch (error) {
-                console.error(error);
-            } finally {
-                setLoading(false);
-            }
-        };
-        loadData();
-    }, [studentId]);
-
-    const handleGeneratePDF = async () => {
-        setGenerating(true);
-        try {
-            const token = localStorage.getItem('hpc_token') || undefined;
-            const response = await fetch(`/api/reports/student/${studentId}/pdf`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify({ academic_year_id: 1 })
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'PDF generation failed');
-            }
-
-            const blob = await response.blob();
-            // ... (rest is same)
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `Report_Card_${studentId}.pdf`;
-            document.body.appendChild(a);
-            a.click();
-            window.URL.revokeObjectURL(url);
-            document.body.removeChild(a);
-
-        } catch (e: any) {
-            console.error(e);
-            alert(`Failed to generate PDF: ${e.message}`);
-        } finally {
-            setGenerating(false);
-        }
-    };
-
-    const router = useRouter();
-
-    if (loading || !reportData) return <div className="p-8 text-center">Loading preview...</div>;
-
-    // --- Helpers (Duplicated from Print Page for consistency) ---
-    const getScholasticScore = (subjectName: string, componentName: string, termName: string) => {
-        return reportData.scholastic?.find((s: any) =>
-            s.subject_name === subjectName &&
-            s.component_name === componentName &&
-            s.term_name === termName
-        );
-    };
-
-    const renderScoreCell = (subject: string, component: string, term: string) => {
-        const score = getScholasticScore(subject, component, term);
-        return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.grade || score?.marks || ''}</td>;
-    };
-
-    const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
-    const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
-
-    const getCoScholastic = (subSkill: string, term: string) => {
-        return reportData.co_scholastic?.find((cs: any) => cs.sub_skill_name === subSkill && cs.term_name === term);
-    };
-
-    const getPersonality = (subSkill: string, term: string) => {
-        return reportData.co_scholastic?.find((cs: any) => cs.sub_skill_name === subSkill && cs.term_name === term);
-    };
-
-    const getRemark = (type: string) => {
-        return reportData.remarks?.find((r: any) => r.type_name === type)?.remark_text || '';
-    };
+    // ... (existing code) ...
 
     return (
         <div className="bg-gray-100 min-h-screen p-8">
-            <link rel="stylesheet" href="/print.css" />
+            <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
 
             <div className="max-w-6xl mx-auto mb-8">
                 <button
@@ -136,7 +48,7 @@ export default function ReportPreviewPage() {
                                     <div className="info-label">Roll No.:</div>
                                     <div className="info-input">{reportData.student?.roll_no}</div>
                                 </div>
-                                <div className="info-row-half">
+                                <div className="info-row-compact">
                                     <div className="info-label">Adm No.:</div>
                                     <div className="info-input">{reportData.student?.admission_no}</div>
                                 </div>
@@ -260,149 +172,127 @@ export default function ReportPreviewPage() {
                     {/* CO-SCHOLASTIC DOMAINS */}
                     <div className="section">
                         <h2 className="section-title">Co-Scholastic Domains</h2>
-                        <div className="grid-2col">
-                            {/* Physical Education */}
-                            <div className="skill-card">
-                                <h3>Physical Education</h3>
-                                <div className="skill-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                    <th style={{ width: '25%' }}>Term I</th>
+                                    <th style={{ width: '25%' }}>Term II</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Physical Education */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Physical Education</td>
+                                </tr>
                                 {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
-                                    <div className="skill-item" key={skill}>
-                                        <span className="skill-name">{skill}</span>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Visual Art */}
-                            <div className="skill-card">
-                                <h3>Visual Art</h3>
-                                <div className="skill-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Visual Art */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Visual Art</td>
+                                </tr>
                                 {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
-                                    <div className="skill-item" key={skill}>
-                                        <span className="skill-name">{skill}</span>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Performing Art - Dance */}
-                            <div className="skill-card">
-                                <h3>Performing Art - Dance</h3>
-                                <div className="skill-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Performing Art - Dance */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Performing Art - Dance</td>
+                                </tr>
                                 {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
-                                    <div className="skill-item" key={skill}>
-                                        <span className="skill-name">{skill}</span>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Performing Art - Music */}
-                            <div className="skill-card">
-                                <h3>Performing Art - Music</h3>
-                                <div className="skill-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Performing Art - Music */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Performing Art - Music</td>
+                                </tr>
                                 {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
-                                    <div className="skill-item" key={skill}>
-                                        <span className="skill-name">{skill}</span>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getCoScholastic(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
 
                     {/* PERSONALITY DEVELOPMENT SKILLS */}
                     <div className="section">
                         <h2 className="section-title">Personality Development Skills</h2>
-                        <div className="personality-grid">
-                            {/* Social Skills */}
-                            <div className="personality-card">
-                                <h4>Social Skills</h4>
-                                <div className="personality-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                    <th style={{ width: '25%' }}>Term I</th>
+                                    <th style={{ width: '25%' }}>Term II</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {/* Social Skills */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Social Skills</td>
+                                </tr>
                                 {['Maintains cordial relationship with peers and adults', 'Demonstrates teamwork and cooperation', 'Respects school property and personal belongings'].map(skill => (
-                                    <div className="personality-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Emotional Skill */}
-                            <div className="personality-card">
-                                <h4>Emotional Skill</h4>
-                                <div className="personality-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Emotional Skills */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Emotional Skills</td>
+                                </tr>
                                 {['Shows sensitivity towards rules and norms', 'Demonstrates self-regulation of emotions and behaviour', 'Displays empathy and concern for others'].map(skill => (
-                                    <div className="personality-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Work Habit */}
-                            <div className="personality-card">
-                                <h4>Work Habit</h4>
-                                <div className="personality-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Work Habit */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Work Habit</td>
+                                </tr>
                                 {['Maintains regularity and punctuality', 'Demonstrates responsible citizenship', 'Shows care and concern for the environment'].map(skill => (
-                                    <div className="personality-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
 
-                            {/* Health & Wellness */}
-                            <div className="personality-card">
-                                <h4>Health & Wellness</h4>
-                                <div className="personality-header">
-                                    <span className="header-label">Sub-Skills</span>
-                                    <span className="header-label">Term I</span>
-                                    <span className="header-label">Term II</span>
-                                </div>
+                                {/* Health & Wellness */}
+                                <tr>
+                                    <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Health & Wellness</td>
+                                </tr>
                                 {['Follows good hygiene practices', 'Maintains cleanliness of self and surroundings', 'Demonstrates resilience and positive coping skills'].map(skill => (
-                                    <div className="personality-item" key={skill}>
-                                        <span>{skill}</span>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term I')?.grade || ''}</div>
-                                        <div className="achievement-box">{getPersonality(skill, 'Term II')?.grade || ''}</div>
-                                    </div>
+                                    <tr key={skill}>
+                                        <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                        <td className="input-cell">{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                    </tr>
                                 ))}
-                            </div>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
 
                     {/* FEEDBACK SECTIONS */}

@@ -290,22 +290,7 @@ export default function ReportPreviewPage() {
                                     </tr>
                                 ))}
                             </tbody>
-                        </table>
-                    </div>
-
-                    {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
-                    <div className="section">
-                        <h2 className="section-title">Co-Scholastic Domains</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
-                                    <th style={{ width: '25%' }}>Term I</th>
-                                    <th style={{ width: '25%' }}>Term II</th>
-                                </tr>
-                            </thead>
                             <tbody>
-
                                 {/* Visual Art */}
                                 <tr>
                                     <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Visual Art</td>
@@ -317,6 +302,22 @@ export default function ReportPreviewPage() {
                                         <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                     </tr>
                                 ))}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
+                    <div className="section">
+                        <h2 className="section-title">Co-Scholastic Domains</h2>
+                        <table className="compact-table">
+                            <thead>
+                                <tr>
+                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                    <th style={{ width: '25%' }}>Term I</th>
+                                    <th style={{ width: '25%' }}>Term II</th>
+                                </tr>
+                            </thead>
+                            <tbody>
 
                                 {/* Performing Art - Dance */}
                                 <tr>

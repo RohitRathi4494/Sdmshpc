@@ -258,6 +258,19 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                         </tr>
                                     ))}
                                 </tbody>
+                                <tbody>
+                                    {/* Visual Art */}
+                                    <tr>
+                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Visual Art</td>
+                                    </tr>
+                                    {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
+                                        <tr key={skill}>
+                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
                             </table>
                         </div>
 
@@ -270,7 +283,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                         {/* CO-SCHOLASTIC DOMAINS */}
                         <div className="section">
                             <h2 className="section-title">Co-Scholastic Domains</h2>
-                            <table>
+                            <table className="compact-table">
                                 <thead>
                                     <tr>
                                         <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
@@ -279,18 +292,6 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                     </tr>
                                 </thead>
                                 <tbody>
-
-                                    {/* Visual Art */}
-                                    <tr>
-                                        <td colSpan={3} className="subject-header" style={{ fontWeight: 700, background: 'rgba(232, 241, 245, 0.4)', textAlign: 'center' }}>Visual Art</td>
-                                    </tr>
-                                    {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
-                                        <tr key={skill}>
-                                            <td style={{ textAlign: 'left', paddingLeft: '15px' }}>{skill}</td>
-                                            <td className="input-cell">{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                            <td className="input-cell">{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                        </tr>
-                                    ))}
 
                                     {/* Performing Art - Dance */}
                                     <tr>

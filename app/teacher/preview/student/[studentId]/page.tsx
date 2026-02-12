@@ -3,11 +3,99 @@
 
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
+import { ApiClient } from '@/app/lib/api-client';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 
 export default function ReportPreviewPage() {
     const params = useParams();
-    // ... (existing code) ...
+    const studentId = parseInt(params.studentId as string);
+    const [reportData, setReportData] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
+    const [generating, setGenerating] = useState(false);
+
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const token = localStorage.getItem('hpc_token') || undefined;
+                const report = await ApiClient.get<any>(`/reports/student/${studentId}?academic_year_id=1`, token);
+                setReportData(report);
+            } catch (error) {
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, [studentId]);
+
+    const handleGeneratePDF = async () => {
+        setGenerating(true);
+        try {
+            const token = localStorage.getItem('hpc_token') || undefined;
+            const response = await fetch(`/api/reports/student/${studentId}/pdf`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({ academic_year_id: 1 })
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'PDF generation failed');
+            }
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Report_Card_${studentId}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            window.URL.revokeObjectURL(url);
+            document.body.removeChild(a);
+
+        } catch (e: any) {
+            console.error(e);
+            alert(`Failed to generate PDF: ${e.message}`);
+        } finally {
+            setGenerating(false);
+        }
+    };
+
+    const router = useRouter();
+
+    if (loading || !reportData) return <div className="p-8 text-center">Loading preview...</div>;
+
+    // --- Helpers (Duplicated from Print Page for consistency) ---
+    const getScholasticScore = (subjectName: string, componentName: string, termName: string) => {
+        return reportData.scholastic?.find((s: any) =>
+            s.subject_name === subjectName &&
+            s.component_name === componentName &&
+            s.term_name === termName
+        );
+    };
+
+    const renderScoreCell = (subject: string, component: string, term: string) => {
+        const score = getScholasticScore(subject, component, term);
+        return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.grade || score?.marks || ''}</td>;
+    };
+
+    const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+    const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
+
+    const getCoScholastic = (subSkill: string, term: string) => {
+        return reportData.co_scholastic?.find((cs: any) => cs.sub_skill_name === subSkill && cs.term_name === term);
+    };
+
+    const getPersonality = (subSkill: string, term: string) => {
+        return reportData.co_scholastic?.find((cs: any) => cs.sub_skill_name === subSkill && cs.term_name === term);
+    };
+
+    const getRemark = (type: string) => {
+        return reportData.remarks?.find((r: any) => r.type_name === type)?.remark_text || '';
+    };
 
     return (
         <div className="bg-gray-100 min-h-screen p-8">

@@ -102,7 +102,7 @@ body {
 
 .info-row-split {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.5fr 1fr; /* Give more space to Roll No side */
     gap: 30px;
     margin-bottom: 15px;
 }
@@ -110,6 +110,14 @@ body {
 .info-row-half {
     display: grid;
     grid-template-columns: 220px 1fr; /* Match info-row label width for alignment */
+    gap: 15px;
+    align-items: center;
+    font-size: 1em;
+}
+
+.info-row-compact {
+    display: grid;
+    grid-template-columns: max-content 1fr; /* Auto width for specific labels like Adm No */
     gap: 15px;
     align-items: center;
     font-size: 1em;

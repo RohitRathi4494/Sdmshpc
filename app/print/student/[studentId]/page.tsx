@@ -108,7 +108,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                                         <div className="info-label">Roll No.:</div>
                                         <div className="info-input">{reportData.student?.roll_no}</div>
                                     </div>
-                                    <div className="info-row-half">
+                                    <div className="info-row-compact">
                                         <div className="info-label">Adm No.:</div>
                                         <div className="info-input">{reportData.student?.admission_no}</div>
                                     </div>

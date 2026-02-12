@@ -15,7 +15,7 @@ body {
     font-family: 'Work Sans', sans-serif;
     background: white;
     color: var(--text-dark);
-    line-height: 1.5; /* Increased for better filling */
+    line-height: 1.3; /* Tighter line height to save space */
     margin: 0;
     padding: 0;
     -webkit-print-color-adjust: exact;
@@ -23,10 +23,11 @@ body {
 }
 
 .container {
-    width: 210mm;
+    width: 100%; /* Auto width to fit printable area */
+    max-width: 100%;
     min-height: 297mm;
     margin: 0 auto;
-    padding: 0;
+    padding: 0; /* Let page margin handle spacing */
     box-sizing: border-box;
     background: white;
     overflow: hidden;
@@ -34,11 +35,10 @@ body {
 }
 
 /* Header Section */
-/* Header Section */
 .header {
     background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%) !important;
     color: white !important;
-    padding: 30px; /* Uniform padding */
+    padding: 20px; /* Reduced header padding */
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -50,12 +50,12 @@ body {
 
 /* Content Area */
 .content {
-    padding: 20px 30px 30px 30px; /* Top reduced slightly (header spacing), Right/Bottom/Left uniform 30px */
+    padding: 10px 0; /* Minimal vertical padding, no horizontal (margin handles it) */
     height: 100%;
 }
 
 .section {
-    margin-bottom: 20px; /* Reduced from 35px to fit Co-Scholastic on same page */
+    margin-bottom: 15px; /* Reduced section gap */
     page-break-inside: avoid;
 }
 
@@ -399,6 +399,6 @@ td.input-cell {
 
 @page {
     size: A4 portrait;
-    margin: 0;
+    margin: 0.5in; /* 12.7mm margin on all sides */
 }
 `;

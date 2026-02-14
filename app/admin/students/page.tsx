@@ -600,6 +600,19 @@ export default function StudentsPage() {
                     </div>
                 </div>
             )}
+            <Modal
+                isOpen={isAddModalOpen}
+                onClose={() => setIsAddModalOpen(false)}
+                title="Add New Student"
+            >
+                <EditStudentForm
+                    student={{}} // Empty for new student
+                    sections={sections} // Pass all sections (or could filter if class selected)
+                    academicYearId={academicYear?.id}
+                    onSave={handleCreateStudent}
+                    onCancel={() => setIsAddModalOpen(false)}
+                />
+            </Modal>
         </div>
     );
 }

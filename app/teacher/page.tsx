@@ -45,23 +45,48 @@ export default function TeacherDashboard() {
                                 </span>
                             </div>
 
-                            <div className="space-y-2">
-                                <p className="text-gray-500 text-sm">Select Section:</p>
-                                <div className="grid grid-cols-2 gap-2">
-                                    <button
-                                        onClick={() => router.push(`/teacher/students?class_id=${cls.id}`)}
-                                        className="col-span-2 text-center text-sm border border-blue-200 text-blue-600 py-1.5 rounded hover:bg-blue-50 transition"
-                                    >
-                                        All Students
-                                    </button>
-                                    {cls.sections?.map((sec: any) => (
+                            <div className="space-y-4">
+                                <div>
+                                    <p className="text-gray-500 text-sm mb-1">Enter Marks:</p>
+                                    <div className="grid grid-cols-2 gap-2">
                                         <button
-                                            key={sec.id}
-                                            onClick={() => router.push(`/teacher/students?class_id=${cls.id}&section_id=${sec.id}`)}
-                                            className="text-sm bg-gray-50 text-gray-700 py-1.5 rounded hover:bg-blue-600 hover:text-white transition"
+                                            onClick={() => router.push(`/teacher/students?class_id=${cls.id}`)}
+                                            className="col-span-2 text-center text-sm border border-blue-200 text-blue-600 py-1.5 rounded hover:bg-blue-50 transition"
                                         >
-                                            {sec.section_name}
+                                            All Students
                                         </button>
+                                        {cls.sections?.map((sec: any) => (
+                                            <button
+                                                key={sec.id}
+                                                onClick={() => router.push(`/teacher/students?class_id=${cls.id}&section_id=${sec.id}`)}
+                                                className="text-sm bg-gray-50 text-gray-700 py-1.5 rounded hover:bg-blue-600 hover:text-white transition"
+                                            >
+                                                {sec.section_name}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="pt-4 border-t border-gray-100">
+                                    <p className="text-gray-500 text-sm mb-2 font-medium">Cumulative Reports (Excel)</p>
+                                    {cls.sections?.map((sec: any) => (
+                                        <div key={sec.id} className="flex flex-col gap-2 mb-2 p-2 bg-gray-50 rounded">
+                                            <span className="text-xs text-gray-500 font-semibold">{sec.section_name} Section</span>
+                                            <div className="flex gap-2">
+                                                <button
+                                                    onClick={() => window.open(`/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}`, '_blank')}
+                                                    className="flex-1 text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
+                                                >
+                                                    Scholastic
+                                                </button>
+                                                <button
+                                                    onClick={() => window.open(`/api/reports/cumulative/co-scholastic?class_id=${cls.id}&section_id=${sec.id}`, '_blank')}
+                                                    className="flex-1 text-xs bg-teal-600 text-white py-1.5 rounded hover:bg-teal-700 transition"
+                                                >
+                                                    Co-Scholastic
+                                                </button>
+                                            </div>
+                                        </div>
                                     ))}
                                 </div>
                             </div>

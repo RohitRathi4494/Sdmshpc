@@ -24,7 +24,7 @@ export async function GET(req: NextRequest) {
 
         // 1. Fetch Students
         let studentQuery = `
-            SELECT s.id, s.admission_no, s.student_name, s.roll_no
+            SELECT s.id, s.admission_no, s.student_name, se.roll_no
             FROM students s
             JOIN student_enrollments se ON s.id = se.student_id
             WHERE se.class_id = $1 AND se.academic_year_id = $2
@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
             queryParams.push(sectionId);
         }
 
-        studentQuery += ` ORDER BY s.roll_no, s.student_name`;
+        studentQuery += ` ORDER BY se.roll_no, s.student_name`;
 
         const studentsRes = await db.query(studentQuery, queryParams);
         const students = studentsRes.rows;

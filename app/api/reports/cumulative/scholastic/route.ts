@@ -15,8 +15,9 @@ export async function GET(req: NextRequest) {
 
         const { searchParams } = new URL(req.url);
         const classId = searchParams.get('class_id');
-        const sectionId = searchParams.get('section_id'); // Optional, but usually needed for a sheet
-        const academicYearId = searchParams.get('academic_year_id') || 1; // Default to 1 if not provided
+        const sectionId = searchParams.get('section_id'); // Optional
+        const termNameParam = searchParams.get('term'); // Optional: 'Term I' or 'Term II'
+        const academicYearId = searchParams.get('academic_year_id') || 1;
 
         if (!classId) {
             return NextResponse.json({ error: 'Class ID is required' }, { status: 400 });
@@ -45,8 +46,8 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: 'No students found for this section' }, { status: 404 });
         }
 
-        // 2. Fetch Schema Data (Subjects, Terms, Components) to build fixed columns
-        // a. Subjects for this class
+        // 2. Fetch Schema Data
+        // a. Subjects
         const subjectsQuery = `
             SELECT sub.subject_name 
             FROM class_subjects cs
@@ -57,17 +58,26 @@ export async function GET(req: NextRequest) {
         const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId]);
         const subjects = subjectsRes.rows.map(r => r.subject_name);
 
-        // b. Terms
-        const termsRes = await db.query(`SELECT term_name FROM terms ORDER BY term_name`, []);
-        const terms = termsRes.rows.map(r => r.term_name);
+        // b. Terms (Filter if param provided)
+        let termsQuery = `SELECT term_name FROM terms ORDER BY term_name`;
+        let termsRes = await db.query(termsQuery, []);
+        let terms = termsRes.rows.map(r => r.term_name);
+
+        if (termNameParam) {
+            terms = terms.filter(t => t === termNameParam);
+        }
 
         // c. Components
-        const componentsRes = await db.query(`SELECT component_name FROM assessment_components ORDER BY id`, []);
-        const components = componentsRes.rows.map(r => r.component_name);
+        // We know the specific order and aliases required
+        const COMPONENT_MAP: any = {
+            'Periodic Assessment': 'PA',
+            'Subject Enrichment Activities': 'SEA',
+            'Internal Assessment': 'IA',
+            'Terminal Assessment': 'TA'
+        };
+        const COMPONENT_ORDER = ['Periodic Assessment', 'Subject Enrichment Activities', 'Internal Assessment', 'Terminal Assessment'];
 
-        // 3. Fetch All Scores for these students
-        // We need Subject, Term, Component, and Marks
-        // We also need to know the max marks for context, but maybe just marks is enough for the sheet.
+        // 3. Fetch Scores
         const scoresQuery = `
             SELECT 
                 ss.student_id,
@@ -87,62 +97,96 @@ export async function GET(req: NextRequest) {
         const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
         const scores = scoresRes.rows;
 
-        // 4. Generate Rigid Columns (Subject x Term x Component)
-        const sortedKeys: string[] = [];
+        // 4. Construct Excel Data (Array of Arrays)
+        // Headers:
+        // Row 0: Admission No | Roll No | Student Name | Subject 1 ............ | Subject 2 ............ |
+        // Row 1:              |         |              | Term 1 .... | Term 2 .... | Term 1 .... | Term 2 .... |
+        // Row 2:              |         |              | PA | SEA | VM | TA | PA ... | PA | SEA | VM | TA | PA ... |
+
+        const headerRow0 = ['Admission No', 'Roll No', 'Student Name'];
+        const headerRow1 = ['', '', ''];
+        const headerRow2 = ['', '', ''];
+
+        const merges: any[] = [
+            { s: { r: 0, c: 0 }, e: { r: 2, c: 0 } }, // Adm No
+            { s: { r: 0, c: 1 }, e: { r: 2, c: 1 } }, // Roll No
+            { s: { r: 0, c: 2 }, e: { r: 2, c: 2 } }, // Name
+        ];
+
+        let colIndex = 3;
+
         subjects.forEach(subj => {
+            // Subject Merge
+            const subjectStartCol = colIndex;
+
             terms.forEach(term => {
-                components.forEach(comp => {
-                    sortedKeys.push(`${subj}|${term}|${comp}`);
+                // Term Merge
+                const termStartCol = colIndex;
+
+                COMPONENT_ORDER.forEach(comp => {
+                    headerRow2.push(COMPONENT_MAP[comp] || comp);
+                    colIndex++;
+                });
+
+                // Add Term Header at start of its block
+                headerRow1[termStartCol] = term;
+                // Merge Term (4 columns per term)
+                merges.push({ s: { r: 1, c: termStartCol }, e: { r: 1, c: colIndex - 1 } });
+            });
+
+            // Add Subject Header at start of its block
+            headerRow0[subjectStartCol] = subj;
+            // Merge Subject (Terms * Components columns)
+            merges.push({ s: { r: 0, c: subjectStartCol }, e: { r: 0, c: colIndex - 1 } });
+        });
+
+        const aoaData = [headerRow0, headerRow1, headerRow2];
+
+        // 5. Add Student Data Rows
+        students.forEach(student => {
+            const row = [student.admission_no, student.roll_no, student.student_name];
+
+            subjects.forEach(subj => {
+                terms.forEach(term => {
+                    COMPONENT_ORDER.forEach(comp => {
+                        const scoreEntry = scores.find(s =>
+                            s.student_id === student.id &&
+                            s.subject_name === subj &&
+                            s.term_name === term &&
+                            s.component_name === comp
+                        );
+                        row.push(scoreEntry ? scoreEntry.marks : '');
+                    });
                 });
             });
+            aoaData.push(row);
         });
 
-        // 5. Build Rows
-        const data = students.map(student => {
-            const row: any = {
-                'Admission No': student.admission_no,
-                'Roll No': student.roll_no,
-                'Student Name': student.student_name
-            };
+        // 6. Generate Sheet
+        const worksheet = XLSX.utils.aoa_to_sheet(aoaData);
+        worksheet['!merges'] = merges;
 
-            sortedKeys.forEach(key => {
-                const [subj, term, comp] = key.split('|');
-                const scoreEntry = scores.find(s =>
-                    s.student_id === student.id &&
-                    s.subject_name === subj &&
-                    s.term_name === term &&
-                    s.component_name === comp
-                );
-
-                // Column Header format: "Math - Term I - Periodic"
-                const colName = `${subj} - ${term} - ${comp}`;
-                row[colName] = scoreEntry ? scoreEntry.marks : '';
-            });
-
-            return row;
-        });
-
-        // 5. Generate Excel
-        const worksheet = XLSX.utils.json_to_sheet(data);
-        const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Scholastic");
-
-        // Adjust column widths slightly
+        // Column Widths
         const wscols = [
-            { wch: 15 }, // Admission No
-            { wch: 10 }, // Roll No
-            { wch: 30 }, // Name
+            { wch: 12 }, // Adm
+            { wch: 8 },  // Roll
+            { wch: 25 }, // Name
         ];
-        // Add default width for dynamic columns
-        sortedKeys.forEach(() => wscols.push({ wch: 15 }));
+        // Add minimal width for data columns
+        for (let i = 3; i < colIndex; i++) {
+            wscols.push({ wch: 6 });
+        }
         worksheet['!cols'] = wscols;
 
-        const buf = XLSX.write(workbook, { type: "buffer", bookType: "xlsx" });
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, worksheet, "Scholastic");
+
+        const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
         return new NextResponse(buf, {
             status: 200,
             headers: {
-                'Content-Disposition': `attachment; filename="scholastic_report_${classId}_${sectionId || 'all'}.xlsx"`,
+                'Content-Disposition': `attachment; filename="scholastic_report_${classId}_${sectionId || 'all'}_${termNameParam || 'cumulative'}.xlsx"`,
                 'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
             },
         });

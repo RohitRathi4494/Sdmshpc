@@ -59,11 +59,27 @@ export default function TeacherDashboard() {
         }
     };
 
+    const [selectedTerm, setSelectedTerm] = useState<string>(''); // '' = Both, 'Term I', 'Term II'
+
     if (loading) return <div>Loading dashboard...</div>;
 
     return (
         <div className="max-w-4xl mx-auto">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">My Classes</h2>
+            <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-gray-800">My Classes</h2>
+                <div className="flex items-center gap-2">
+                    <label className="text-sm font-medium text-gray-700">Report Term:</label>
+                    <select
+                        value={selectedTerm}
+                        onChange={(e) => setSelectedTerm(e.target.value)}
+                        className="border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    >
+                        <option value="">Cumulative (Both Terms)</option>
+                        <option value="Term I">Term I</option>
+                        <option value="Term II">Term II</option>
+                    </select>
+                </div>
+            </div>
 
             {classes.length === 0 ? (
                 <div className="p-8 bg-white rounded-lg shadow text-center text-gray-500">
@@ -109,7 +125,13 @@ export default function TeacherDashboard() {
                                             <span className="text-xs text-gray-500 font-semibold">{sec.section_name} Section</span>
                                             <div className="flex gap-2">
                                                 <button
-                                                    onClick={() => handleDownload(`/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}`, `scholastic_${cls.class_name}_${sec.section_name}.xlsx`)}
+                                                    onClick={() => {
+                                                        const termParam = selectedTerm ? `&term=${encodeURIComponent(selectedTerm)}` : '';
+                                                        handleDownload(
+                                                            `/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}${termParam}`,
+                                                            `scholastic_${cls.class_name}_${sec.section_name}${selectedTerm ? '_' + selectedTerm.replace(' ', '') : ''}.xlsx`
+                                                        );
+                                                    }}
                                                     className="flex-1 text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
                                                 >
                                                     Scholastic

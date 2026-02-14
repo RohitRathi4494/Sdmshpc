@@ -45,7 +45,27 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: 'No students found for this section' }, { status: 404 });
         }
 
-        // 2. Fetch All Scores for these students
+        // 2. Fetch Schema Data (Subjects, Terms, Components) to build fixed columns
+        // a. Subjects for this class
+        const subjectsQuery = `
+            SELECT sub.subject_name 
+            FROM class_subjects cs
+            JOIN subjects sub ON cs.subject_id = sub.id
+            WHERE cs.class_id = $1 AND cs.academic_year_id = $2
+            ORDER BY sub.subject_name
+        `;
+        const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId]);
+        const subjects = subjectsRes.rows.map(r => r.subject_name);
+
+        // b. Terms
+        const termsRes = await db.query(`SELECT term_name FROM terms ORDER BY term_name`, []);
+        const terms = termsRes.rows.map(r => r.term_name);
+
+        // c. Components
+        const componentsRes = await db.query(`SELECT component_name FROM assessment_components ORDER BY id`, []);
+        const components = componentsRes.rows.map(r => r.component_name);
+
+        // 3. Fetch All Scores for these students
         // We need Subject, Term, Component, and Marks
         // We also need to know the max marks for context, but maybe just marks is enough for the sheet.
         const scoresQuery = `
@@ -67,40 +87,17 @@ export async function GET(req: NextRequest) {
         const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
         const scores = scoresRes.rows;
 
-        // 3. Pivot Data
-        // Structure: Student Info | Subject 1 - Term 1 - Comp 1 | Subject 1 - Term 1 - Comp 2 ...
-
-        // First, build a distinct list of columns based on the data found (or ideally all possible combinations)
-        // For a rigid report, we might want a fixed set, but dynamic based on data is safer for now.
-        // Let's gather all unique (Subject, Term, Component) tuples and sort them logically.
-
-        const uniqueColumns = new Set<string>();
-        const columnMap = new Map<string, any>(); // Key -> { subject, term, component }
-
-        scores.forEach(r => {
-            const key = `${r.subject_name}|${r.term_name}|${r.component_name}`;
-            uniqueColumns.add(key);
-            if (!columnMap.has(key)) {
-                columnMap.set(key, {
-                    subject: r.subject_name,
-                    term: r.term_name,
-                    component: r.component_name
+        // 4. Generate Rigid Columns (Subject x Term x Component)
+        const sortedKeys: string[] = [];
+        subjects.forEach(subj => {
+            terms.forEach(term => {
+                components.forEach(comp => {
+                    sortedKeys.push(`${subj}|${term}|${comp}`);
                 });
-            }
+            });
         });
 
-        // Sort columns: Subject -> Term -> Component (You might want a specific order for Terms/Components)
-        // Terms: Term I, Term II. Components: Periodic Assessment, Notebook, etc.
-        const sortedKeys = Array.from(uniqueColumns).sort((a, b) => {
-            const [s1, t1, c1] = a.split('|');
-            const [s2, t2, c2] = b.split('|');
-
-            if (s1 !== s2) return s1.localeCompare(s2);
-            if (t1 !== t2) return t1.localeCompare(t2); // Term I before Term II (alphabetical works for I vs II but lucky)
-            return c1.localeCompare(c2);
-        });
-
-        // 4. Build Rows
+        // 5. Build Rows
         const data = students.map(student => {
             const row: any = {
                 'Admission No': student.admission_no,

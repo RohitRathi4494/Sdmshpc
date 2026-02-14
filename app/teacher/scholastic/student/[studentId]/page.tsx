@@ -58,11 +58,56 @@ export default function ScholasticEntryPage() {
     const [scores, setScores] = useState<Record<string, ScholasticScore>>({});
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
-    const [saveError, setSaveError] = useState<string | null>(null); // Added state
+    const [saveError, setSaveError] = useState<string | null>(null);
+    const [fetchError, setFetchError] = useState<string | null>(null); // New state for fetch errors
     const [subjects, setSubjects] = useState<any[]>([]);
     const [components, setComponents] = useState<AssessmentComponent[]>([]);
 
     // ... (useEffect remains same) ...
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                setFetchError(null);
+                const token = localStorage.getItem('hpc_token') || undefined;
+
+                const [report, componentsData] = await Promise.all([
+                    ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=1`, token),
+                    ApiClient.get<AssessmentComponent[]>('/teacher/assessment-components', token)
+                ]);
+
+                // console.log('Components Data:', componentsData); // Debug log removed
+                setReportData(report);
+                setComponents(componentsData);
+
+                // Transform array to map for O(1) access
+                const scoreMap: Record<string, ScholasticScore> = {};
+                if (report.scholastic) {
+                    report.scholastic.forEach((s: any) => {
+                        const key = `${s.subject_id}-${s.component_id}-${s.term_id}`;
+                        scoreMap[key] = s;
+                    });
+                }
+                setScores(scoreMap);
+
+                // Use subjects from API
+                if (report.subjects && report.subjects.length > 0) {
+                    // sort to ensure consistent order (optional, API already sorts by name)
+                    setSubjects(report.subjects);
+                } else {
+                    // Fallback to hardcoded only if API returns nothing (legacy behavior)
+                    const subjectList = SUBJECTS_ORDER.map((name, idx) => ({ id: idx + 1, name }));
+                    setSubjects(subjectList);
+                }
+
+            } catch (error: any) {
+                console.error('Failed to load data', error);
+                setFetchError(error.message || 'Failed to load data. Please try refreshing.');
+            } finally {
+                setLoading(false);
+            }
+        };
+        loadData();
+    }, [studentId]);
 
     // Upsert Handler
     const handleScoreChange = useCallback(async (
@@ -113,7 +158,24 @@ export default function ScholasticEntryPage() {
         }
     }, [scores, studentId, components]);
 
-    if (loading || !reportData) return <div className="p-8 text-center">Loading assessment data...</div>;
+    if (loading) return <div className="p-8 text-center">Loading assessment data...</div>;
+
+    if (fetchError) {
+        return (
+            <div className="p-8 text-center text-red-600">
+                <p className="font-bold text-lg mb-2">Error Loading Data</p>
+                <p>{fetchError}</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
+
+    if (!reportData) return <div className="p-8 text-center text-red-600">Student data not found.</div>;
 
     return (
         <div className="max-w-full mx-auto">

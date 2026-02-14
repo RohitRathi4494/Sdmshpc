@@ -41,6 +41,10 @@ export async function GET(req: NextRequest) {
         const studentsRes = await db.query(studentQuery, queryParams);
         const students = studentsRes.rows;
 
+        if (students.length === 0) {
+            return NextResponse.json({ error: 'No students found for this section' }, { status: 404 });
+        }
+
         // 2. Fetch All Scores for these students
         // We need Subject, Term, Component, and Marks
         // We also need to know the max marks for context, but maybe just marks is enough for the sheet.
@@ -146,8 +150,11 @@ export async function GET(req: NextRequest) {
             },
         });
 
-    } catch (error) {
+    } catch (error: any) {
         console.error('Error generating scholastic report:', error);
-        return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+        return NextResponse.json({
+            error: error.message || 'Internal Server Error',
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        }, { status: 500 });
     }
 }

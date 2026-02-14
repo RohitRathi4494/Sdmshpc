@@ -47,15 +47,23 @@ export async function GET(req: NextRequest) {
         }
 
         // 2. Fetch Schema Data
+        // 2. Fetch Schema Data
         // a. Subjects
+        // We want subjects assigned to the class OR subjects that have marks for students in this class.
+        // This handles cases where data exists but the mapping might be missing or inactive.
         const subjectsQuery = `
-            SELECT sub.subject_name 
-            FROM class_subjects cs
-            JOIN subjects sub ON cs.subject_id = sub.id
-            WHERE cs.class_id = $1 AND cs.academic_year_id = $2
-            ORDER BY sub.subject_name
+            SELECT DISTINCT s.subject_name 
+            FROM subjects s
+            LEFT JOIN class_subjects cs ON s.id = cs.subject_id AND cs.class_id = $1 AND cs.academic_year_id = $2
+            LEFT JOIN scholastic_scores ss ON s.id = ss.subject_id AND ss.student_id = ANY($3) AND ss.academic_year_id = $2
+            WHERE cs.id IS NOT NULL OR ss.id IS NOT NULL
+            ORDER BY s.subject_name
         `;
-        const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId]);
+
+        // Need student IDs for the scores check
+        const studentIds = students.map(s => s.id);
+
+        const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId, studentIds]);
         const subjects = subjectsRes.rows.map(r => r.subject_name);
 
         // b. Terms (Filter if param provided)
@@ -93,7 +101,7 @@ export async function GET(req: NextRequest) {
             AND ss.academic_year_id = $2
         `;
 
-        const studentIds = students.map(s => s.id);
+
         const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
         const scores = scoresRes.rows;
 

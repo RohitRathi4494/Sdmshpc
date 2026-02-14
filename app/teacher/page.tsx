@@ -24,6 +24,41 @@ export default function TeacherDashboard() {
         fetchClasses();
     }, []);
 
+    const handleDownload = async (url: string, filename: string) => {
+        try {
+            const token = localStorage.getItem('hpc_token');
+            if (!token) {
+                alert('Please login again');
+                return;
+            }
+
+            const res = await fetch(url, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+
+            if (!res.ok) {
+                const err = await res.json();
+                alert(err.error || 'Download failed');
+                return;
+            }
+
+            const blob = await res.blob();
+            const downloadUrl = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = downloadUrl;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            window.URL.revokeObjectURL(downloadUrl);
+        } catch (error) {
+            console.error('Download error:', error);
+            alert('Failed to download report');
+        }
+    };
+
     if (loading) return <div>Loading dashboard...</div>;
 
     return (
@@ -74,13 +109,13 @@ export default function TeacherDashboard() {
                                             <span className="text-xs text-gray-500 font-semibold">{sec.section_name} Section</span>
                                             <div className="flex gap-2">
                                                 <button
-                                                    onClick={() => window.open(`/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}`, '_blank')}
+                                                    onClick={() => handleDownload(`/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}`, `scholastic_${cls.class_name}_${sec.section_name}.xlsx`)}
                                                     className="flex-1 text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
                                                 >
                                                     Scholastic
                                                 </button>
                                                 <button
-                                                    onClick={() => window.open(`/api/reports/cumulative/co-scholastic?class_id=${cls.id}&section_id=${sec.id}`, '_blank')}
+                                                    onClick={() => handleDownload(`/api/reports/cumulative/co-scholastic?class_id=${cls.id}&section_id=${sec.id}`, `co_scholastic_${cls.class_name}_${sec.section_name}.xlsx`)}
                                                     className="flex-1 text-xs bg-teal-600 text-white py-1.5 rounded hover:bg-teal-700 transition"
                                                 >
                                                     Co-Scholastic

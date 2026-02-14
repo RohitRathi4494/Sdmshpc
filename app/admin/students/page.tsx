@@ -507,6 +507,20 @@ export default function StudentsPage() {
 
             {activeTab === 'enroll' && (
                 <div className="space-y-6">
+                    {/* Add Single Student Header */}
+                    <div className="flex justify-between items-center bg-gray-50 p-4 rounded border border-gray-200">
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-800">Enrollment Actions</h3>
+                            <p className="text-sm text-gray-500">Add new students individually or enroll existing ones.</p>
+                        </div>
+                        <button
+                            onClick={() => setIsAddModalOpen(true)}
+                            className="bg-green-600 text-white px-4 py-2 rounded shadow hover:bg-green-700 text-sm font-medium flex items-center gap-2"
+                        >
+                            <span>+</span> Add Single Student
+                        </button>
+                    </div>
+
                     {/* Enrollment Controls */}
                     <div className="bg-white p-4 rounded shadow border border-gray-100 flex gap-4 items-end">
                         <div>

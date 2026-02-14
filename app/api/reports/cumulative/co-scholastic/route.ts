@@ -1,11 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import * as XLSX from 'xlsx';
-import { verifyAuth } from '@/app/lib/auth';
+import { extractToken, verifyAuth } from '@/app/lib/auth';
+
+export const dynamic = 'force-dynamic';
 
 export async function GET(req: NextRequest) {
     try {
-        const auth = await verifyAuth(req);
+        const token = extractToken(req.headers.get('Authorization'));
+        const auth = await verifyAuth(token);
         if (!auth) {
             return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
         }

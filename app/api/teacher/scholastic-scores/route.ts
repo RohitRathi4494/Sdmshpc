@@ -67,12 +67,18 @@ export async function POST(request: Request) {
                 // FALLBACK: The DB still requires a grade. Calculate and insert it.
                 console.warn('Database requires Grade. Switching to fallback insert with calculated grade.');
 
-                let grade = 'E'; // Default
+                let grade = 'NA'; // Default safe value
                 if (marks !== null && marks !== undefined) {
-                    const compRes = await db.query('SELECT max_marks FROM assessment_components WHERE id = $1', [component_id]);
-                    const maxMarks = compRes.rows[0]?.max_marks || 100;
-                    const percentage = (marks / maxMarks) * 100;
-                    grade = calculateGrade(percentage);
+                    try {
+                        const compRes = await db.query('SELECT max_marks FROM assessment_components WHERE id = $1', [component_id]);
+                        const maxMarks = compRes.rows[0]?.max_marks || 100;
+                        const percentage = (marks / maxMarks) * 100;
+                        grade = calculateGrade(percentage);
+                    } catch (e) {
+                        // If max_marks column is missing, just use NA. User doesn't want grades anyway.
+                        console.warn('Could not fetch max_marks for grade calculation, using NA:', e);
+                        grade = 'NA';
+                    }
                 } else {
                     grade = 'AB'; // Absent/Null
                 }

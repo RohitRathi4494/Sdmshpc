@@ -50,7 +50,8 @@ export default function ReportPreviewPage() {
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `Report_Card_${studentId}.pdf`;
+            const filename = `${reportData.student.student_name}_${reportData.student.class_name}_${reportData.student.section_name}.pdf`.replace(/[^a-zA-Z0-9._-]/g, '_');
+            a.download = filename;
             document.body.appendChild(a);
             a.click();
             window.URL.revokeObjectURL(url);

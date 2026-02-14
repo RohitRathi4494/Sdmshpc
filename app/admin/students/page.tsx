@@ -195,6 +195,7 @@ export default function StudentsPage() {
     const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
     const [enrolling, setEnrolling] = useState(false);
     const [editingStudent, setEditingStudent] = useState<any | null>(null);
+    const [isAddModalOpen, setIsAddModalOpen] = useState(false);
 
     // List View State
     const [filterClassId, setFilterClassId] = useState<number | null>(null);
@@ -294,6 +295,24 @@ export default function StudentsPage() {
             alert('Enrollment failed: ' + error.message);
         } finally {
             setEnrolling(false);
+        }
+    };
+
+    const handleCreateStudent = async (studentData: any) => {
+        if (!academicYear) return;
+        try {
+            const token = localStorage.getItem('hpc_token') || '';
+            await ApiClient.post('/admin/students', {
+                ...studentData,
+                academic_year_id: academicYear.id
+            }, token);
+
+            alert('Student added successfully!');
+            setIsAddModalOpen(false);
+            if (activeTab === 'enroll') fetchUnenrolled();
+            if (activeTab === 'list' && filterClassId) fetchEnrolled();
+        } catch (error: any) {
+            alert('Failed to add student: ' + error.message);
         }
     };
 

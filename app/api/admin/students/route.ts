@@ -63,9 +63,102 @@ export async function GET(request: Request) {
             data: rows,
         });
 
+        return NextResponse.json({
+            success: true,
+            data: rows,
+        });
+
     } catch (error: any) {
         return NextResponse.json(
             { success: false, error_code: 'DB_ERROR', message: error.message },
+            { status: 500 }
+        );
+    }
+}
+
+export async function POST(request: Request) {
+    try {
+        const token = extractToken(request.headers.get('Authorization'));
+        const user = await verifyAuth(token);
+
+        if (!user || user.role !== UserRole.ADMIN) {
+            return NextResponse.json(
+                { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
+                { status: 403 }
+            );
+        }
+
+        const body = await request.json();
+        const { admission_no, student_name, father_name, mother_name, dob, class_id, section_id, academic_year_id } = body;
+
+        if (!admission_no || !student_name || !father_name || !dob) {
+            return NextResponse.json(
+                { success: false, error_code: 'VALIDATION_ERROR', message: 'Missing required fields' },
+                { status: 400 }
+            );
+        }
+
+        const client = await db.pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            // 1. Insert Student
+            const insertStudentQuery = `
+                INSERT INTO students (admission_no, student_name, father_name, mother_name, dob)
+                VALUES ($1, $2, $3, $4, $5)
+                ON CONFLICT (admission_no) DO UPDATE 
+                SET student_name = EXCLUDED.student_name,
+                    father_name = EXCLUDED.father_name,
+                    mother_name = EXCLUDED.mother_name,
+                    dob = EXCLUDED.dob
+                RETURNING id;
+            `;
+            const studentRes = await client.query(insertStudentQuery, [
+                admission_no, student_name, father_name, mother_name, dob
+            ]);
+            const studentId = studentRes.rows[0].id;
+
+            // 2. Enroll if class/section provided
+            if (class_id && section_id && academic_year_id) {
+                const checkEnrollment = `
+                    SELECT id FROM student_enrollments 
+                    WHERE student_id = $1 AND academic_year_id = $2
+                `;
+                const existing = await client.query(checkEnrollment, [studentId, academicYearId]);
+
+                if (existing.rows.length > 0) {
+                    await client.query(`
+                        UPDATE student_enrollments
+                        SET class_id = $1, section_id = $2
+                        WHERE id = $3
+                    `, [class_id, section_id, existing.rows[0].id]);
+                } else {
+                    await client.query(`
+                        INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id)
+                        VALUES ($1, $2, $3, $4)
+                    `, [studentId, class_id, section_id, academic_year_id]);
+                }
+            }
+
+            await client.query('COMMIT');
+
+            return NextResponse.json({
+                success: true,
+                message: 'Student created/updated successfully',
+                data: { id: studentId }
+            });
+
+        } catch (e) {
+            await client.query('ROLLBACK');
+            throw e;
+        } finally {
+            client.release();
+        }
+
+    } catch (error: any) {
+        console.error('Create student error:', error);
+        return NextResponse.json(
+            { success: false, error_code: 'SERVER_ERROR', message: error.message },
             { status: 500 }
         );
     }

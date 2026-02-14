@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { getActiveAcademicYear } from '../lib/actions';
 
 export default async function AdminDashboard() {

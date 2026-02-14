@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ApiClient } from '@/app/lib/api-client';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 
 export default function StudentImporter({ onImportSuccess }: { onImportSuccess: () => void }) {
     const [file, setFile] = useState<File | null>(null);

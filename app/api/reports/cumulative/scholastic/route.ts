@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 import { extractToken, verifyAuth } from '@/app/lib/auth';
 
 export const dynamic = 'force-dynamic';
@@ -97,15 +97,44 @@ export async function GET(req: NextRequest) {
         const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
         const scores = scoresRes.rows;
 
-        // 4. Construct Excel Data (Array of Arrays)
-        // Headers:
-        // Row 0: Admission No | Roll No | Student Name | Subject 1 ............ | Subject 2 ............ |
-        // Row 1:              |         |              | Term 1 .... | Term 2 .... | Term 1 .... | Term 2 .... |
-        // Row 2:              |         |              | PA | SEA | VM | TA | PA ... | PA | SEA | VM | TA | PA ... |
+        // 4. Construct Excel Data & Styles
 
-        const headerRow0 = ['Admission No', 'Roll No', 'Student Name'];
-        const headerRow1 = ['', '', ''];
-        const headerRow2 = ['', '', ''];
+        // Define Styles
+        const headerStyle = {
+            font: { bold: true, sz: 11 },
+            alignment: { horizontal: "center", vertical: "center", wrapText: true },
+            border: {
+                top: { style: "thin" },
+                bottom: { style: "thin" },
+                left: { style: "thin" },
+                right: { style: "thin" }
+            },
+            fill: { fgColor: { rgb: "EFEFEF" } }
+        };
+
+        const cellStyle = {
+            alignment: { horizontal: "center", vertical: "center" },
+            border: {
+                top: { style: "thin" },
+                bottom: { style: "thin" },
+                left: { style: "thin" },
+                right: { style: "thin" }
+            }
+        };
+
+        // Helper to create a cell with style
+        const createCell = (value: any, style: any = cellStyle) => {
+            return { v: value, s: style, t: typeof value === 'number' ? 'n' : 's' };
+        };
+
+        // Build Headers with styles
+        // Note: xlsx-js-style uses a slightly different structure than arrays of strings when using full style control.
+        // It's safest to build the worksheet cell by cell or use aoa_to_sheet and then apply styles.
+        // Let's stick with aoa_to_sheet logic but construct the objects directly.
+
+        const headerRow0: any[] = [createCell('Admission No', headerStyle), createCell('Roll No', headerStyle), createCell('Student Name', headerStyle)];
+        const headerRow1: any[] = [createCell('', headerStyle), createCell('', headerStyle), createCell('', headerStyle)];
+        const headerRow2: any[] = [createCell('', headerStyle), createCell('', headerStyle), createCell('', headerStyle)];
 
         const merges: any[] = [
             { s: { r: 0, c: 0 }, e: { r: 2, c: 0 } }, // Adm No
@@ -116,35 +145,48 @@ export async function GET(req: NextRequest) {
         let colIndex = 3;
 
         subjects.forEach(subj => {
-            // Subject Merge
             const subjectStartCol = colIndex;
 
             terms.forEach(term => {
-                // Term Merge
                 const termStartCol = colIndex;
 
                 COMPONENT_ORDER.forEach(comp => {
-                    headerRow2.push(COMPONENT_MAP[comp] || comp);
+                    const label = COMPONENT_MAP[comp] || comp;
+                    headerRow2.push(createCell(label, headerStyle));
                     colIndex++;
                 });
 
                 // Add Term Header at start of its block
-                headerRow1[termStartCol] = term;
-                // Merge Term (4 columns per term)
+                headerRow1[termStartCol] = createCell(term, headerStyle);
+                // Fill empty cells for merge to carry style
+                for (let i = termStartCol + 1; i < colIndex; i++) {
+                    headerRow1[i] = createCell('', headerStyle);
+                }
                 merges.push({ s: { r: 1, c: termStartCol }, e: { r: 1, c: colIndex - 1 } });
             });
 
-            // Add Subject Header at start of its block
-            headerRow0[subjectStartCol] = subj;
-            // Merge Subject (Terms * Components columns)
+            // Add Subject Header
+            headerRow0[subjectStartCol] = createCell(subj, headerStyle);
+            // Fill empty cells for merge
+            for (let i = subjectStartCol + 1; i < colIndex; i++) {
+                headerRow0[i] = createCell('', headerStyle);
+            }
             merges.push({ s: { r: 0, c: subjectStartCol }, e: { r: 0, c: colIndex - 1 } });
         });
 
-        const aoaData = [headerRow0, headerRow1, headerRow2];
+        // Fill remaining empty cells in header rows to complete the rectangle for proper borders
+        for (let i = 3; i < colIndex; i++) {
+            if (!headerRow0[i]) headerRow0[i] = createCell('', headerStyle);
+            if (!headerRow1[i]) headerRow1[i] = createCell('', headerStyle);
+        }
 
-        // 5. Add Student Data Rows
+        const dataRows: any[] = [];
         students.forEach(student => {
-            const row = [student.admission_no, student.roll_no, student.student_name];
+            const row: any[] = [
+                createCell(student.admission_no),
+                createCell(student.roll_no),
+                createCell(student.student_name, { ...cellStyle, alignment: { horizontal: "left", vertical: "center" } }) // Align name left
+            ];
 
             subjects.forEach(subj => {
                 terms.forEach(term => {
@@ -155,22 +197,24 @@ export async function GET(req: NextRequest) {
                             s.term_name === term &&
                             s.component_name === comp
                         );
-                        row.push(scoreEntry ? scoreEntry.marks : '');
+                        row.push(createCell(scoreEntry ? scoreEntry.marks : ''));
                     });
                 });
             });
-            aoaData.push(row);
+            dataRows.push(row);
         });
 
         // 6. Generate Sheet
-        const worksheet = XLSX.utils.aoa_to_sheet(aoaData);
+        // aoa_to_sheet can accept cell objects if they have {v, t, s}
+        const wsData = [headerRow0, headerRow1, headerRow2, ...dataRows];
+        const worksheet = XLSX.utils.aoa_to_sheet(wsData);
         worksheet['!merges'] = merges;
 
         // Column Widths
         const wscols = [
             { wch: 12 }, // Adm
             { wch: 8 },  // Roll
-            { wch: 25 }, // Name
+            { wch: 30 }, // Name
         ];
         // Add minimal width for data columns
         for (let i = 3; i < colIndex; i++) {
@@ -181,6 +225,7 @@ export async function GET(req: NextRequest) {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, worksheet, "Scholastic");
 
+        // Write with styles
         const buf = XLSX.write(wb, { type: "buffer", bookType: "xlsx" });
 
         return new NextResponse(buf, {

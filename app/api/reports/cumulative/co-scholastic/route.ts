@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
-import * as XLSX from 'xlsx';
+import XLSX from 'xlsx-js-style';
 import { extractToken, verifyAuth } from '@/app/lib/auth';
 
 export const dynamic = 'force-dynamic';

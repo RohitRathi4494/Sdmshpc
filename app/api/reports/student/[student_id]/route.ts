@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import { verifyAuth, extractToken, UserRole } from '@/app/lib/auth'; // Everyone can view reports? Or valid roles.
 import { getStudentReportData } from '@/app/lib/report-service';
 
+export const dynamic = 'force-dynamic';
+
 export async function GET(request: Request, context: { params: Promise<{ student_id: string }> }) {
     try {
         const token = extractToken(request.headers.get('Authorization'));

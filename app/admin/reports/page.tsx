@@ -144,8 +144,7 @@ export default function ReportsPage() {
                                     <td className="px-6 py-3 text-gray-500">{student.father_name}</td>
                                     <td className="px-6 py-3 text-right space-x-2">
                                         <a
-                                            href={`/teacher/preview/student/${student.id}`}
-                                            target="_blank"
+                                            href={`/admin/reports/view/${student.id}`}
                                             className="inline-flex items-center px-3 py-1.5 border border-indigo-600 text-indigo-600 rounded text-xs font-medium hover:bg-indigo-50 transition-colors"
                                         >
                                             View Report

@@ -124,7 +124,7 @@ export async function POST(request: Request) {
                     SELECT id FROM student_enrollments 
                     WHERE student_id = $1 AND academic_year_id = $2
                 `;
-                const existing = await client.query(checkEnrollment, [studentId, academicYearId]);
+                const existing = await client.query(checkEnrollment, [studentId, academic_year_id]);
 
                 if (existing.rows.length > 0) {
                     await client.query(`

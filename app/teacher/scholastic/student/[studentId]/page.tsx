@@ -7,6 +7,7 @@ import { ApiClient } from '@/app/lib/api-client';
 // Types matching backend
 interface StudentReport {
     scholastic: any[];
+    subjects?: any[]; // Added
     student: {
         id: number;
         student_name: string;
@@ -85,9 +86,15 @@ export default function ScholasticEntryPage() {
                 }
                 setScores(scoreMap);
 
-                // Mock Subjects based on schema
-                const subjectList = SUBJECTS_ORDER.map((name, idx) => ({ id: idx + 1, name }));
-                setSubjects(subjectList);
+                // Use subjects from API
+                if (report.subjects && report.subjects.length > 0) {
+                    // sort to ensure consistent order (optional, API already sorts by name)
+                    setSubjects(report.subjects);
+                } else {
+                    // Fallback to hardcoded only if API returns nothing (legacy behavior)
+                    const subjectList = SUBJECTS_ORDER.map((name, idx) => ({ id: idx + 1, name }));
+                    setSubjects(subjectList);
+                }
 
             } catch (error) {
                 console.error('Failed to load data', error);
@@ -194,7 +201,7 @@ export default function ScholasticEntryPage() {
                         {subjects.map(subject => (
                             <tr key={subject.id} className="hover:bg-gray-50">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r sticky left-0 bg-white z-10">
-                                    {subject.name}
+                                    {subject.subject_name || subject.name}
                                 </td>
                                 {components.map(comp => (
                                     <React.Fragment key={comp.id}>

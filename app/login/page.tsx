@@ -20,7 +20,9 @@ function LoginForm() {
             case 'admin': return 'Admin Login';
             case 'teacher': return 'Teacher Login';
             case 'office': return 'Office Admin Login';
-            case 'parent': return 'Parent Portal Login';
+            case 'parent':
+                router.push('/parent/login'); // Redirect to specific parent login
+                return 'Parent Portal Login';
             default: return 'Sign In';
         }
     };

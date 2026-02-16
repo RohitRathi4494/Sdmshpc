@@ -17,8 +17,9 @@ export async function POST(request: Request) {
         }
 
         // 1. Find student by admission_no
+        // Fetch DOB as stringDDMMYYYY to avoid timezone issues with Date objects
         const result = await db.query(
-            `SELECT id, student_name, dob FROM students WHERE admission_no = $1`,
+            `SELECT id, student_name, TO_CHAR(dob, 'DDMMYYYY') as dob_str FROM students WHERE admission_no = $1`,
             [admission_no]
         );
 
@@ -32,16 +33,10 @@ export async function POST(request: Request) {
         const student = result.rows[0];
 
         // 2. Validate DOB
-        // Stored DOB is a Date object. Format it to DDMMYYYY to compare.
-        const storedDob = new Date(student.dob);
-        const day = String(storedDob.getDate()).padStart(2, '0');
-        const month = String(storedDob.getMonth() + 1).padStart(2, '0');
-        const year = storedDob.getFullYear();
-        const formattedStoredDob = `${day}${month}${year}`;
-
-        if (formattedStoredDob !== dob) {
+        // Direct string comparison
+        if (student.dob_str !== dob) {
             return NextResponse.json(
-                { success: false, message: 'Invalid credentials' },
+                { success: false, message: 'Invalid DOB' }, // More specific for debugging, or keep generic 'Invalid credentials'
                 { status: 401 }
             );
         }

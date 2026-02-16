@@ -38,7 +38,7 @@ export default function Home() {
             description: 'Student Progress',
             icon: '👨‍👩‍👧‍👦',
             color: 'bg-purple-600',
-            path: '/login?role=parent'
+            path: '/parent/login'
         }
     ];
 

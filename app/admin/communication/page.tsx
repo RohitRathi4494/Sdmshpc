@@ -41,7 +41,10 @@ export default function CommunicationPage() {
 
     const fetchClasses = async () => {
         try {
-            const res = await fetch('/api/admin/classes'); // Using existing API
+            const token = localStorage.getItem('hpc_token');
+            const res = await fetch('/api/admin/classes', {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (res.ok) {
                 const data = await res.json();
                 setClasses(data.data || []);
@@ -55,7 +58,7 @@ export default function CommunicationPage() {
         setLoading(true);
         try {
             const res = await fetch('/api/notices/sent', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hpc_token')}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -77,7 +80,7 @@ export default function CommunicationPage() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('hpc_token');
             const recipients = [];
 
             if (recipientType === 'CLASS') {

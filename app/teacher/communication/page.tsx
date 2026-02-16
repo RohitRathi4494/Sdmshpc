@@ -46,7 +46,7 @@ export default function CommunicationPage() {
         try {
             // Teacher needs to see classes they are assigned to
             const res = await fetch('/api/teacher/classes', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hpc_token')}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -75,7 +75,7 @@ export default function CommunicationPage() {
         setLoading(true);
         try {
             const res = await fetch('/api/notices/sent', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
+                headers: { 'Authorization': `Bearer ${localStorage.getItem('hpc_token')}` }
             });
             if (res.ok) {
                 const data = await res.json();
@@ -103,7 +103,7 @@ export default function CommunicationPage() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('token');
+            const token = localStorage.getItem('hpc_token');
             const recipients = [];
 
             if (recipientType === 'CLASS') {

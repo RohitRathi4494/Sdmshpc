@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
+import ChangePasswordModal from '../components/auth/ChangePasswordModal';
 
 const ACCESS_TOKEN_KEY = 'hpc_token';
 const USER_ROLE_KEY = 'hpc_role';
@@ -12,6 +13,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const pathname = usePathname();
     const router = useRouter();
     const [authorized, setAuthorized] = useState(false);
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     useEffect(() => {
         const token = localStorage.getItem(ACCESS_TOKEN_KEY);
@@ -59,6 +61,13 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                             {isSidebarOpen && <span>{item.label}</span>}
                         </Link>
                     ))}
+                    <button
+                        onClick={() => setIsPasswordModalOpen(true)}
+                        className={`flex items-center p-3 rounded-lg hover:bg-gray-800 text-gray-300 transition-colors w-full text-left`}
+                    >
+                        <span className="text-xl mr-3">🔒</span>
+                        {isSidebarOpen && <span>Change Password</span>}
+                    </button>
                 </nav>
                 <div className="p-4">
                     <button
@@ -94,6 +103,11 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                     {children}
                 </div>
             </main>
+
+            <ChangePasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+            />
         </div>
     );
 }

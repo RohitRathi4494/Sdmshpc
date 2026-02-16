@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { getActiveAcademicYear } from '../lib/actions';
+import ChangePasswordModal from '../components/auth/ChangePasswordModal';
 
 // Mock Auth Context for this implementation since we don't have full Auth Provider
 // In real app, this wraps the app.
@@ -15,6 +16,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     const [academicYear, setAcademicYear] = useState('...');
     const pathname = usePathname();
     const router = useRouter();
+    const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     useEffect(() => {
         const fetchYear = async () => {
@@ -66,6 +68,13 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                             {isSidebarOpen && <span>{item.label}</span>}
                         </Link>
                     ))}
+                    <button
+                        onClick={() => setIsPasswordModalOpen(true)}
+                        className={`flex items-center p-3 rounded-lg hover:bg-blue-50 text-gray-700 transition-colors w-full text-left`}
+                    >
+                        <span className="text-xl mr-3">🔒</span>
+                        {isSidebarOpen && <span>Change Password</span>}
+                    </button>
                 </nav>
                 <div className="absolute bottom-0 w-full p-4 border-t">
                     <button
@@ -98,6 +107,11 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                     {children}
                 </div>
             </main>
+
+            <ChangePasswordModal
+                isOpen={isPasswordModalOpen}
+                onClose={() => setIsPasswordModalOpen(false)}
+            />
         </div>
     );
 }

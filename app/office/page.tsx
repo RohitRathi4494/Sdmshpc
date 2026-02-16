@@ -1,6 +1,8 @@
 import Link from 'next/link';
 import { db } from '@/app/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 async function getStats() {
     try {
         // We can fetch fee stats here later

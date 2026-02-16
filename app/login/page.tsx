@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
-export default function LoginPage() {
+function LoginForm() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const roleParam = searchParams.get('role');
@@ -83,92 +83,100 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100">
-            <div className="bg-white p-8 rounded-lg shadow-md w-96">
-                <div className="flex flex-col items-center mb-6">
-                    <div className="relative w-24 h-24 mb-4">
-                        <Image
-                            src="/school_logo.png"
-                            alt="School Logo"
-                            fill
-                            className="object-contain"
-                            priority
-                        />
-                    </div>
-                    <h1 className="text-2xl font-bold text-blue-700">SDMS EduPulse</h1>
-                    <p className="text-gray-500 font-medium mt-2">{getRoleTitle()}</p>
+        <div className="bg-white p-8 rounded-lg shadow-md w-96">
+            <div className="flex flex-col items-center mb-6">
+                <div className="relative w-24 h-24 mb-4">
+                    <Image
+                        src="/school_logo.png"
+                        alt="School Logo"
+                        fill
+                        className="object-contain"
+                        priority
+                    />
                 </div>
-
-                {error && (
-                    <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
-                        {error}
-                    </div>
-                )}
-
-                <form onSubmit={handleLogin} className="space-y-6">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Username
-                        </label>
-                        <input
-                            type="text"
-                            required
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter username"
-                        />
-                    </div>
-
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Password
-                        </label>
-                        <input
-                            type="password"
-                            required
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            placeholder="Enter password"
-                        />
-                    </div>
-
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''
-                            }`}
-                    >
-                        {loading ? 'Signing in...' : 'Sign In'}
-                    </button>
-
-                    <div className="text-center mt-4">
-                        <button
-                            type="button"
-                            onClick={() => router.push('/')}
-                            className="text-sm text-gray-500 hover:text-gray-700 hover:underline"
-                        >
-                            ← Back to Home
-                        </button>
-                    </div>
-                </form>
-
-                <div className="mt-6 text-center text-sm text-gray-500 border-t pt-4">
-                    {roleParam === 'admin' && (
-                        <>
-                            <p>Default Admin Credentials:</p>
-                            <p>admin / admin</p>
-                        </>
-                    )}
-                    {roleParam === 'office' && (
-                        <>
-                            <p>Default Office Credentials:</p>
-                            <p>office / office123</p>
-                        </>
-                    )}
-                </div>
+                <h1 className="text-2xl font-bold text-blue-700">SDMS EduPulse</h1>
+                <p className="text-gray-500 font-medium mt-2">{getRoleTitle()}</p>
             </div>
+
+            {error && (
+                <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4 text-sm">
+                    {error}
+                </div>
+            )}
+
+            <form onSubmit={handleLogin} className="space-y-6">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Username
+                    </label>
+                    <input
+                        type="text"
+                        required
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter username"
+                    />
+                </div>
+
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Password
+                    </label>
+                    <input
+                        type="password"
+                        required
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        placeholder="Enter password"
+                    />
+                </div>
+
+                <button
+                    type="submit"
+                    disabled={loading}
+                    className={`w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors ${loading ? 'opacity-50 cursor-not-allowed' : ''
+                        }`}
+                >
+                    {loading ? 'Signing in...' : 'Sign In'}
+                </button>
+
+                <div className="text-center mt-4">
+                    <button
+                        type="button"
+                        onClick={() => router.push('/')}
+                        className="text-sm text-gray-500 hover:text-gray-700 hover:underline"
+                    >
+                        ← Back to Home
+                    </button>
+                </div>
+            </form>
+
+            <div className="mt-6 text-center text-sm text-gray-500 border-t pt-4">
+                {roleParam === 'admin' && (
+                    <>
+                        <p>Default Admin Credentials:</p>
+                        <p>admin / admin</p>
+                    </>
+                )}
+                {roleParam === 'office' && (
+                    <>
+                        <p>Default Office Credentials:</p>
+                        <p>office / office123</p>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <div className="min-h-screen flex items-center justify-center bg-gray-100">
+            <Suspense fallback={<div className="text-center">Loading...</div>}>
+                <LoginForm />
+            </Suspense>
         </div>
     );
 }

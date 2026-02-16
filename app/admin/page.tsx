@@ -2,6 +2,8 @@ import Link from 'next/link';
 import { getActiveAcademicYear } from '../lib/actions';
 import { db } from '@/app/lib/db';
 
+export const dynamic = 'force-dynamic';
+
 async function getDashboardStats() {
     try {
         const studentRes = await db.query('SELECT COUNT(*) FROM students');

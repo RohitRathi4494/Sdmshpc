@@ -1,16 +1,41 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
 export default function LoginPage() {
     const router = useRouter();
+    const searchParams = useSearchParams();
+    const roleParam = searchParams.get('role');
+
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // Contextual Title
+    const getRoleTitle = () => {
+        switch (roleParam?.toLowerCase()) {
+            case 'admin': return 'Admin Login';
+            case 'teacher': return 'Teacher Login';
+            case 'office': return 'Office Admin Login';
+            case 'parent': return 'Parent Portal Login';
+            default: return 'Sign In';
+        }
+    };
+
+    useEffect(() => {
+        // Check if already logged in
+        const token = localStorage.getItem('hpc_token');
+        const role = localStorage.getItem('hpc_role');
+        if (token && role) {
+            if (role === 'ADMIN') router.push('/admin');
+            else if (role === 'OFFICE') router.push('/office');
+            else if (role === 'TEACHER') router.push('/teacher');
+            else if (role === 'PARENT') router.push('/parent');
+        }
+    }, []);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -35,12 +60,19 @@ export default function LoginPage() {
             // Login Successful
             localStorage.setItem('hpc_token', data.token);
             localStorage.setItem('hpc_role', data.role);
+            localStorage.setItem('hpc_user', JSON.stringify(data.user)); // Store user info if useful
 
             // Redirect based on role
             if (data.role === 'ADMIN') {
-                router.push('/admin'); // Assuming admin route exists or will exist
-            } else {
+                router.push('/admin');
+            } else if (data.role === 'OFFICE') {
+                router.push('/office');
+            } else if (data.role === 'TEACHER') {
                 router.push('/teacher');
+            } else if (data.role === 'PARENT') {
+                router.push('/parent'); // Assuming parent route
+            } else {
+                router.push('/admin'); // Fallback
             }
 
         } catch (err: any) {
@@ -64,6 +96,7 @@ export default function LoginPage() {
                         />
                     </div>
                     <h1 className="text-2xl font-bold text-blue-700">SDMS EduPulse</h1>
+                    <p className="text-gray-500 font-medium mt-2">{getRoleTitle()}</p>
                 </div>
 
                 {error && (
@@ -113,18 +146,27 @@ export default function LoginPage() {
                     <div className="text-center mt-4">
                         <button
                             type="button"
-                            onClick={() => alert('Please contact the School Administrator to reset your password.')}
-                            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                            onClick={() => router.push('/')}
+                            className="text-sm text-gray-500 hover:text-gray-700 hover:underline"
                         >
-                            Forgot Password?
+                            ← Back to Home
                         </button>
                     </div>
                 </form>
 
-                <div className="mt-6 text-center text-sm text-gray-500">
-                    <p>Default Admin Credentials:</p>
-                    <p>Username: admin</p>
-                    <p>Password: admin</p>
+                <div className="mt-6 text-center text-sm text-gray-500 border-t pt-4">
+                    {roleParam === 'admin' && (
+                        <>
+                            <p>Default Admin Credentials:</p>
+                            <p>admin / admin</p>
+                        </>
+                    )}
+                    {roleParam === 'office' && (
+                        <>
+                            <p>Default Office Credentials:</p>
+                            <p>office / office123</p>
+                        </>
+                    )}
                 </div>
             </div>
         </div>

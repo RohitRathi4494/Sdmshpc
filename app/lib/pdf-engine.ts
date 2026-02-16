@@ -1,15 +1,12 @@
 
 import puppeteer from 'puppeteer-core';
 
-export async function generatePdf(studentId: number, academicYearId: number): Promise<Buffer> {
+
+export async function generatePagePdf(targetUrl: string): Promise<Buffer> {
     let browser;
     try {
         if (process.env.NODE_ENV === 'production') {
             const chromium = require('@sparticuz/chromium');
-
-            // Optional: Load custom fonts if needed
-            // await chromium.font('https://raw.githack.com/googlefonts/noto-emoji/main/fonts/NotoColorEmoji.ttf');
-
             browser = await puppeteer.launch({
                 args: chromium.args,
                 defaultViewport: chromium.defaultViewport,
@@ -18,7 +15,6 @@ export async function generatePdf(studentId: number, academicYearId: number): Pr
                 ignoreHTTPSErrors: true,
             } as any);
         } else {
-            // Local Development
             const localPuppeteer = require('puppeteer');
             browser = await localPuppeteer.launch({
                 headless: true,
@@ -27,40 +23,29 @@ export async function generatePdf(studentId: number, academicYearId: number): Pr
         }
 
         const page = await browser.newPage();
+        console.log(`Generating PDF for URL: ${targetUrl}`);
 
-        // Pass Internal Token
-        const token = process.env.PDF_INTERNAL_TOKEN || 'default_secret'; // Fallback for safety
-
-        // BETTER logic for Base URL
-        const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-        const url = `${baseUrl}/print/student/${studentId}?token=${token}&academic_year_id=${academicYearId}`;
-
-        console.log(`Generating PDF for URL: ${url}`);
-
-        await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 }); // Increased timeout
+        await page.goto(targetUrl, { waitUntil: 'networkidle0', timeout: 60000 });
 
         const pdfBuffer = await page.pdf({
             format: 'A4',
             printBackground: true,
-            margin: {
-                top: '0mm',
-                right: '0mm',
-                bottom: '0mm',
-                left: '0mm'
-            }
+            margin: { top: '0mm', right: '0mm', bottom: '0mm', left: '0mm' }
         });
 
         return Buffer.from(pdfBuffer);
     } catch (error) {
         console.error("PDF Engine Error Detail:", error);
-        if (error instanceof Error) {
-            console.error("Message:", error.message);
-            console.error("Stack:", error.stack);
-        }
         throw error;
     } finally {
-        if (browser) {
-            await browser.close();
-        }
+        if (browser) await browser.close();
     }
 }
+
+export async function generatePdf(studentId: number, academicYearId: number): Promise<Buffer> {
+    const token = process.env.PDF_INTERNAL_TOKEN || 'default_secret';
+    const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+    const url = `${baseUrl}/print/student/${studentId}?token=${token}&academic_year_id=${academicYearId}`;
+    return generatePagePdf(url);
+}
+

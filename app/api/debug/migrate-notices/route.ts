@@ -37,9 +37,18 @@ export async function GET() {
         `);
         console.log('Created index on notice_recipients.');
 
+        // 4. Verify Tables
+        const verify = await db.query(`
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+            AND table_name IN ('notices', 'notice_recipients');
+        `);
+
         return NextResponse.json({
             success: true,
-            message: 'Successfully created notices and notice_recipients tables.'
+            message: 'Successfully created tables.',
+            tables_found: verify.rows.map(r => r.table_name)
         });
 
     } catch (error: any) {

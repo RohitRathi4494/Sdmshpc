@@ -5,6 +5,7 @@ const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'default-s
 export enum UserRole {
     ADMIN = 'ADMIN',
     TEACHER = 'TEACHER',
+    PARENT = 'PARENT', // Added for Parent Portal
     VIEW_ONLY = 'VIEW_ONLY',
 }
 

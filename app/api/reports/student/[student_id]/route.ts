@@ -15,8 +15,6 @@ export async function GET(request: Request, context: { params: Promise<{ student
                 { status: 401 }
             );
         }
-        // Access control: Admin, Teacher, or the specific student (if View Only user matches student_id? tricky without users table mapping).
-        // For now, allow authorized roles.
 
         const { searchParams } = new URL(request.url);
         const academic_year_id = searchParams.get('academic_year_id');
@@ -38,6 +36,18 @@ export async function GET(request: Request, context: { params: Promise<{ student
                 { status: 400 }
             );
         }
+
+        // Access Control
+        if (user.role === UserRole.PARENT) {
+            // Parent can only view their own child's report
+            if (parseInt(user.user_id) !== student_id) {
+                return NextResponse.json(
+                    { success: false, error_code: 'FORBIDDEN', message: 'You can only view your own child\'s report' },
+                    { status: 403 }
+                );
+            }
+        }
+        // Teachers and Admins can view any (or we could restrict Teachers to their classes, but for now open)
 
         const reportData = await getStudentReportData(student_id, parseInt(academic_year_id, 10));
 

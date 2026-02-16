@@ -24,12 +24,12 @@ export default function ParentReportPage() {
             try {
                 const token = localStorage.getItem('hpc_parent_token');
                 if (!token) {
+                    console.log("No token, redirecting");
                     router.push('/parent/login');
                     return;
                 }
 
-                // 1. Get Student ID from 'GET /api/parent/student' first (or extract from token if we could, but API is safer)
-                // Actually, let's just use the /api/parent/student to get the ID and active year.
+                // 1. Get Student Session
                 const studentRes = await fetch('/api/parent/student', {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
@@ -39,8 +39,14 @@ export default function ParentReportPage() {
                 }
 
                 const studentData = await studentRes.json();
-                const studentId = studentData.data.student.id;
-                const yearId = studentData.data.academicYear.id;
+                console.log("Student Data Fetched:", studentData);
+
+                const studentId = studentData?.data?.student?.id;
+                const yearId = studentData?.data?.academicYear?.id;
+
+                if (!studentId || !yearId) {
+                    throw new Error("Missing student or year data");
+                }
 
                 // 2. Fetch Report Data
                 const reportRes = await fetch(`/api/reports/student/${studentId}?academic_year_id=${yearId}`, {
@@ -53,9 +59,16 @@ export default function ParentReportPage() {
                 }
 
                 const reportJson = await reportRes.json();
+                console.log("Report Data Fetched:", reportJson);
+
+                if (!reportJson.data) {
+                    throw new Error("Report data is empty");
+                }
+
                 setReportData(reportJson.data);
 
             } catch (err: any) {
+                console.error("Error fetching report:", err);
                 setError(err.message);
             } finally {
                 setLoading(false);

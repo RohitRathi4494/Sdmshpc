@@ -12,111 +12,71 @@ export const PRINT_STYLES = `
 }
 
 @page {
-    size: A4;
-    margin: 0.10in; /* 0.25 inch margins */
-}
-
-:root {
-    --primary-navy: #1a3a52;
-    --secondary-blue: #2c5f7f;
-    --accent-gold: #c9a961;
-    --light-cream: #fdfbf7;
-    --border-grey: #d4d4d4;
-    --text-dark: #2d2d2d;
+    size: A4 portrait;
+    margin: 0.25in;
 }
 
 body {
     font-family: 'Work Sans', sans-serif;
-    background: white;
     color: var(--text-dark);
     line-height: 1.3;
-    margin: 0;
-    padding: 0;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
 }
 
-.container {
-    width: 100%;
-    max-width: 100%;
-    min-height: 297mm;
-    margin: 0 auto;
-    padding: 0;
-    box-sizing: border-box;
-    background: white;
-    overflow: hidden;
-    position: relative;
-}
-
-/* Header Section */
 /* Header Section */
 .header {
     background: linear-gradient(135deg, var(--primary-navy) 0%, var(--secondary-blue) 100%) !important;
     color: white !important;
-    padding: 15px; /* Compact padding */
-    position: relative;
-    overflow: hidden;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    padding: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     gap: 15px;
-    text-align: center; /* Center align text */
+    text-align: center;
 }
 
 .header-logo {
-    height: 90px;
+    height: 80px;
     width: auto;
-    background: transparent;
-    padding: 0;
-    border-radius: 0;
-    box-shadow: none;
 }
 
 .header-text {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Center align text blocks */
+    align-items: center;
 }
 
 .header h1 {
     font-family: 'Crimson Pro', serif;
-    font-size: 2em; /* Reduced to fit one line */
+    font-size: 1.8em;
     font-weight: 700;
     margin: 0;
     line-height: 1.1;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    color: white !important;
 }
 
 .subtitle {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.6em; /* Slightly reduced */
+    font-size: 1.4em;
     margin-top: 5px;
     font-weight: 600;
-    opacity: 0.9;
+    color: rgba(255, 255, 255, 0.9) !important;
 }
 
-/* ... */
-
-/* Content Area */
-.content {
-    padding: 5px 0; /* Minimal vertical padding */
-    height: 100%;
-}
-
+/* Section Styling */
 .section {
-    margin-bottom: 10px; /* Reduced section gap */
+    margin-bottom: 20px;
     page-break-inside: avoid;
 }
 
 .section-title {
     font-family: 'Crimson Pro', serif;
-    font-size: 1.4em; /* Slightly smaller */
+    font-size: 1.4em;
     font-weight: 700;
     color: var(--primary-navy) !important;
-    margin-bottom: 10px; /* Reduced margin */
+    margin-bottom: 15px;
     padding-bottom: 5px;
     border-bottom: 2px solid var(--accent-gold) !important;
     display: flex;
@@ -131,211 +91,130 @@ body {
     background: var(--accent-gold) !important;
     border-radius: 3px;
     display: inline-block;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
 }
 
 /* General Information */
 .info-grid {
     background: white;
-    padding: 15px; /* Reduced padding */
-    border: 2px solid var(--border-grey);
+    padding: 15px;
+    border: 1px solid var(--border-grey);
     border-radius: 8px;
 }
 
-.info-row {
+.info-row, .info-row-half {
     display: grid;
-    grid-template-columns: 220px 1fr;
-    margin-bottom: 8px; /* Compact spacing */
+    grid-template-columns: 200px 1fr;
+    margin-bottom: 10px;
     align-items: center;
-    gap: 10px;
-    font-size: 1em;
+    gap: 15px;
 }
 
 .info-row-split {
     display: grid;
-    grid-template-columns: 1.5fr 1fr;
+    grid-template-columns: 1fr 1fr;
     gap: 20px;
-    margin-bottom: 8px; /* Compact spacing */
-}
-
-.info-row-half {
-    display: grid;
-    grid-template-columns: 220px 1fr; /* Match info-row label width for alignment */
-    gap: 15px;
-    align-items: center;
-    font-size: 1em;
+    margin-bottom: 10px;
 }
 
 .info-row-compact {
     display: grid;
-    grid-template-columns: max-content 1fr; /* Auto width for specific labels like Adm No */
+    grid-template-columns: max-content 1fr;
     gap: 15px;
     align-items: center;
-    font-size: 1em;
 }
 
 .info-label {
     font-weight: 600;
     color: var(--secondary-blue) !important;
-    font-size: 1.05em;
 }
 
 .info-input {
     border: 1px solid var(--border-grey);
     border-radius: 4px;
-    padding: 8px 12px;
-    min-height: 40px; /* Taller input boxes */
+    padding: 6px 10px;
+    min-height: 36px;
     background: rgba(232, 241, 245, 0.1);
     display: flex;
     align-items: center;
-    font-size: 1.1em;
 }
 
 /* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-bottom: 25px;
-    font-size: 0.9em; /* Standard readable size */
-    box-shadow: none;
-}
-
-/* Specific compact style for huge attendance table */
-.attendance-table {
-    font-size: 0.85em !important; /* Increased from 0.75em */
-    table-layout: fixed;
-    width: 100%;
-}
-
-.attendance-table th, 
-.attendance-table td {
-    padding: 4px 2px !important; /* Slightly increased padding */
-    overflow: hidden;
-    white-space: nowrap;
-}
-
-.attendance-table td:first-child {
-    white-space: normal !important; /* Allow wrapping for row headers */
-    line-height: 1.1;
-    padding: 4px 5px !important;
-    text-align: left;
-}
-
-.attendance-table .input-cell {
-    min-width: auto !important;
-}
-
-thead {
-    background: var(--primary-navy) !important;
-    color: white !important;
-    -webkit-print-color-adjust: exact;
-    print-color-adjust: exact;
+    margin-bottom: 15px;
+    font-size: 0.9em;
 }
 
 th {
-    padding: 10px 8px; /* Comfortable padding */
-    text-align: center;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    border: 1px solid #000;
+    background: var(--primary-navy) !important;
     color: white !important;
-    font-size: 1em;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #1a3a52;
 }
 
 td {
-    padding: 8px 6px; /* Comfortable padding */
+    padding: 8px;
     border: 1px solid var(--border-grey);
-    background: white;
     text-align: center;
-    vertical-align: middle;
-}
-
-.compact-table {
-    /* Font size standard */
-}
-
-.compact-table td, 
-.compact-table th {
-    padding: 4px 4px !important; /* Adjusted to 4px as requested */
-    height: auto !important;
-    /* Border inherits from glboal td */
-}
-
-.compact-section {
-    margin-bottom: 10px !important; /* Tighter section spacing */
 }
 
 td.subject-name {
-    font-weight: 600;
-    color: var(--primary-navy) !important;
     text-align: left;
+    font-weight: 600;
+    color: var(--primary-navy);
     padding-left: 15px;
-    font-size: 1em;
 }
 
-td.input-cell {
-    min-width: 50px;
-    text-align: center;
-    font-weight: 500;
-    font-size: 1.1em;
+/* Attendance Table */
+.attendance-table th, .attendance-table td {
+    padding: 4px !important;
+    font-size: 0.85em;
 }
 
-/* Unified Table Styles for Co-Scholastic & Personality */
+/* Co-Scholastic & Personality */
 .subject-header {
     background-color: var(--light-cream) !important;
     color: var(--primary-navy) !important;
     font-weight: 700;
     text-align: center;
     padding: 8px !important;
-    border-bottom: 2px solid var(--accent-gold);
 }
 
-/* Remove obsolete grid/card styles for these sections if no longer used */
-/* But keeping generic table styles as they apply to the new tables */
+.compact-table td, .compact-table th {
+    padding: 5px !important;
+}
 
-/* Feedback Sections */
+/* Feedback Section */
 .feedback-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 25px;
-    margin-bottom: 25px;
+    gap: 20px;
 }
 
 .feedback-card {
-    border: 2px solid var(--secondary-blue) !important;
+    border: 1px solid var(--secondary-blue);
     border-radius: 8px;
-    padding: 20px;
-    background: white;
-    break-inside: avoid;
+    padding: 15px;
 }
 
 .feedback-card h3 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.4em;
-    color: var(--primary-navy) !important;
-    margin: 0 0 15px 0;
+    color: var(--primary-navy);
+    margin-top: 0;
+    border-bottom: 1px solid var(--border-grey);
+    padding-bottom: 10px;
 }
 
 .feedback-row {
     display: grid;
-    grid-template-columns: 180px 1fr;
-    margin-bottom: 12px;
-    align-items: start;
-    font-size: 0.95em;
-}
-
-.feedback-label {
-    font-weight: 600;
-    color: var(--secondary-blue) !important;
-    padding: 6px 0;
+    grid-template-columns: 200px 1fr;
+    gap: 15px;
+    margin-bottom: 10px;
 }
 
 .feedback-input {
-    border: 1px solid var(--border-grey);
-    border-radius: 4px;
-    padding: 6px 10px;
-    min-height: 35px;
+    min-height: 40px;
     background: white;
 }
 
@@ -344,77 +223,54 @@ td.input-cell {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: 20px;
-    margin-top: 30px;
-    padding-top: 30px;
+    margin-top: 40px;
+    padding-top: 20px;
     border-top: 2px solid var(--border-grey);
-    page-break-inside: avoid;
 }
 
 .signature-box {
     text-align: center;
-    padding: 10px 5px;
 }
 
 .signature-line {
-    height: 50px;
     border-bottom: 2px solid var(--text-dark);
-    margin-bottom: 8px;
+    height: 40px;
+    margin-bottom: 5px;
 }
 
 .signature-label {
-    font-size: 0.9em;
     font-weight: 600;
-    color: var(--secondary-blue) !important;
+    font-size: 0.9em;
+    color: var(--secondary-blue);
 }
 
-/* Grading Framework */
 /* Grading Framework */
 .grading-section {
-    background: white;
-    padding: 15px; /* Reduced padding */
+    border: 1px solid var(--border-grey);
+    padding: 15px;
     border-radius: 8px;
-    margin-top: 15px; /* Reduced margin */
-    border: 2px solid var(--border-grey);
-    page-break-inside: avoid;
-    height: 100%; /* Ensure full height usage if needed */
-}
-
-.grading-section h3 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.3em; /* Slightly smaller */
-    color: var(--primary-navy) !important;
-    margin-bottom: 10px; /* Reduced margin */
-    text-align: center;
 }
 
 .grading-grid {
     display: grid;
-    grid-template-columns: 60px 100px 1fr;
-    gap: 0; /* Remove gap for collapse effect */
-    border: 1px solid var(--text-dark); /* Outer border */
-    margin-bottom: 15px;
-    font-size: 0.85em;
+    grid-template-columns: 60px 120px 1fr;
+    border: 1px solid var(--text-dark);
 }
 
 .grading-cell {
-    padding: 5px 8px;
-    background: white;
+    padding: 8px;
+    border-right: 1px solid var(--text-dark);
+    border-bottom: 1px solid var(--text-dark);
     display: flex;
     align-items: center;
     justify-content: center;
-    border-bottom: 1px solid var(--text-dark); /* Inner borders */
-    border-right: 1px solid var(--text-dark);
+    text-align: center;
 }
 
 .grading-cell:nth-child(3n) {
-    justify-content: flex-start;
+    border-right: none;
     text-align: left;
-    border-right: none; /* No right border for last column */
-}
-
-/* Remove bottom border for last row */
-.grading-grid > :nth-last-child(-n+3) {
-    border-bottom: none;
+    justify-content: flex-start;
 }
 
 .grading-header {
@@ -423,107 +279,21 @@ td.input-cell {
     font-weight: 700;
 }
 
-.grade-label, .grade-range {
-    font-weight: 600;
-    color: var(--primary-navy) !important;
-}
-
-/* Evaluation Levels */
-.evaluation-wrapper {
-    display: grid;
-    grid-template-columns: 1fr; /* Stack vertically */
-    gap: 15px; /* Reduced gap */
-}
-
-.evaluation-box {
-    margin-bottom: 5px;
-}
-
-.evaluation-levels h4 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.1em;
-    font-weight: 700;
-    color: var(--primary-navy) !important;
-    margin-bottom: 5px; /* Compact margin */
-    border-bottom: 2px solid var(--accent-gold);
-    padding-bottom: 2px;
-}
-
-.level-item {
-    display: grid;
-    grid-template-columns: 30px 1fr;
-    gap: 10px;
-    margin-bottom: 4px; /* Very compact item spacing */
-    font-size: 0.9em; /* Standard font size */
-    align-items: start;
-}
-
-.level-label {
-    font-weight: 700;
-    color: var(--secondary-blue) !important;
-    text-align: center;
-}
-    font-weight: 600;
-    text-align: center;
-    padding: 8px; /* Reduced padding */
-}
-
 .grade-label {
     font-weight: 700;
-    color: var(--primary-navy) !important;
-    text-align: center;
-    font-size: 1.1em;
+    color: var(--primary-navy);
 }
 
-.grade-range {
-    font-weight: 600;
-    color: var(--secondary-blue) !important;
-    text-align: center;
-}
-
-/* Evaluation Wrapper for Side-by-Side */
-.evaluation-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    margin-top: 10px;
-}
-
-.evaluation-levels {
-    font-size: 0.85em; /* Smaller font */
-}
-
-.evaluation-levels h4 {
-    font-family: 'Crimson Pro', serif;
-    font-size: 1.1em;
-    color: var(--primary-navy) !important;
-    margin-bottom: 8px; 
-    border-bottom: 1px solid #eee;
-    padding-bottom: 5px;
-}
-
-.level-item {
-    display: grid;
-    grid-template-columns: 40px 1fr; /* Tighter label column */
-    gap: 10px;
-    padding: 6px; /* Compact padding */
-    margin-bottom: 5px; /* Reduced margin */
-    background: white;
-    border-left: 4px solid var(--accent-gold) !important;
-    border-radius: 4px;
-    page-break-inside: avoid;
-}
-
-.level-label {
-    font-weight: 700;
-    font-size: 1.2em;
-    color: var(--primary-navy) !important;
-    text-align: center;
-    align-self: center;
-}
-
-@page {
-    size: A4 portrait;
-    margin: 0.5in; /* 12.7mm margin on all sides */
+/* Print Specifics */
+@media print {
+    body {
+        -webkit-print-color-adjust: exact;
+    }
+    .no-print {
+        display: none !important;
+    }
+    .page-break {
+        page-break-before: always;
+    }
 }
 `;

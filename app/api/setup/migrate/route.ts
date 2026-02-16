@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
+import bcrypt from 'bcryptjs';
 
 // This is a temporary endpoint to run migrations on Vercel
 export const dynamic = 'force-dynamic';
@@ -8,7 +9,7 @@ export async function GET() {
     try {
         console.log('Starting Migration via API...');
 
-        // 0. Update User Roles Constraint
+        // 0. Update User Roles Constraint to allow OFFICE role
         try {
             await db.query(`
                 ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
@@ -83,9 +84,9 @@ export async function GET() {
             `, [head]);
         }
 
-        // 6. Seed OFFICE User
-        // Hash for 'office123'
-        const passwordHash = '$2b$10$KrTjANQr2CM4ilZ6/K/pD.nc.bG0PIpLdhGh7.w1UhHFxGwsN9s7K';
+        // 6. Seed OFFICE User with Dynamic Hashing
+        const passwordPlain = 'office123';
+        const passwordHash = await bcrypt.hash(passwordPlain, 10);
 
         await db.query(`
             INSERT INTO users (username, password_hash, full_name, role, is_active)
@@ -93,7 +94,16 @@ export async function GET() {
             ON CONFLICT (username) DO UPDATE SET password_hash = $2, role = $4, is_active = $5
         `, ['office', passwordHash, 'School Office', 'OFFICE', true]);
 
-        return NextResponse.json({ success: true, message: 'Migration and Seeding Completed Successfully.' });
+        // Verify immediately
+        const verifyUser = await db.query('SELECT password_hash FROM users WHERE username = $1', ['office']);
+        const isMatch = await bcrypt.compare(passwordPlain, verifyUser.rows[0].password_hash);
+
+        return NextResponse.json({
+            success: true,
+            message: 'Migration and Seeding Completed Successfully.',
+            verification: isMatch ? 'Password verified internally' : 'Password verification failed internally',
+            generated_hash: passwordHash // Optional: for debugging
+        });
 
     } catch (error: any) {
         console.error('Migration failed:', error);

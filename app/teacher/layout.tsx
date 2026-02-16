@@ -43,6 +43,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     const navItems = [
         { label: 'Dashboard', href: '/teacher', icon: '🏠' },
         { label: 'Student List', href: '/teacher/students', icon: '👨‍🎓' },
+        { label: 'Communication', href: '/teacher/communication', icon: '📢' },
         // Specific assessment links might depend on selected student, 
         // so sidebar mostly gives access to high level lists.
     ];

@@ -50,14 +50,14 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     return (
         <div className="flex h-screen bg-gray-100">
             {/* Sidebar */}
-            <aside className={`bg-white shadow-md transition-all duration-300 ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
-                <div className="p-4 flex items-center justify-between border-b">
+            <aside className={`bg-white shadow-md transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
+                <div className="p-4 flex items-center justify-between border-b shrink-0">
                     <h1 className={`font-bold text-xl text-blue-600 ${!isSidebarOpen && 'hidden'}`}>SDMS EduPulse Teacher</h1>
                     <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-gray-100 rounded">
                         {isSidebarOpen ? '◀' : '▶'}
                     </button>
                 </div>
-                <nav className="p-4 space-y-2">
+                <nav className="p-4 space-y-2 flex-1 overflow-y-auto">
                     {navItems.map((item) => (
                         <Link
                             key={item.href}
@@ -76,7 +76,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                         {isSidebarOpen && <span>Change Password</span>}
                     </button>
                 </nav>
-                <div className="absolute bottom-0 w-full p-4 border-t">
+                <div className="p-4 border-t shrink-0">
                     <button
                         onClick={() => {
                             localStorage.removeItem(ACCESS_TOKEN_KEY);

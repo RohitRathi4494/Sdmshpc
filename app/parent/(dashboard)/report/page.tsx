@@ -452,15 +452,8 @@ export default function ParentReportPage() {
                         </div>
                     </div>
 
-                    {/* SIGNATURE SECTION */}
-                    <div className="signature-section">
-                        {['Class Teacher', 'Parents', 'Block Incharge', 'Vice Principal', 'Principal'].map(role => (
-                            <div className="signature-box" key={role}>
-                                <div className="signature-line"></div>
-                                <div className="signature-label">{role}</div>
-                            </div>
-                        ))}
-                    </div>
+                    {/* SIGNATURE SECTION - REMOVED FOR PARENT VIEW */}
+
 
                     {/* GRADING FRAMEWORK */}
                     <div className="grading-section">

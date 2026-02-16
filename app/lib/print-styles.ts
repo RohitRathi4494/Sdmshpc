@@ -151,12 +151,12 @@ th {
     color: white !important;
     padding: 10px;
     text-align: center;
-    border: 1px solid #1a3a52;
+    border: 1px solid #000; /* Darker border */
 }
 
 td {
     padding: 8px;
-    border: 1px solid var(--border-grey);
+    border: 1px solid #000; /* Darker border */
     text-align: center;
 }
 

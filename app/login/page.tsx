@@ -109,6 +109,16 @@ export default function LoginPage() {
                     >
                         {loading ? 'Signing in...' : 'Sign In'}
                     </button>
+
+                    <div className="text-center mt-4">
+                        <button
+                            type="button"
+                            onClick={() => alert('Please contact the School Administrator to reset your password.')}
+                            className="text-sm text-blue-600 hover:text-blue-800 hover:underline"
+                        >
+                            Forgot Password?
+                        </button>
+                    </div>
                 </form>
 
                 <div className="mt-6 text-center text-sm text-gray-500">

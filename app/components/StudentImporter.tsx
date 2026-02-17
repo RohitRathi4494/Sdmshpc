@@ -47,24 +47,27 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                     const parsed = [];
                     for (let i = 0; i < rows.length; i++) {
                         const row: any = rows[i];
-                        // Skip empty rows
                         if (!row || row.length === 0) continue;
 
-                        // Expect at least 5 columns, but now we want 7
-                        // Format: admission_no, student_name, father_name, mother_name, dob, class_name, section_name
+                        // Expected Columns (Index based for simplicity, but header mapping would be better in future)
+                        // 0: admission_no, 1: student_name, 2: father_name, 3: mother_name, 4: dob, 5: class, 6: section
+                        // 7: admission_date, 8: gender, 9: blood_group, 10: address, 11: phone_no, 12: emergency_no
+                        // 13: category, 14: aadhar_no, 15: ppp_id, 16: apaar_id
+
                         if (row.length >= 5) {
                             let dob = row[4];
-                            // Handle Excel Date Objects
                             if (dob instanceof Date) {
-                                // Convert to YYYY-MM-DD, adjusting for timezone / extracting date part
-                                // toISOString() uses UTC. Excel dates are typically local 00:00:00.
-                                // Safe-ish way for date-only:
-                                const year = dob.getFullYear();
-                                const month = String(dob.getMonth() + 1).padStart(2, '0');
-                                const day = String(dob.getDate()).padStart(2, '0');
-                                dob = `${year}-${month}-${day}`;
+                                dob = dob.toISOString().split('T')[0];
                             } else {
                                 dob = String(dob || '').trim();
+                            }
+
+                            // Admission Date (Optional)
+                            let admission_date = row[7];
+                            if (admission_date instanceof Date) {
+                                admission_date = admission_date.toISOString().split('T')[0];
+                            } else {
+                                admission_date = String(admission_date || '').trim();
                             }
 
                             parsed.push({
@@ -74,7 +77,23 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                                 mother_name: String(row[3] || '').trim(),
                                 dob: dob,
                                 class_name: row[5] ? String(row[5]).trim() : '',
-                                section_name: row[6] ? String(row[6]).trim() : ''
+                                section_name: row[6] ? String(row[6]).trim() : '',
+                                // New Fields
+                                admission_date: admission_date,
+                                gender: String(row[8] || 'Male').trim(),
+                                blood_group: String(row[9] || '').trim(),
+                                address: String(row[10] || '').trim(),
+                                phone_no: String(row[11] || '').trim(),
+                                emergency_no: String(row[12] || '').trim(),
+                                category: String(row[13] || 'General').trim(),
+                                aadhar_no: String(row[14] || '').trim(),
+                                ppp_id: String(row[15] || '').trim(),
+                                apaar_id: String(row[16] || '').trim(),
+                                srn_no: String(row[17] || '').trim(),
+                                board_roll_x: String(row[18] || '').trim(),
+                                board_roll_xii: String(row[19] || '').trim(),
+                                education_reg_no: String(row[20] || '').trim(),
+                                student_code: String(row[21] || '').trim(), // New field for import
                             });
                         }
                     }
@@ -149,13 +168,39 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
         }
     };
 
+    const handleDownloadSample = () => {
+        const headers = [
+            'admission_no', 'student_name', 'father_name', 'mother_name', 'dob (YYYY-MM-DD)',
+            'class', 'section', 'admission_date (YYYY-MM-DD)', 'gender', 'blood_group',
+            'address', 'phone_no', 'emergency_no', 'category',
+            'aadhar_no', 'ppp_id', 'apaar_id', 'srn_no',
+            'board_roll_x', 'board_roll_xii', 'education_reg_no', 'student_code'
+        ];
+
+        const ws = XLSX.utils.aoa_to_sheet([headers]);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Students");
+        XLSX.writeFile(wb, "student_import_sample.xlsx");
+    };
+
     return (
         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-            <h3 className="text-lg font-semibold mb-4">Import Students via Excel/CSV</h3>
+            <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Import Students via Excel/CSV</h3>
+                <button
+                    onClick={handleDownloadSample}
+                    className="text-sm bg-gray-100 text-gray-700 px-3 py-1.5 rounded hover:bg-gray-200 border border-gray-300 flex items-center gap-2"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                    </svg>
+                    Download Sample Template
+                </button>
+            </div>
 
             <div className="mb-6">
                 <p className="text-sm text-gray-500 mb-2">
-                    Format: <code>admission_no, student_name, father_name, mother_name, dob, class_name, section_name</code>
+                    Format: <code>admission_no, student_name, father, mother, dob, class, section, adm_date, gender, blood, address, phone, emergency, category, aadhar, ppp, apaar, srn, roll_x, roll_xii, reg_no, student_code</code>
                 </p>
                 <input
                     type="file"

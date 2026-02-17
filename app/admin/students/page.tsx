@@ -1,158 +1,12 @@
 'use client';
 
+
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
 import StudentImporter from '@/app/components/StudentImporter';
 import Modal from '@/app/components/ui/Modal';
-
-// --- Edit Form Component ---
-interface Student {
-    id: number;
-    admission_no: string;
-    student_name: string;
-    father_name: string;
-    mother_name?: string;
-    dob?: string;
-}
-
-// --- Edit Form Component ---
-function EditStudentForm({ student, sections, academicYearId, onSave, onCancel }: any) {
-    const [formData, setFormData] = useState({
-        student_name: student.student_name || '',
-        father_name: student.father_name || '',
-        mother_name: student.mother_name || '',
-        dob: student.dob ? new Date(student.dob).toISOString().split('T')[0] : '',
-        admission_no: student.admission_no || '',
-        roll_no: student.roll_no || '',
-        section_id: student.section_id || '',
-        academic_year_id: academicYearId
-    });
-
-    const handleChange = (e: any) => {
-        const value = e.target.type === 'number' ? parseInt(e.target.value) : e.target.value;
-        setFormData({ ...formData, [e.target.name]: value });
-    };
-
-    const handleSubmit = (e: React.FormEvent) => {
-        e.preventDefault();
-        onSave(formData);
-    };
-
-    return (
-        <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Student Name</label>
-                    <input
-                        type="text"
-                        name="student_name"
-                        value={formData.student_name}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Admission No</label>
-                    <input
-                        type="text"
-                        name="admission_no"
-                        value={formData.admission_no}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                        required
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Father Name</label>
-                    <input
-                        type="text"
-                        name="father_name"
-                        value={formData.father_name}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Mother Name</label>
-                    <input
-                        type="text"
-                        name="mother_name"
-                        value={formData.mother_name}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                    />
-                </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Date of Birth</label>
-                    <input
-                        type="date"
-                        name="dob"
-                        value={formData.dob}
-                        onChange={handleChange}
-                        className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                    />
-                </div>
-            </div>
-
-            <div className="border-t pt-4 mt-4">
-                <h4 className="text-sm font-semibold text-gray-500 mb-2 uppercase">Enrollment Details</h4>
-                <div className="grid grid-cols-2 gap-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Section</label>
-                        <select
-                            name="section_id"
-                            value={formData.section_id}
-                            onChange={handleChange}
-                            className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                        >
-                            <option value="">Select Section</option>
-                            {sections.map((s: any) => (
-                                <option key={s.id} value={s.id}>{s.section_name}</option>
-                            ))}
-                        </select>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Roll No</label>
-                        <input
-                            type="number"
-                            name="roll_no"
-                            value={formData.roll_no}
-                            onChange={handleChange}
-                            className="mt-1 block w-full border border-gray-300 rounded px-3 py-2"
-                        />
-                    </div>
-                </div>
-            </div>
-
-            <div className="flex justify-end gap-3 mt-6">
-                <button
-                    type="button"
-                    onClick={onCancel}
-                    className="px-4 py-2 text-gray-700 bg-gray-100 rounded hover:bg-gray-200"
-                >
-                    Cancel
-                </button>
-                <button
-                    type="submit"
-                    className="px-4 py-2 text-white bg-indigo-600 rounded hover:bg-indigo-700"
-                >
-                    Save Changes
-                </button>
-            </div>
-        </form>
-    );
-}
-
-
+import StudentForm from '@/app/components/StudentForm';
 
 // Types
 interface Student {
@@ -160,6 +14,9 @@ interface Student {
     admission_no: string;
     student_name: string;
     father_name: string;
+    mother_name?: string;
+    dob?: string;
+    // ... other fields are optional in list view
 }
 
 interface ClassData {
@@ -302,8 +159,14 @@ export default function StudentsPage() {
         if (!academicYear) return;
         try {
             const token = localStorage.getItem('hpc_token') || '';
+
+            // StudentForm returns proper types, but we might need to attach academic_year_id
             await ApiClient.post('/admin/students', {
                 ...studentData,
+                // Ensure class_id is derived from section_id if not present? 
+                // Wait, POST /admin/students expects class_id. 
+                // If we select section in form, we must find class.
+                class_id: sections.find(s => s.id === studentData.section_id)?.class_id,
                 academic_year_id: academicYear.id
             }, token);
 
@@ -483,11 +346,13 @@ export default function StudentsPage() {
                 isOpen={!!editingStudent}
                 onClose={() => setEditingStudent(null)}
                 title="Edit Student Details"
+                maxWidth="max-w-4xl"
             >
                 {editingStudent && (
-                    <EditStudentForm
+                    <StudentForm
                         student={editingStudent}
-                        sections={activeTab === 'list' && filterClassId ? sections.filter(s => s.class_id === filterClassId) : []}
+                        classes={classes}
+                        sections={sections}
                         academicYearId={academicYear?.id}
                         onSave={async (updatedData: any) => {
                             try {
@@ -604,10 +469,12 @@ export default function StudentsPage() {
                 isOpen={isAddModalOpen}
                 onClose={() => setIsAddModalOpen(false)}
                 title="Add New Student"
+                maxWidth="max-w-4xl"
             >
-                <EditStudentForm
+                <StudentForm
                     student={{}} // Empty for new student
-                    sections={sections} // Pass all sections (or could filter if class selected)
+                    classes={classes}
+                    sections={sections} // Pass all sections
                     academicYearId={academicYear?.id}
                     onSave={handleCreateStudent}
                     onCancel={() => setIsAddModalOpen(false)}

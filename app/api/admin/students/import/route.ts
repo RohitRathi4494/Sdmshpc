@@ -35,16 +35,33 @@ function normalizeDate(dateStr: string): string | null {
     return null;
 }
 
+
 const studentImportSchema = z.object({
     action: z.enum(['preview', 'confirm']),
     data: z.array(z.object({
         admission_no: z.string().min(1),
         student_name: z.string().min(1),
         father_name: z.string().min(1),
-        mother_name: z.string().min(1),
+        mother_name: z.string().optional(),
         dob: z.string().min(1),
         class_name: z.string().min(1),
         section_name: z.string().min(1),
+        // New Fields (Optional or Required based on business logic, making most optional for import flexibility)
+        admission_date: z.string().optional(),
+        gender: z.string().optional(),
+        blood_group: z.string().optional(),
+        address: z.string().optional(),
+        phone_no: z.string().optional(),
+        emergency_no: z.string().optional(),
+        category: z.string().optional(),
+        aadhar_no: z.string().optional(),
+        ppp_id: z.string().optional(),
+        apaar_id: z.string().optional(),
+        srn_no: z.string().optional(),
+        board_roll_x: z.string().optional(),
+        board_roll_xii: z.string().optional(),
+        education_reg_no: z.string().optional(),
+        student_code: z.string().optional(),
     })),
 });
 
@@ -66,7 +83,8 @@ export async function POST(request: Request) {
         if (body.data && Array.isArray(body.data)) {
             body.data = body.data.map((row: any) => ({
                 ...row,
-                dob: normalizeDate(row.dob) || row.dob // Try to normalize, else keep original for validation failure
+                dob: normalizeDate(row.dob) || row.dob,
+                admission_date: normalizeDate(row.admission_date) || row.admission_date
             }));
         }
 
@@ -110,7 +128,7 @@ export async function POST(request: Request) {
 
             // 1. Validate Date
             if (!/^\d{4}-\d{2}-\d{2}$/.test(row.dob)) {
-                rowError = 'Invalid Date Format';
+                rowError = 'Invalid DOB Format (YYYY-MM-DD)';
             }
 
             // 2. Validate Class & Section
@@ -177,9 +195,22 @@ export async function POST(request: Request) {
 
                 for (const row of validData) {
                     // 1. Insert Student
-                    const studentRes = await client.query(
-                        'INSERT INTO students (admission_no, student_name, father_name, mother_name, dob) VALUES ($1, $2, $3, $4, $5) RETURNING id',
-                        [row.admission_no, row.student_name, row.father_name, row.mother_name, row.dob]
+                    // Handle optional types
+                    const admissionDate = row.admission_date ? new Date(row.admission_date) : new Date();
+
+                    const studentRes = await client.query(`
+                        INSERT INTO students 
+                        (admission_no, student_name, father_name, mother_name, dob, admission_date, 
+                         blood_group, gender, address, phone_no, emergency_no, category, 
+                         aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no, student_code) 
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) 
+                        RETURNING id`,
+                        [
+                            row.admission_no, row.student_name, row.father_name, row.mother_name || '', row.dob, admissionDate,
+                            row.blood_group || '', row.gender || 'Male', row.address || '', row.phone_no || '', row.emergency_no || '', row.category || 'General',
+                            row.aadhar_no || '', row.ppp_id || '', row.apaar_id || '', row.srn_no || '', row.board_roll_x || '', row.board_roll_xii || '', row.education_reg_no || '',
+                            row.student_code || '' // Use imported code or empty (maybe trigger DB default if we had one, but we don't. empty string ok?)
+                        ]
                     );
                     const studentId = studentRes.rows[0].id;
 

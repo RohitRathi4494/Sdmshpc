@@ -7,7 +7,7 @@ export async function GET(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || user.role !== UserRole.ADMIN) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }
@@ -35,7 +35,7 @@ export async function POST(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || user.role !== UserRole.ADMIN) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }

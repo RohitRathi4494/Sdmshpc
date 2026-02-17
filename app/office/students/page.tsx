@@ -201,13 +201,12 @@ export default function OfficeStudentsPage() {
             // ApiClient handles error status generally
             try {
                 const [cls, sec, yrs] = await Promise.all([
-                    ApiClient.get<ClassData[]>('/teacher/classes', token), // Using teacher endpoint as it likely lists classes generally
-                    ApiClient.get<SectionData[]>('/admin/sections', token), // Should be accessible if role check allows
+                    ApiClient.get<ClassData[]>('/admin/classes', token),
+                    ApiClient.get<SectionData[]>('/admin/sections', token),
                     ApiClient.get<AcademicYear[]>('/admin/academic-years', token)
                 ]);
-                // Fallback if teacher endpoint structure differs: { classes: [] } vs []
-                // @ts-ignore
-                if (cls.classes) setClasses(cls.classes); else setClasses(cls);
+
+                setClasses(cls);
 
                 setSections(sec);
                 const active = yrs.find(y => y.is_active);

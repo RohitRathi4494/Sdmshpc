@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
 import Modal from '@/app/components/ui/Modal';
+import StudentImporter from '@/app/components/StudentImporter';
 
 // --- Edit Form Component (Reused) ---
 function EditStudentForm({ student, sections, academicYearId, onSave, onCancel }: any) {
@@ -169,8 +170,8 @@ interface AcademicYear {
 }
 
 export default function OfficeStudentsPage() {
-    // Simplified logic for Office: View List, Edit, Add Single. Import removed for simplicity unless requested.
-    const [activeTab, setActiveTab] = useState<'enroll' | 'list'>('list');
+    // Simplified logic for Office: View List, Edit, Add Single, and now Import.
+    const [activeTab, setActiveTab] = useState<'enroll' | 'list' | 'import'>('list');
     const [students, setStudents] = useState<Student[]>([]);
     const [enrolledStudents, setEnrolledStudents] = useState<any[]>([]); // For list view
     const [classes, setClasses] = useState<ClassData[]>([]);
@@ -343,7 +344,17 @@ export default function OfficeStudentsPage() {
                 >
                     Enroll New / Add
                 </button>
+                <button
+                    onClick={() => setActiveTab('import')}
+                    className={`px-6 py-3 font-medium text-sm border-b-2 transition-colors ${activeTab === 'import' ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-500 hover:text-gray-700'}`}
+                >
+                    Import Students
+                </button>
             </div>
+
+            {activeTab === 'import' && (
+                <StudentImporter onImportSuccess={() => setActiveTab('list')} />
+            )}
 
             {activeTab === 'list' && (
                 <div className="space-y-6">

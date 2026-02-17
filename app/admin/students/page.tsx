@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
-import StudentImporter from './StudentImporter';
+import StudentImporter from '@/app/components/StudentImporter';
 import Modal from '@/app/components/ui/Modal';
 
 // --- Edit Form Component ---

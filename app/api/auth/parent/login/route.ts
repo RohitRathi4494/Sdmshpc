@@ -7,7 +7,9 @@ const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'default-s
 
 export async function POST(request: Request) {
     try {
-        const { admission_no, dob } = await request.json();
+        const body = await request.json();
+        const admission_no = body.admission_no?.trim();
+        const dob = body.dob?.trim();
 
         if (!admission_no || !dob) {
             return NextResponse.json(
@@ -24,6 +26,7 @@ export async function POST(request: Request) {
         );
 
         if (result.rows.length === 0) {
+            console.log(`[Parent Login Debug] Student not found for admission_no: ${admission_no}`);
             return NextResponse.json(
                 { success: false, message: 'Invalid credentials' },
                 { status: 401 }
@@ -34,9 +37,11 @@ export async function POST(request: Request) {
 
         // 2. Validate DOB
         // Direct string comparison
+        console.log(`[Parent Login Debug] Input: ${dob}, Stored: ${student.dob_str}`);
+
         if (student.dob_str !== dob) {
             return NextResponse.json(
-                { success: false, message: 'Invalid DOB' }, // More specific for debugging, or keep generic 'Invalid credentials'
+                { success: false, message: `Invalid credentials. (Debug: expected ${student.dob_str})` },
                 { status: 401 }
             );
         }

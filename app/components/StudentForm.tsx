@@ -22,6 +22,10 @@ export default function StudentForm({ student = {}, classes = [], sections = [],
         blood_group: student.blood_group || '',
         category: student.category || 'General',
 
+        // Senior Secondary Spec
+        stream: student.stream || '',
+        subject_count: student.subject_count || 5,
+
         // Family
         father_name: student.father_name || '',
         mother_name: student.mother_name || '',
@@ -112,6 +116,41 @@ export default function StudentForm({ student = {}, classes = [], sections = [],
                     </div>
                 </div>
             </div>
+
+            {/* 1.5 Academic Details (Senior Secondary) */}
+            {(() => {
+                const selectedClass = classes.find(c => c.id == formData.class_id);
+                // Simple heuristic for Class XI/XII - can be improved if class structure is known
+                // Checks for '11', '12', 'XI', 'XII' in class name.
+                const isSenior = selectedClass && /(11|12|XI|XII)/i.test(selectedClass.class_name);
+
+                if (isSenior) return (
+                    <div className="bg-yellow-50 p-3 rounded border border-yellow-100">
+                        <h4 className="text-sm font-semibold text-yellow-800 uppercase mb-3">Senior Secondary Details</h4>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700">Stream</label>
+                                <select name="stream" value={formData.stream} onChange={handleChange} className="w-full border rounded p-2 text-sm bg-white">
+                                    <option value="">Select Stream</option>
+                                    <option value="Medical">Medical</option>
+                                    <option value="Non-Medical">Non-Medical</option>
+                                    <option value="Commerce">Commerce</option>
+                                    <option value="Arts">Arts</option>
+                                    <option value="Humanities">Humanities</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-xs font-medium text-gray-700">Subject Count (for Fee Calculation)</label>
+                                <select name="subject_count" value={formData.subject_count} onChange={(e) => setFormData({ ...formData, subject_count: parseInt(e.target.value) })} className="w-full border rounded p-2 text-sm bg-white">
+                                    <option value="5">5 Subjects</option>
+                                    <option value="6">6 Subjects</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                );
+                return null;
+            })()}
 
             {/* 2. Personal Details */}
             <div>

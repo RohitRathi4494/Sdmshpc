@@ -62,6 +62,8 @@ const studentImportSchema = z.object({
         board_roll_xii: z.string().optional(),
         education_reg_no: z.string().optional(),
         student_code: z.string().optional(),
+        stream: z.string().optional(),
+        subject_count: z.number().optional(),
     })),
 });
 
@@ -202,14 +204,16 @@ export async function POST(request: Request) {
                         INSERT INTO students 
                         (admission_no, student_name, father_name, mother_name, dob, admission_date, 
                          blood_group, gender, address, phone_no, emergency_no, category, 
-                         aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no, student_code) 
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20) 
+                         aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no, student_code, stream, subject_count) 
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) 
                         RETURNING id`,
                         [
                             row.admission_no, row.student_name, row.father_name, row.mother_name || '', row.dob, admissionDate,
                             row.blood_group || '', row.gender || 'Male', row.address || '', row.phone_no || '', row.emergency_no || '', row.category || 'General',
                             row.aadhar_no || '', row.ppp_id || '', row.apaar_id || '', row.srn_no || '', row.board_roll_x || '', row.board_roll_xii || '', row.education_reg_no || '',
-                            row.student_code || '' // Use imported code or empty (maybe trigger DB default if we had one, but we don't. empty string ok?)
+                            row.student_code || '',
+                            row.stream || null,
+                            row.subject_count || 5
                         ]
                     );
                     const studentId = studentRes.rows[0].id;

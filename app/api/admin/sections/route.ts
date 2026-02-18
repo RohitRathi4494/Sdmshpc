@@ -6,7 +6,7 @@ import { z } from 'zod';
 const createSectionSchema = z.object({
     class_id: z.number().int().positive(),
     section_name: z.string().min(1),
-    class_teacher_id: z.number().int().positive().optional(),
+    class_teacher_id: z.number().int().positive().nullable().optional(),
 });
 
 export async function POST(request: Request) {

@@ -96,7 +96,9 @@ export async function POST(request: Request) {
             admission_date, gender, blood_group, category,
             address, phone_no, emergency_no,
             aadhar_no, ppp_id, apaar_id, srn_no,
-            board_roll_x, board_roll_xii, education_reg_no
+            board_roll_x, board_roll_xii, education_reg_no,
+            // Senior Secondary Fields
+            stream, subject_count
         } = body;
 
         if (!admission_no || !student_name || !father_name || !dob) {
@@ -140,9 +142,10 @@ export async function POST(request: Request) {
                 INSERT INTO students (
                     admission_no, student_code, student_name, father_name, mother_name, dob, admission_date,
                     gender, blood_group, category, address, phone_no, emergency_no,
-                    aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no
+                    aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no,
+                    stream, subject_count
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
                 RETURNING id;
             `;
 
@@ -152,7 +155,8 @@ export async function POST(request: Request) {
                 gender || 'Male', blood_group || '', category || 'General',
                 address || '', phone_no || '', emergency_no || '',
                 aadhar_no || '', ppp_id || '', apaar_id || '', srn_no || '',
-                board_roll_x || '', board_roll_xii || '', education_reg_no || ''
+                board_roll_x || '', board_roll_xii || '', education_reg_no || '',
+                stream || null, subject_count || 5
             ]);
 
             const studentId = studentRes.rows[0].id;

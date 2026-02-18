@@ -93,7 +93,9 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                                 board_roll_x: String(row[18] || '').trim(),
                                 board_roll_xii: String(row[19] || '').trim(),
                                 education_reg_no: String(row[20] || '').trim(),
-                                student_code: String(row[21] || '').trim(), // New field for import
+                                student_code: String(row[21] || '').trim(),
+                                stream: String(row[22] || '').trim(),
+                                subject_count: row[23] ? parseInt(row[23]) : 5,
                             });
                         }
                     }
@@ -174,7 +176,8 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
             'class', 'section', 'admission_date (YYYY-MM-DD)', 'gender', 'blood_group',
             'address', 'phone_no', 'emergency_no', 'category',
             'aadhar_no', 'ppp_id', 'apaar_id', 'srn_no',
-            'board_roll_x', 'board_roll_xii', 'education_reg_no', 'student_code'
+            'board_roll_x', 'board_roll_xii', 'education_reg_no', 'student_code',
+            'stream', 'subject_count'
         ];
 
         const ws = XLSX.utils.aoa_to_sheet([headers]);

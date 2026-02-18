@@ -26,6 +26,8 @@ export async function PUT(
             admission_date, blood_group, gender, address, phone_no, emergency_no,
             category, ppp_id, apaar_id, aadhar_no,
             board_roll_x, board_roll_xii, education_reg_no, srn_no,
+            // Senior Secondary
+            stream, subject_count,
             // Enrollment
             roll_no, section_id, academic_year_id
         } = body;
@@ -40,13 +42,15 @@ export async function PUT(
                 admission_date = COALESCE($7, admission_date), 
                 blood_group = $8, gender = $9, address = $10, phone_no = $11, emergency_no = $12,
                 category = $13, ppp_id = $14, apaar_id = $15, aadhar_no = $16,
-                board_roll_x = $17, board_roll_xii = $18, education_reg_no = $19, srn_no = $20
+                board_roll_x = $17, board_roll_xii = $18, education_reg_no = $19, srn_no = $20,
+                stream = $21, subject_count = $22
             WHERE id = $6
         `, [
-            student_name, father_name, mother_name, dobValue, admission_no, studentId,
+            student_name, father_name, mother_name, dobValue, admission_no, parseInt(params.id),
             admissionDateValue, blood_group, gender, address, phone_no, emergency_no,
             category, ppp_id, apaar_id, aadhar_no,
-            board_roll_x, board_roll_xii, education_reg_no, srn_no
+            board_roll_x, board_roll_xii, education_reg_no, srn_no,
+            stream || null, subject_count || 5
         ]);
 
         // 2. Update Enrollment Info if academic_year_id is provided

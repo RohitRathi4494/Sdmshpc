@@ -164,13 +164,15 @@ export async function POST(request: Request) {
         if (action === 'preview') {
             return NextResponse.json({
                 success: true,
-                summary: {
-                    total: data.length,
-                    valid: validData.length,
-                    invalid: errors.length,
-                },
-                errors,
-                data: validData, // Return valid data for confirmation payload
+                data: {
+                    summary: {
+                        total: data.length,
+                        valid: validData.length,
+                        invalid: errors.length,
+                    },
+                    errors,
+                    validData: validData,
+                }
             });
         }
 
@@ -181,12 +183,14 @@ export async function POST(request: Request) {
                     success: false,
                     error_code: 'NO_DATA',
                     message: 'No valid data to import. See errors for details.',
-                    summary: {
-                        total: data.length,
-                        imported: 0,
-                        failed: errors.length
-                    },
-                    errors
+                    data: {
+                        summary: {
+                            total: data.length,
+                            imported: 0,
+                            failed: errors.length
+                        },
+                        errors
+                    }
                 }, { status: 400 });
             }
 
@@ -230,12 +234,15 @@ export async function POST(request: Request) {
                 return NextResponse.json({
                     success: true,
                     message: `Imported: ${validData.length}, Failed/Skipped: ${errors.length}`,
-                    summary: {
-                        total: data.length,
-                        imported: validData.length,
-                        failed: errors.length
-                    },
-                    errors: errors // Return errors so UI can show them
+                    data: {
+                        summary: {
+                            total: data.length,
+                            imported: validData.length,
+                            failed: errors.length
+                        },
+                        errors: errors,
+                        message: `Imported: ${validData.length}, Failed/Skipped: ${errors.length}`
+                    }
                 });
 
             } catch (e) {

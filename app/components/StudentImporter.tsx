@@ -95,7 +95,7 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                                 education_reg_no: String(row[20] || '').trim(),
                                 student_code: String(row[21] || '').trim(),
                                 stream: String(row[22] || '').trim(),
-                                subject_count: row[23] ? parseInt(row[23]) : 5,
+                                subject_count: (row[23] && !isNaN(parseInt(row[23]))) ? parseInt(row[23]) : 5,
                             });
                         }
                     }
@@ -139,7 +139,7 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                 return;
             }
 
-            setPreviewData(res.data); // Valid rows
+            setPreviewData(res.validData); // Valid rows
             setErrors(res.errors || []);
             setImportSummary(res.summary);
             setIsPreviewing(true);
@@ -238,21 +238,13 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                                 const token = localStorage.getItem('hpc_token') || '';
                                 const res = await ApiClient.post<any>('/admin/students/import', { action: 'confirm', data }, token);
 
-                                if (res.success) {
-                                    let msg = res.message || 'Import successful';
-                                    if (res.errors && res.errors.length > 0) {
-                                        msg += `\n\n${res.errors.length} records skipped:\n` + res.errors.map((e: any) => `- Row ${e.index + 1}: ${e.error}`).join('\n');
-                                    }
-                                    alert(msg);
-                                    setFile(null);
-                                    onImportSuccess();
-                                } else {
-                                    let msg = 'Import failed: ' + res.message;
-                                    if (res.errors && res.errors.length > 0) {
-                                        msg += `\n\n${res.errors.length} records failed:\n` + res.errors.map((e: any) => `- Row ${e.index + 1}: ${e.error}`).join('\n');
-                                    }
-                                    alert(msg);
+                                let msg = res.message || 'Import successful';
+                                if (res.errors && res.errors.length > 0) {
+                                    msg += `\n\n${res.errors.length} records skipped:\n` + res.errors.map((e: any) => `- Row ${e.index + 1}: ${e.error}`).join('\n');
                                 }
+                                alert(msg);
+                                setFile(null);
+                                onImportSuccess();
                             } catch (e: any) {
                                 let msg = e.message || 'Import failed';
                                 if (e.details && e.details.errors && e.details.errors.length > 0) {

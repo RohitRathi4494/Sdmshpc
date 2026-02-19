@@ -108,8 +108,11 @@ export default function ParentReportPage() {
         return reportData.co_scholastic?.find((cs: any) => cs.sub_skill_name === subSkill && cs.term_name === term);
     };
 
-    const getRemark = (type: string) => {
-        return reportData.remarks?.find((r: any) => r.type_name === type)?.remark_text || '';
+    const getRemark = (type: string, aspect?: string) => {
+        return reportData.remarks?.find((r: any) =>
+            r.type_name === type &&
+            (aspect ? r.aspect === aspect : !r.aspect)
+        )?.remark_text || '';
     };
 
     return (
@@ -434,7 +437,7 @@ export default function ParentReportPage() {
                                 {['My child enjoys participating in...', 'My child can be supported for...', 'Any additional observations'].map(label => (
                                     <div className="feedback-row" key={label}>
                                         <div className="feedback-label">{label}</div>
-                                        <div className="feedback-input">{getRemark(`Parent's Feedback - ${label}`)}</div>
+                                        <div className="feedback-input">{getRemark("Parent’s Feedback", label)}</div>
                                     </div>
                                 ))}
                             </div>
@@ -445,7 +448,7 @@ export default function ParentReportPage() {
                                 {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
                                     <div className="feedback-row" key={label}>
                                         <div className="feedback-label">{label}</div>
-                                        <div className="feedback-input">{getRemark(`Self Assessment - ${label}`)}</div>
+                                        <div className="feedback-input">{getRemark("Self-Assessment", label)}</div>
                                     </div>
                                 ))}
                             </div>

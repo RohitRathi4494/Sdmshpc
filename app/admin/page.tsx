@@ -65,7 +65,7 @@ export default async function AdminDashboard() {
                         <span className="text-sm text-gray-500">Active Classes</span>
                     </div>
                     <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <span className="block text-3xl font-bold text-indigo-600">{academicYear}</span>
+                        <span className="block text-3xl font-bold text-indigo-600">{academicYear.name}</span>
                         <span className="text-sm text-gray-500">Current Session</span>
                     </div>
                 </div>

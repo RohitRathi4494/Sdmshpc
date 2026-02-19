@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
+import { getActiveAcademicYear } from '@/app/lib/actions';
 
 interface StudentReport {
     co_scholastic: any[];
@@ -37,11 +38,22 @@ export default function CoScholasticEntryPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
+    const [yearId, setYearId] = useState<number>(1); // Default to 1, but will fetch
 
     useEffect(() => {
         const loadData = async () => {
             try {
                 const token = localStorage.getItem('hpc_token') || undefined;
+
+                // 0. Fetch Active Year ID
+                try {
+                    const yearData = await getActiveAcademicYear();
+                    if (yearData && yearData.id) {
+                        setYearId(yearData.id);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch active year", e);
+                }
 
                 // 1. Fetch Metadata (Domains & Skills)
                 const metadataRes = await ApiClient.get<{ success: boolean; data: any[] }>('/teacher/co-scholastic-scores/metadata', token);
@@ -50,14 +62,27 @@ export default function CoScholasticEntryPage() {
                 setDomains(fetchedDomains);
 
                 // 2. Fetch Existing Scores via Report
-                const report = await ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=1`, token);
+                // Use the fetched yearId if available, or default to 1? 
+                // Wait, during initial load 'yearId' state might not be set yet if I run parallel. 
+                // Better to simple fetch report with Query Param logic or update API to use active year implicit?
+                // For now, let's just default to current params or 1. Report API expects param.
+                // Actually, let's rely on the fact that if getActiveAcademicYear is fast, we might want to wait.
+                // But report fetch uses `academic_year_id` param.
+                // Let's blindly use 1 for fetching REPORT for now, as the report viewer also defaults to 1 if not passed?
+                // No, report API demands `academic_year_id`.
+                // Let's assume the Layout/Context sets the year, but we don't have context here.
+                // I will fetch the year first, THEN the report.
+
+                const activeYear = await getActiveAcademicYear();
+                const currentYearId = activeYear.id || 1;
+                setYearId(currentYearId);
+
+                const report = await ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=${currentYearId}`, token);
                 setReportData(report);
 
                 const scoreMap: Record<string, string> = {};
-                // Determine IDs from report data
                 if (report.co_scholastic) {
                     report.co_scholastic.forEach((s: any) => {
-                        // Key: skill_id - term_id
                         scoreMap[`${s.sub_skill_id}-${s.term_id}`] = s.grade;
                     });
                 }
@@ -83,21 +108,21 @@ export default function CoScholasticEntryPage() {
 
         try {
             const token = localStorage.getItem('hpc_token') || undefined;
-            // Term ID and Academic Year ID need to be correct.
-            // Assumption: Academic Year = 1 (Current)
+
             await ApiClient.post('/teacher/co-scholastic-scores', {
                 student_id: studentId,
                 sub_skill_id: skillId,
                 term_id: termId,
                 grade,
-                academic_year_id: 1
+                academic_year_id: yearId // Use the dynamically fetched ID
             }, token);
             setSaving(false);
-        } catch (e) {
+        } catch (e: any) {
             console.error("Failed to save grade:", e);
             // Revert on error
-            setScores(prev => ({ ...prev, [key]: previousGrade || '' })); // revert to previous or clear
-            alert("Failed to save grade. Please check your connection.");
+            setScores(prev => ({ ...prev, [key]: previousGrade || '' }));
+            // Show specific error if available
+            alert(`Failed to save grade: ${e.message || "Please check your connection."}`);
             setSaving(false);
         }
     };

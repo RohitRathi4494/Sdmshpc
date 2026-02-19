@@ -21,7 +21,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
     useEffect(() => {
         const fetchYear = async () => {
             const year = await getActiveAcademicYear();
-            setAcademicYear(year);
+            setAcademicYear(year.name);
         };
         fetchYear();
     }, []);

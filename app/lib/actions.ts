@@ -9,11 +9,11 @@ export async function getActiveAcademicYear() {
         );
 
         if (result.rows.length > 0) {
-            return result.rows[0].year_name;
+            return { id: result.rows[0].id, name: result.rows[0].year_name };
         }
-        return '2024-2025'; // Fallback
+        return { id: 1, name: '2024-2025' }; // Fallback
     } catch (error) {
         console.error('Error fetching active academic year:', error);
-        return '2024-2025'; // Fallback on error
+        return { id: 1, name: '2024-2025' }; // Fallback on error
     }
 }

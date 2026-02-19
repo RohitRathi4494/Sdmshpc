@@ -11,14 +11,13 @@ async function check() {
     try {
         const client = await pool.connect();
 
-        console.log('--- Academic Years (Production Check) ---');
-        const years = await client.query('SELECT * FROM academic_years ORDER BY id');
-        console.table(years.rows);
-
-        // Also check if user has access to this student
-        console.log('--- Student 1 ---');
-        const s = await client.query('SELECT id, student_name FROM students WHERE id = $1', [1]);
-        console.table(s.rows);
+        console.log('--- Columns of co_scholastic_scores ---');
+        const cols = await client.query(`
+            SELECT column_name, data_type 
+            FROM information_schema.columns 
+            WHERE table_name = 'co_scholastic_scores'
+        `);
+        console.table(cols.rows);
 
         client.release();
     } catch (e) {

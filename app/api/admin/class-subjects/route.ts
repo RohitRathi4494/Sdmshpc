@@ -8,7 +8,8 @@ const assignSubjectsSchema = z.object({
     academic_year_id: z.number().int().positive(),
     subjects: z.array(z.object({
         subject_id: z.number().int().positive(),
-        max_marks: z.number().int().positive().default(100)
+        max_marks: z.number().int().positive().default(100),
+        display_order: z.number().int().optional().default(0)
     })),
 });
 
@@ -47,12 +48,12 @@ export async function POST(request: Request) {
             await client.query(clearQuery, [class_id, academic_year_id]);
 
             const insertQuery = `
-        INSERT INTO class_subjects (class_id, academic_year_id, subject_id, max_marks, is_active)
-        VALUES ($1, $2, $3, $4, true)
+        INSERT INTO class_subjects (class_id, academic_year_id, subject_id, max_marks, display_order, is_active)
+        VALUES ($1, $2, $3, $4, $5, true)
       `;
 
             for (const sub of subjects) {
-                await client.query(insertQuery, [class_id, academic_year_id, sub.subject_id, sub.max_marks]);
+                await client.query(insertQuery, [class_id, academic_year_id, sub.subject_id, sub.max_marks, sub.display_order || 0]);
             }
 
             await client.query('COMMIT');
@@ -101,7 +102,7 @@ export async function GET(request: Request) {
         }
 
         const query = `
-            SELECT subject_id, max_marks 
+            SELECT subject_id, max_marks, display_order
             FROM class_subjects 
             WHERE class_id = $1 AND academic_year_id = $2
         `;

@@ -35,8 +35,8 @@ export default function SubjectMappingPage() {
     const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
     const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
 
-    // Map of subjectId -> max_marks. If present in map, it's assigned.
-    const [assignments, setAssignments] = useState<Map<number, number>>(new Map());
+    // Map of subjectId -> { max_marks, display_order }. If present in map, it's assigned.
+    const [assignments, setAssignments] = useState<Map<number, { max_marks: number, display_order: number }>>(new Map());
 
     const [loadingInitial, setLoadingInitial] = useState(true);
     const [loadingMapping, setLoadingMapping] = useState(false);
@@ -83,11 +83,14 @@ export default function SubjectMappingPage() {
             setLoadingMapping(true);
             try {
                 const token = sessionStorage.getItem('hpc_token') || '';
-                // API now returns { subject_id, max_marks }[]
-                const data = await ApiClient.get<Assignment[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`, token);
+                // API now returns { subject_id, max_marks, display_order }[]
+                const data = await ApiClient.get<any[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`, token);
 
-                const newMap = new Map<number, number>();
-                data.forEach(item => newMap.set(item.subject_id, item.max_marks || 100));
+                const newMap = new Map<number, { max_marks: number, display_order: number }>();
+                data.forEach(item => newMap.set(item.subject_id, {
+                    max_marks: item.max_marks || 100,
+                    display_order: item.display_order || 0
+                }));
                 setAssignments(newMap);
 
             } catch (error) {
@@ -108,17 +111,18 @@ export default function SubjectMappingPage() {
             if (newMap.has(subjectId)) {
                 newMap.delete(subjectId);
             } else {
-                newMap.set(subjectId, 100); // Default max marks
+                newMap.set(subjectId, { max_marks: 100, display_order: 0 }); // Default
             }
             return newMap;
         });
     };
 
-    const handleMaxMarksChange = (subjectId: number, marks: number) => {
+    const handleAssignmentChange = (subjectId: number, field: 'max_marks' | 'display_order', value: number) => {
         setAssignments(prev => {
             const newMap = new Map(prev);
-            if (newMap.has(subjectId)) {
-                newMap.set(subjectId, marks);
+            const current = newMap.get(subjectId);
+            if (current) {
+                newMap.set(subjectId, { ...current, [field]: value });
             }
             return newMap;
         });
@@ -131,9 +135,10 @@ export default function SubjectMappingPage() {
         try {
             const token = sessionStorage.getItem('hpc_token') || '';
             // Convert map to array of objects
-            const subjectsPayload = Array.from(assignments.entries()).map(([subject_id, max_marks]) => ({
+            const subjectsPayload = Array.from(assignments.entries()).map(([subject_id, data]) => ({
                 subject_id,
-                max_marks
+                max_marks: data.max_marks,
+                display_order: data.display_order
             }));
 
             await ApiClient.post('/admin/class-subjects', {
@@ -237,12 +242,13 @@ export default function SubjectMappingPage() {
                                     <div className="grid grid-cols-1 gap-4">
                                         <div className="grid grid-cols-12 gap-4 font-semibold text-gray-500 border-b pb-2 mb-2">
                                             <div className="col-span-1 text-center">Select</div>
-                                            <div className="col-span-7">Subject Name</div>
-                                            <div className="col-span-4">Max Marks (Weightage)</div>
+                                            <div className="col-span-5">Subject Name</div>
+                                            <div className="col-span-3">Display Order</div>
+                                            <div className="col-span-3">Max Marks (Weightage)</div>
                                         </div>
                                         {allSubjects.map(subject => {
                                             const isSelected = assignments.has(subject.id);
-                                            const marks = assignments.get(subject.id) || 100;
+                                            const data = assignments.get(subject.id) || { max_marks: 100, display_order: 0 };
 
                                             return (
                                                 <div key={subject.id} className={`grid grid-cols-12 gap-4 items-center p-3 rounded border transition-colors ${isSelected ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
@@ -254,14 +260,24 @@ export default function SubjectMappingPage() {
                                                             className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
                                                         />
                                                     </div>
-                                                    <div className="col-span-7 font-medium text-gray-800">
+                                                    <div className="col-span-5 font-medium text-gray-800">
                                                         {subject.subject_name}
                                                     </div>
-                                                    <div className="col-span-4">
+                                                    <div className="col-span-3">
                                                         <input
                                                             type="number"
-                                                            value={marks}
-                                                            onChange={e => handleMaxMarksChange(subject.id, parseInt(e.target.value) || 0)}
+                                                            value={data.display_order}
+                                                            onChange={e => handleAssignmentChange(subject.id, 'display_order', parseInt(e.target.value) || 0)}
+                                                            disabled={!isSelected}
+                                                            className="w-full px-3 py-1 border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
+                                                            min="0"
+                                                        />
+                                                    </div>
+                                                    <div className="col-span-3">
+                                                        <input
+                                                            type="number"
+                                                            value={data.max_marks}
+                                                            onChange={e => handleAssignmentChange(subject.id, 'max_marks', parseInt(e.target.value) || 0)}
                                                             disabled={!isSelected}
                                                             className="w-full px-3 py-1 border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
                                                             min="1"

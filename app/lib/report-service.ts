@@ -65,7 +65,7 @@ export async function getStudentReportData(student_id: number, academic_year_id:
         FROM class_subjects cs
         JOIN subjects sub ON cs.subject_id = sub.id
         WHERE cs.class_id = $1 AND cs.academic_year_id = $2
-        ORDER BY sub.subject_name
+        ORDER BY cs.display_order ASC, sub.subject_name ASC
     `;
   // student.class_id is now available from query 1
   const subjectsRes = await db.query(subjectsQuery, [student.class_id, academic_year_id]);

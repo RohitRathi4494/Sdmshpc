@@ -36,29 +36,49 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const studentData = studentRes.rows[0];
         const { class_id, academic_year_id, stream, subject_count } = studentData;
 
-        // 2. Fetch Fee Structures (Demands) with Specificity Logic
+        // 2. Fetch Fee Structures (Demands) with Specificity Logic & New Admission Check
         let feeStructures: any[] = [];
         if (class_id && academic_year_id) {
-            // Logic:
-            // Fetch all fee structures for this class/year.
-            // Use DISTINCT ON (fee_head_id) to pick the best match for each fee head.
-            // Ordering by specificity: (Matches Stream + Count) > (Matches Stream) > (General)
-            // A match means: (structure.field IS NULL) OR (structure.field = student.field)
+            // Need to know if student is "New Admission" for this academic year
+            // Logic: If student.admission_date >= academic_year.start_date
+
+            // Re-fetch with start_date if not present in previous query (it wasn't)
+            // But actually we can just JOIN and get it.
+            // Let's optimize: Update the first query or just do it here. 
+            // The first query had `ay.year_name`. Let's assume we need to re-fetch or update query 1.
+            // Actually, let's just fetch the start_date for the `academic_year_id` we have.
+
+            const ayRes = await db.query('SELECT start_date FROM academic_years WHERE id = $1', [academic_year_id]);
+            const ayStartDate = ayRes.rows[0]?.start_date;
+
+            // Get student admission date
+            const studentAdmRes = await db.query('SELECT admission_date FROM students WHERE id = $1', [studentId]);
+            const admissionDate = studentAdmRes.rows[0]?.admission_date;
+
+            let isNewStudent = false;
+            if (ayStartDate && admissionDate) {
+                // If admission date is ON or AFTER the start of the academic year
+                isNewStudent = new Date(admissionDate) >= new Date(ayStartDate);
+            }
 
             const structRes = await db.query(`
                 SELECT DISTINCT ON (fs.fee_head_id) 
                     fs.id, fs.amount, fs.due_date, fs.stream, fs.subject_count,
-                    fh.head_name
+                    fh.head_name, fh.applies_to_new_students_only
                 FROM fee_structures fs
                 JOIN fee_heads fh ON fs.fee_head_id = fh.id
                 WHERE fs.class_id = $1 
                   AND fs.academic_year_id = $2
                   AND (fs.stream IS NULL OR fs.stream = $3)
                   AND (fs.subject_count IS NULL OR fs.subject_count = $4)
+                  AND (
+                      fh.applies_to_new_students_only = false OR 
+                      (fh.applies_to_new_students_only = true AND $5 = true)
+                  )
                 ORDER BY fs.fee_head_id, 
                          (CASE WHEN fs.stream IS NOT NULL THEN 1 ELSE 0 END + 
                           CASE WHEN fs.subject_count IS NOT NULL THEN 1 ELSE 0 END) DESC
-            `, [class_id, academic_year_id, stream || null, subject_count || null]);
+            `, [class_id, academic_year_id, stream || null, subject_count || null, isNewStudent]);
 
             feeStructures = structRes.rows;
         }

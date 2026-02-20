@@ -7,102 +7,179 @@ export const dynamic = 'force-dynamic';
 
 export async function GET() {
     try {
-        console.log('Starting Migration via API...');
+        console.log('Starting Complete Migration & Seeding...');
 
-        // 0. Update User Roles Constraint to allow OFFICE role
+        // --- 1. Schema Updates ---
+
+        // Academic Years: Add Dates
+        await db.query(`
+            ALTER TABLE academic_years 
+            ADD COLUMN IF NOT EXISTS start_date DATE,
+            ADD COLUMN IF NOT EXISTS end_date DATE;
+        `);
+        // Update default active year dates if not set
+        await db.query(`
+            UPDATE academic_years 
+            SET start_date = '2025-04-01', end_date = '2026-03-31' 
+            WHERE year_name = '2025-2026' AND start_date IS NULL;
+        `);
+
+        // Fee Heads: New Student Flag
+        await db.query(`
+            ALTER TABLE fee_heads 
+            ADD COLUMN IF NOT EXISTS applies_to_new_students_only BOOLEAN DEFAULT FALSE;
+        `);
+
+        // Fee Structures: Drop Constraints to allow Monthly Fees
+        await db.query(`
+            ALTER TABLE fee_structures DROP CONSTRAINT IF EXISTS uq_fee_structure;
+            DROP INDEX IF EXISTS fee_structures_unique_config;
+            ALTER TABLE fee_structures DROP CONSTRAINT IF EXISTS fee_structures_unique_config;
+        `);
+
+        // Users: Role Constraint
         try {
             await db.query(`
                 ALTER TABLE users DROP CONSTRAINT IF EXISTS users_role_check;
                 ALTER TABLE users ADD CONSTRAINT users_role_check 
                 CHECK (role IN ('ADMIN', 'TEACHER', 'PARENT', 'VIEW_ONLY', 'OFFICE'));
             `);
-        } catch (e: any) {
-            console.log('Constraint update skipped/failed (non-critical):', e.message);
+        } catch (e: any) { console.log('Role constraint update skipped:', e.message); }
+
+
+        // --- 2. Seed Data ---
+
+        // A. Seed Classes
+        const classes = [
+            'Nursery', 'LKG', 'UKG', 'I', 'II', 'III', 'IV', 'V',
+            'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'
+        ];
+        const classMap: Record<string, number> = {};
+
+        for (let i = 0; i < classes.length; i++) {
+            const name = classes[i];
+            const order = i + 1;
+            const res = await db.query('SELECT id FROM classes WHERE class_name = $1', [name]);
+            if (res.rows.length > 0) {
+                classMap[name] = res.rows[0].id;
+                await db.query('UPDATE classes SET display_order = $1 WHERE id = $2', [order, res.rows[0].id]);
+            } else {
+                const ins = await db.query('INSERT INTO classes (class_name, display_order) VALUES ($1, $2) RETURNING id', [name, order]);
+                classMap[name] = ins.rows[0].id;
+            }
         }
 
-        // 1. Fee Heads
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS fee_heads (
-                id SERIAL PRIMARY KEY,
-                head_name VARCHAR(100) NOT NULL UNIQUE,
-                applies_to_new_students_only BOOLEAN DEFAULT FALSE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            );
-        `);
+        // B. Seed Fee Heads
+        const headsNeeded = [
+            { name: 'Admission Fee', isNew: true },
+            { name: 'Tuition Fee', isNew: false },
+            { name: 'Annual Charges', isNew: false },
+            { name: 'Exam Fee', isNew: false },
+            { name: 'Transport Fee', isNew: false }
+        ];
+        const headMap: Record<string, number> = {};
 
-        // 2. Fee Structures
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS fee_structures (
-                id SERIAL PRIMARY KEY,
-                class_id INT NOT NULL,
-                academic_year_id INT NOT NULL,
-                fee_head_id INT NOT NULL,
-                amount NUMERIC(10, 2) NOT NULL,
-                due_date DATE,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                CONSTRAINT fk_fs_class FOREIGN KEY (class_id) REFERENCES classes(id),
-                CONSTRAINT fk_fs_year FOREIGN KEY (academic_year_id) REFERENCES academic_years(id),
-                CONSTRAINT fk_fs_head FOREIGN KEY (fee_head_id) REFERENCES fee_heads(id),
-                CONSTRAINT uq_fee_structure UNIQUE (class_id, academic_year_id, fee_head_id)
-            );
-        `);
-
-        // 3. Fee Payments
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS fee_payments (
-                id SERIAL PRIMARY KEY,
-                student_id INT NOT NULL,
-                receipt_number VARCHAR(50) UNIQUE NOT NULL,
-                amount_paid NUMERIC(10, 2) NOT NULL,
-                payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                payment_mode VARCHAR(50) NOT NULL, 
-                transaction_reference VARCHAR(100),
-                remarks TEXT,
-                created_by INT REFERENCES users(id),
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                CONSTRAINT fk_fp_student FOREIGN KEY (student_id) REFERENCES students(id)
-            );
-        `);
-
-        // 4. Payment Items
-        await db.query(`
-            CREATE TABLE IF NOT EXISTS fee_payment_items (
-                id SERIAL PRIMARY KEY,
-                fee_payment_id INT NOT NULL,
-                fee_structure_id INT NOT NULL,
-                amount NUMERIC(10, 2) NOT NULL,
-                CONSTRAINT fk_fpi_payment FOREIGN KEY (fee_payment_id) REFERENCES fee_payments(id) ON DELETE CASCADE,
-                CONSTRAINT fk_fpi_structure FOREIGN KEY (fee_structure_id) REFERENCES fee_structures(id)
-            );
-        `);
-
-        // 5. Seed Fee Heads
-        const heads = ['Tuition Fee', 'Annual Charges', 'Admission Fee', 'Exam Fee', 'Transport Fee'];
-        for (const head of heads) {
-            await db.query(`
-                INSERT INTO fee_heads (head_name) VALUES ($1) ON CONFLICT (head_name) DO NOTHING
-            `, [head]);
+        for (const h of headsNeeded) {
+            const res = await db.query('SELECT id FROM fee_heads WHERE head_name = $1', [h.name]);
+            if (res.rows.length > 0) {
+                headMap[h.name] = res.rows[0].id;
+                await db.query('UPDATE fee_heads SET applies_to_new_students_only = $1 WHERE id = $2', [h.isNew, res.rows[0].id]);
+            } else {
+                const ins = await db.query('INSERT INTO fee_heads (head_name, applies_to_new_students_only) VALUES ($1, $2) RETURNING id', [h.name, h.isNew]);
+                headMap[h.name] = ins.rows[0].id;
+            }
         }
 
-        // 6. Seed OFFICE User with Dynamic Hashing
+        // C. Seed Fee Structures (Only if empty for this year to avoid duplicates on re-run, or delete first?)
+        // Let's safe-guard: Delete existing structure for the active year to allow a fresh "Sync" from code.
+        const ayRes = await db.query('SELECT id, start_date FROM academic_years WHERE is_active = true LIMIT 1');
+        if (ayRes.rows.length > 0) {
+            const ayId = ayRes.rows[0].id;
+            const startYear = new Date(ayRes.rows[0].start_date || '2025-04-01').getFullYear();
+
+            // CLEAR EXISTING FEES FOR THIS YEAR
+            await db.query('DELETE FROM fee_structures WHERE academic_year_id = $1', [ayId]);
+
+            const insertFee = async (classIds: number[], headId: number, amount: number, isMonthly: boolean, stream: string | null = null, subjectCount: number | null = null) => {
+                for (const cid of classIds) {
+                    if (isMonthly) {
+                        for (let m = 0; m < 12; m++) {
+                            let year = startYear;
+                            let month = 3 + m; // Apr is 3
+                            if (month > 11) { month -= 12; year++; }
+                            const dueDate = new Date(Date.UTC(year, month, 10));
+
+                            await db.query(`
+                                INSERT INTO fee_structures (class_id, academic_year_id, fee_head_id, amount, due_date, stream, subject_count)
+                                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                            `, [cid, ayId, headId, amount, dueDate.toISOString(), stream, subjectCount]);
+                        }
+                    } else {
+                        const dueDate = new Date(Date.UTC(startYear, 3, 1));
+                        await db.query(`
+                            INSERT INTO fee_structures (class_id, academic_year_id, fee_head_id, amount, due_date, stream, subject_count)
+                            VALUES ($1, $2, $3, $4, $5, $6, $7)
+                        `, [cid, ayId, headId, amount, dueDate.toISOString(), stream, subjectCount]);
+                    }
+                }
+            };
+
+            const admHead = headMap['Admission Fee'];
+            const tuitionHead = headMap['Tuition Fee'];
+
+            // Seeding Logic (Same as script)
+            const getIds = (names: string[]) => names.map(n => classMap[n]).filter(Boolean);
+
+            await insertFee(getIds(['Nursery', 'LKG', 'UKG']), admHead, 20000, false);
+            await insertFee(getIds(['Nursery', 'LKG', 'UKG']), tuitionHead, 5000, true);
+
+            await insertFee(getIds(['I', 'II']), admHead, 20000, false);
+            await insertFee(getIds(['I', 'II']), tuitionHead, 5200, true);
+
+            await insertFee(getIds(['III', 'IV', 'V']), admHead, 22500, false);
+            await insertFee(getIds(['III', 'IV', 'V']), tuitionHead, 5600, true);
+
+            await insertFee(getIds(['VI', 'VII', 'VIII']), admHead, 22500, false);
+            await insertFee(getIds(['VI', 'VII', 'VIII']), tuitionHead, 5950, true);
+
+            await insertFee([classMap['IX']], admHead, 25000, false);
+            await insertFee([classMap['IX']], tuitionHead, 6600, true);
+
+            await insertFee([classMap['X']], tuitionHead, 6600, true);
+
+            // XI & XII
+            const xi = [classMap['XI']];
+            const xii = [classMap['XII']];
+
+            // XI
+            await insertFee(xi, admHead, 28000, false, 'Medical');
+            await insertFee(xi, tuitionHead, 8350, true, 'Medical');
+            await insertFee(xi, admHead, 28000, false, 'Non-Medical');
+            await insertFee(xi, tuitionHead, 8350, true, 'Non-Medical');
+            await insertFee(xi, admHead, 28000, false, 'Commerce', 6);
+            await insertFee(xi, tuitionHead, 7800, true, 'Commerce', 6);
+            await insertFee(xi, admHead, 28000, false, 'Commerce', 5);
+            await insertFee(xi, tuitionHead, 7600, true, 'Commerce', 5);
+
+            // XII (No Admission)
+            await insertFee(xii, tuitionHead, 8350, true, 'Medical');
+            await insertFee(xii, tuitionHead, 8350, true, 'Non-Medical');
+            await insertFee(xii, tuitionHead, 7800, true, 'Commerce', 6);
+            await insertFee(xii, tuitionHead, 7600, true, 'Commerce', 5);
+        }
+
+        // 3. Seed Office User
         const passwordPlain = 'office123';
         const passwordHash = await bcrypt.hash(passwordPlain, 10);
-
         await db.query(`
             INSERT INTO users (username, password_hash, full_name, role, is_active)
             VALUES ($1, $2, $3, $4, $5)
             ON CONFLICT (username) DO UPDATE SET password_hash = $2, role = $4, is_active = $5
         `, ['office', passwordHash, 'School Office', 'OFFICE', true]);
 
-        // Verify immediately
-        const verifyUser = await db.query('SELECT password_hash FROM users WHERE username = $1', ['office']);
-        const isMatch = await bcrypt.compare(passwordPlain, verifyUser.rows[0].password_hash);
-
         return NextResponse.json({
             success: true,
-            message: 'Migration and Seeding Completed Successfully.',
-            verification: isMatch ? 'Password verified internally' : 'Password verification failed internally',
-            generated_hash: passwordHash // Optional: for debugging
+            message: 'Migration and Fee Seeding Completed Successfully.'
         });
 
     } catch (error: any) {

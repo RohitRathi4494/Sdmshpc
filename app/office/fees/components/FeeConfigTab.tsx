@@ -16,6 +16,8 @@ export default function FeeConfigTab() {
     const [selectedHead, setSelectedHead] = useState('');
     const [amount, setAmount] = useState('');
     const [dueDate, setDueDate] = useState('');
+    const [stream, setStream] = useState('');
+    const [subjectCount, setSubjectCount] = useState('');
 
     useEffect(() => {
         fetchInitialData();
@@ -101,12 +103,16 @@ export default function FeeConfigTab() {
                     academic_year_id: parseInt(selectedYear),
                     fee_head_id: parseInt(selectedHead),
                     amount: parseFloat(amount),
-                    due_date: dueDate || null
+                    due_date: dueDate || null,
+                    stream: stream || null,
+                    subject_count: subjectCount ? parseInt(subjectCount) : null
                 })
             });
             if (res.ok) {
                 setAmount('');
                 setDueDate('');
+                setStream('');
+                setSubjectCount('');
                 fetchStructures();
             } else {
                 alert('Failed to add fee structure');
@@ -207,6 +213,32 @@ export default function FeeConfigTab() {
                                 />
                             </div>
                             <div>
+                                <label className="block text-xs text-gray-500 mb-1">Stream (Optional)</label>
+                                <select
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                    value={stream}
+                                    onChange={(e) => setStream(e.target.value)}
+                                >
+                                    <option value="">All Streams</option>
+                                    <option value="Medical">Medical</option>
+                                    <option value="Non-Medical">Non-Medical</option>
+                                    <option value="Commerce">Commerce</option>
+                                    <option value="Humanities">Humanities</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-xs text-gray-500 mb-1">Subj Count (Opt)</label>
+                                <select
+                                    className="w-full p-2 border border-gray-300 rounded"
+                                    value={subjectCount}
+                                    onChange={(e) => setSubjectCount(e.target.value)}
+                                >
+                                    <option value="">Any</option>
+                                    <option value="5">5 Subjects</option>
+                                    <option value="6">6 Subjects</option>
+                                </select>
+                            </div>
+                            <div>
                                 <label className="block text-xs text-gray-500 mb-1">Due Date (Optional)</label>
                                 <input
                                     type="date"
@@ -233,6 +265,7 @@ export default function FeeConfigTab() {
                                         <thead className="bg-gray-50">
                                             <tr>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Fee Head</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Conditions</th>
                                                 <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Due Date</th>
                                             </tr>
@@ -241,6 +274,11 @@ export default function FeeConfigTab() {
                                             {structures.map((s) => (
                                                 <tr key={s.id}>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{s.head_name}</td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {s.stream && <span className="bg-blue-100 text-blue-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded">{s.stream}</span>}
+                                                        {s.subject_count && <span className="bg-purple-100 text-purple-800 text-xs font-semibold px-2.5 py-0.5 rounded">{s.subject_count} Subj</span>}
+                                                        {!s.stream && !s.subject_count && <span className="text-gray-400 text-xs">All Students</span>}
+                                                    </td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-right">₹{s.amount}</td>
                                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                         {s.due_date ? new Date(s.due_date).toLocaleDateString() : '-'}

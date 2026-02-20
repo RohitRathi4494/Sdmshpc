@@ -15,10 +15,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
             return NextResponse.json({ success: false, message: 'Unauthorized' }, { status: 403 });
         }
 
-        // 1. Get Student Enrollment to find Class & Academic Year & User Info
-        // Fetch student name too for the UI header
+        // 1. Get Student Enrollment, Stream, and Subject Count
         const studentRes = await db.query(`
-            SELECT s.student_name, s.admission_no, 
+            SELECT s.student_name, s.admission_no, s.stream, s.subject_count,
                    se.class_id, se.academic_year_id,
                    c.class_name, ay.year_name
             FROM students s
@@ -35,17 +34,32 @@ export async function GET(request: Request, { params }: { params: { id: string }
         }
 
         const studentData = studentRes.rows[0];
-        const { class_id, academic_year_id } = studentData;
+        const { class_id, academic_year_id, stream, subject_count } = studentData;
 
-        // 2. Fetch Fee Structures (Demands)
+        // 2. Fetch Fee Structures (Demands) with Specificity Logic
         let feeStructures: any[] = [];
         if (class_id && academic_year_id) {
+            // Logic:
+            // Fetch all fee structures for this class/year.
+            // Use DISTINCT ON (fee_head_id) to pick the best match for each fee head.
+            // Ordering by specificity: (Matches Stream + Count) > (Matches Stream) > (General)
+            // A match means: (structure.field IS NULL) OR (structure.field = student.field)
+
             const structRes = await db.query(`
-                SELECT fs.id, fs.amount, fs.due_date, fh.head_name
+                SELECT DISTINCT ON (fs.fee_head_id) 
+                    fs.id, fs.amount, fs.due_date, fs.stream, fs.subject_count,
+                    fh.head_name
                 FROM fee_structures fs
                 JOIN fee_heads fh ON fs.fee_head_id = fh.id
-                WHERE fs.class_id = $1 AND fs.academic_year_id = $2
-            `, [class_id, academic_year_id]);
+                WHERE fs.class_id = $1 
+                  AND fs.academic_year_id = $2
+                  AND (fs.stream IS NULL OR fs.stream = $3)
+                  AND (fs.subject_count IS NULL OR fs.subject_count = $4)
+                ORDER BY fs.fee_head_id, 
+                         (CASE WHEN fs.stream IS NOT NULL THEN 1 ELSE 0 END + 
+                          CASE WHEN fs.subject_count IS NOT NULL THEN 1 ELSE 0 END) DESC
+            `, [class_id, academic_year_id, stream || null, subject_count || null]);
+
             feeStructures = structRes.rows;
         }
 

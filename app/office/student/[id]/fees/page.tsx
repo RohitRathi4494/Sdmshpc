@@ -163,7 +163,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                         <div className="text-xs text-gray-500">
                                             {new Date(pay.payment_date).toLocaleDateString()} • {pay.payment_mode}
                                         </div>
-                                        <div className="text-xs text-gray-400">{pay.receipt_number}</div>
+                                        <div className="text-xs text-gray-400">REC-{pay.id}</div>
                                     </div>
                                     <button
                                         onClick={() => window.open(`/api/office/fees/receipt/${pay.id}/pdf`, '_blank')}

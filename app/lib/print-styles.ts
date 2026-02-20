@@ -251,6 +251,17 @@ td.subject-name {
     border-radius: 8px;
 }
 
+.grading-section h3 {
+    text-align: center;
+    font-size: 1.6em; /* Increased size */
+    font-family: 'Crimson Pro', serif;
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-top: 10px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
 .grading-grid {
     display: grid;
     grid-template-columns: 60px 120px 1fr;

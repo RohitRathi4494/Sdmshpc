@@ -52,36 +52,23 @@ async function migrate() {
         `);
         console.log('Created fee_structures table.');
 
-        // 3. Fee Payments (Transactions)
+        // 3. Student Fee Payments (Transactions)
         await pool.query(`
-            CREATE TABLE IF NOT EXISTS fee_payments (
+            CREATE TABLE IF NOT EXISTS student_fee_payments (
                 id SERIAL PRIMARY KEY,
                 student_id INT NOT NULL,
-                receipt_number VARCHAR(50) UNIQUE NOT NULL,
+                fee_structure_id INT, -- Optional: if paying specific head (nullable)
                 amount_paid NUMERIC(10, 2) NOT NULL,
-                payment_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                payment_mode VARCHAR(50) NOT NULL, -- CASH, UPI, ONLINE, CHEQUE
+                payment_date DATE DEFAULT CURRENT_DATE,
+                payment_mode VARCHAR(50) CHECK (payment_mode IN ('CASH', 'UPI', 'CHEQUE', 'ONLINE')),
                 transaction_reference VARCHAR(100),
                 remarks TEXT,
-                created_by INT REFERENCES users(id),
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                CONSTRAINT fk_fp_student FOREIGN KEY (student_id) REFERENCES students(id)
+                CONSTRAINT fk_sfp_student FOREIGN KEY (student_id) REFERENCES students(id),
+                CONSTRAINT fk_sfp_structure FOREIGN KEY (fee_structure_id) REFERENCES fee_structures(id)
             );
         `);
-        console.log('Created fee_payments table.');
-
-        // 4. Payment Items (Allocation of payment to heads)
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS fee_payment_items (
-                id SERIAL PRIMARY KEY,
-                fee_payment_id INT NOT NULL,
-                fee_structure_id INT NOT NULL,
-                amount NUMERIC(10, 2) NOT NULL,
-                CONSTRAINT fk_fpi_payment FOREIGN KEY (fee_payment_id) REFERENCES fee_payments(id) ON DELETE CASCADE,
-                CONSTRAINT fk_fpi_structure FOREIGN KEY (fee_structure_id) REFERENCES fee_structures(id)
-            );
-        `);
-        console.log('Created fee_payment_items table.');
+        console.log('Created student_fee_payments table.');
 
 
         // 5. Seed Fee Heads

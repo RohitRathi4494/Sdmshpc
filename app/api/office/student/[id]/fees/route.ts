@@ -51,7 +51,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
         // 3. Fetch Payments
         const paymentsRes = await db.query(`
-            SELECT * FROM fee_payments 
+            SELECT * FROM student_fee_payments 
             WHERE student_id = $1 
             ORDER BY payment_date DESC
         `, [studentId]);

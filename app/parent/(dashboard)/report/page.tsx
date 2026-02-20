@@ -116,7 +116,7 @@ export default function ParentReportPage() {
     };
 
     return (
-        <div className="bg-gray-100 min-h-screen py-8 px-4 sm:px-8">
+        <div className="bg-white min-h-screen py-8 px-4 sm:px-8">
             <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
 
             <div className="max-w-6xl mx-auto mb-8 bg-white shadow-lg rounded-xl overflow-hidden">

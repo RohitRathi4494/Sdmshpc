@@ -87,7 +87,7 @@ export default function DailyReportTab() {
                             ) : (
                                 transactions.map((t: any) => (
                                     <tr key={t.id} className="hover:bg-gray-50">
-                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{t.receipt_number}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">REC-{t.id}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{t.student_name}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{t.admission_no}</td>
                                         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{t.class_name}-{t.section_name}</td>

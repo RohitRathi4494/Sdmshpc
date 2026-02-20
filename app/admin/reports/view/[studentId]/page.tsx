@@ -265,21 +265,22 @@ export default function AdminReportViewPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {[
-                                    'English', 'Hindi', 'Mathematics', 'Science', 'Social Science', 'ICT', 'Sanskrit', 'General Knowledge'
-                                ].map(subject => (
-                                    <tr key={subject}>
-                                        <td className="subject-name">{subject}</td>
-                                        {renderScoreCell(subject, 'Periodic Assessment', 'Term I')}
-                                        {renderScoreCell(subject, 'Periodic Assessment', 'Term II')}
-                                        {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term I')}
-                                        {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term II')}
-                                        {renderScoreCell(subject, 'Internal Assessment', 'Term I')}
-                                        {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
-                                        {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
-                                        {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
-                                    </tr>
-                                ))}
+                                {reportData.subjects?.map((sub: any) => {
+                                    const subject = sub.subject_name;
+                                    return (
+                                        <tr key={subject}>
+                                            <td className="subject-name">{subject}</td>
+                                            {renderScoreCell(subject, 'Periodic Assessment', 'Term I')}
+                                            {renderScoreCell(subject, 'Periodic Assessment', 'Term II')}
+                                            {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term I')}
+                                            {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term II')}
+                                            {renderScoreCell(subject, 'Internal Assessment', 'Term I')}
+                                            {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
+                                            {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
+                                            {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -519,15 +520,15 @@ export default function AdminReportViewPage() {
                             <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
                             <table className="compact-table">
                                 <tbody>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700, width: '50px' }}>A</td>
                                         <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
                                     </tr>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700 }}>B</td>
                                         <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
                                     </tr>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700 }}>C</td>
                                         <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
                                     </tr>
@@ -539,15 +540,15 @@ export default function AdminReportViewPage() {
                             <h2 className="section-title">Evaluation Levels: Physical Education</h2>
                             <table className="compact-table">
                                 <tbody>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700, width: '50px' }}>A</td>
                                         <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
                                     </tr>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700 }}>B</td>
                                         <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
                                     </tr>
-                                    <tr style={{ background: 'var(--light-cream)' }}>
+                                    <tr>
                                         <td style={{ fontWeight: 700 }}>C</td>
                                         <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
                                     </tr>

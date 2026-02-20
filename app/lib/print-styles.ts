@@ -133,7 +133,7 @@ body {
     border-radius: 4px;
     padding: 6px 10px;
     min-height: 36px;
-    background: rgba(232, 241, 245, 0.1);
+    background: white; /* Changed from light blue */
     display: flex;
     align-items: center;
 }
@@ -151,12 +151,12 @@ th {
     color: white !important;
     padding: 10px;
     text-align: center;
-    border: 1px solid #000; /* Darker border */
+    border: 1px solid #000;
 }
 
 td {
     padding: 8px;
-    border: 1px solid #000; /* Darker border */
+    border: 1px solid #000;
     text-align: center;
 }
 
@@ -175,11 +175,12 @@ td.subject-name {
 
 /* Co-Scholastic & Personality */
 .subject-header {
-    background-color: var(--light-cream) !important;
+    background-color: white !important; /* Changed from light cream */
     color: var(--primary-navy) !important;
     font-weight: 700;
     text-align: center;
     padding: 8px !important;
+    border-bottom: 1px solid #000;
 }
 
 .compact-table td, .compact-table th {
@@ -250,6 +251,7 @@ td.subject-name {
     padding: 10px;
     border-radius: 8px;
     page-break-inside: avoid;
+    background: white;
 }
 
 /* Unified Heading Style for Grading Section */
@@ -276,12 +278,12 @@ td.subject-name {
     display: grid;
     grid-template-columns: 60px 120px 1fr;
     border: 1px solid var(--text-dark);
-    font-size: 0.85em; /* Unified font size */
+    font-size: 0.95em; /* Increased size back up */
     margin-bottom: 15px;
 }
 
 .grading-cell {
-    padding: 4px 6px; /* Compact padding */
+    padding: 6px 8px; /* Corrected padding */
     border-right: 1px solid var(--text-dark);
     border-bottom: 1px solid var(--text-dark);
     display: flex;
@@ -309,13 +311,13 @@ td.subject-name {
 
 /* Compact Table Updates for Consistency */
 .grading-section .compact-table {
-    font-size: 0.85em;
+    font-size: 0.95em; /* Increased size back up */
     margin-bottom: 10px;
 }
 
 .grading-section .compact-table td,
 .grading-section .compact-table th {
-    padding: 4px 6px !important;
+    padding: 6px 8px !important;
     border: 1px solid var(--text-dark);
 }
 

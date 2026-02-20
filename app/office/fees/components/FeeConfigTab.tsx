@@ -30,7 +30,7 @@ export default function FeeConfigTab() {
 
             const [headsRes, classesRes, yearsRes] = await Promise.all([
                 fetch('/api/office/fees/heads', { headers }),
-                fetch('/api/teacher/classes', { headers }), // Assuming this returns classes
+                fetch('/api/admin/classes', { headers }),
                 fetch('/api/admin/academic-years', { headers }) // Assuming this exists
             ]);
 
@@ -40,7 +40,7 @@ export default function FeeConfigTab() {
             }
             if (classesRes.ok) {
                 const data = await classesRes.json();
-                setClasses(data.classes || []); // Check API response structure
+                setClasses(data.data || []); // Fixed: API returns { data: [...] }
             }
             if (yearsRes.ok) {
                 const data = await yearsRes.json();

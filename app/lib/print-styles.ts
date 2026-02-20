@@ -230,6 +230,9 @@ td.subject-name {
 .feedback-input {
     min-height: 40px;
     background: white;
+    border: 1px solid var(--border-grey);
+    border-radius: 4px;
+    padding: 8px;
 }
 
 /* Signature Section */

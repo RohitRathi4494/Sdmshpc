@@ -218,6 +218,7 @@ td.subject-name {
     margin-top: 0;
     border-bottom: 1px solid var(--border-grey);
     padding-bottom: 10px;
+    margin-bottom: 15px;
 }
 
 .feedback-row {

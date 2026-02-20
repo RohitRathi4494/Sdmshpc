@@ -247,29 +247,41 @@ td.subject-name {
 /* Grading Framework */
 .grading-section {
     border: 1px solid var(--border-grey);
-    padding: 15px;
+    padding: 10px;
     border-radius: 8px;
+    page-break-inside: avoid;
 }
 
-.grading-section h3 {
+/* Unified Heading Style for Grading Section */
+.grading-section h3,
+.grading-section .section-title {
     text-align: center;
-    font-size: 1.6em; /* Increased size */
+    font-size: 1.4em;
     font-family: 'Crimson Pro', serif;
     font-weight: 700;
-    color: var(--primary-navy);
-    margin-top: 10px;
-    margin-bottom: 20px;
+    color: var(--primary-navy) !important;
+    margin-top: 5px;
+    margin-bottom: 10px;
     text-transform: uppercase;
+    border-bottom: none !important;
+    padding-bottom: 0 !important;
+    display: block;
+}
+
+.grading-section .section-title::before {
+    display: none;
 }
 
 .grading-grid {
     display: grid;
     grid-template-columns: 60px 120px 1fr;
     border: 1px solid var(--text-dark);
+    font-size: 0.85em; /* Unified font size */
+    margin-bottom: 15px;
 }
 
 .grading-cell {
-    padding: 8px;
+    padding: 4px 6px; /* Compact padding */
     border-right: 1px solid var(--text-dark);
     border-bottom: 1px solid var(--text-dark);
     display: flex;
@@ -293,6 +305,23 @@ td.subject-name {
 .grade-label {
     font-weight: 700;
     color: var(--primary-navy);
+}
+
+/* Compact Table Updates for Consistency */
+.grading-section .compact-table {
+    font-size: 0.85em;
+    margin-bottom: 10px;
+}
+
+.grading-section .compact-table td,
+.grading-section .compact-table th {
+    padding: 4px 6px !important;
+    border: 1px solid var(--text-dark);
+}
+
+/* Reduce internal section margins */
+.grading-section .section {
+    margin-bottom: 5px;
 }
 
 /* Print Specifics */

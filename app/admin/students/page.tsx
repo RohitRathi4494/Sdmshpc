@@ -61,7 +61,7 @@ export default function StudentsPage() {
     // Load Masters
     useEffect(() => {
         const fetchMasters = async () => {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const [cls, sec, yrs] = await Promise.all([
                 ApiClient.get<ClassData[]>('/admin/classes', token),
                 ApiClient.get<SectionData[]>('/admin/sections', token),
@@ -80,7 +80,7 @@ export default function StudentsPage() {
         if (!academicYear) return;
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const data = await ApiClient.get<Student[]>(`/admin/students?status=unenrolled&academic_year_id=${academicYear.id}`, token);
             setStudents(data);
             setSelectedStudents([]);
@@ -96,7 +96,7 @@ export default function StudentsPage() {
         if (!academicYear || !filterClassId) return;
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             let url = `/admin/students?class_id=${filterClassId}&academic_year_id=${academicYear.id}`;
             if (filterSectionId) url += `&section_id=${filterSectionId}`;
 
@@ -133,7 +133,7 @@ export default function StudentsPage() {
 
         setEnrolling(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const promises = selectedStudents.map(studentId =>
                 ApiClient.post('/admin/student-enrollments', {
                     student_id: studentId,
@@ -158,7 +158,7 @@ export default function StudentsPage() {
     const handleCreateStudent = async (studentData: any) => {
         if (!academicYear) return;
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
 
             // StudentForm returns proper types, but we might need to attach academic_year_id
             await ApiClient.post('/admin/students', {

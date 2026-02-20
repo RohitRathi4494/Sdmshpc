@@ -88,7 +88,7 @@ export default function OfficeStudentsPage() {
     // Load Masters
     useEffect(() => {
         const fetchMasters = async () => {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             // Using API endpoints that should be accessible or generic
             // Assuming Teacher/Admin APIs are accessible to Office or we need to ensure permissions
             // ApiClient handles error status generally
@@ -116,7 +116,7 @@ export default function OfficeStudentsPage() {
         if (!academicYear) return;
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const data = await ApiClient.get<Student[]>(`/admin/students?status=unenrolled&academic_year_id=${academicYear.id}`, token);
             setStudents(data);
             setSelectedStudents([]);
@@ -132,7 +132,7 @@ export default function OfficeStudentsPage() {
         if (!academicYear || !filterClassId) return;
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             let url = `/admin/students?class_id=${filterClassId}&academic_year_id=${academicYear.id}`;
             if (filterSectionId) url += `&section_id=${filterSectionId}`;
 
@@ -169,7 +169,7 @@ export default function OfficeStudentsPage() {
 
         setEnrolling(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const promises = selectedStudents.map(studentId =>
                 ApiClient.post('/admin/student-enrollments', {
                     student_id: studentId,
@@ -194,7 +194,7 @@ export default function OfficeStudentsPage() {
     const handleCreateStudent = async (studentData: any) => {
         if (!academicYear) return;
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.post('/admin/students', {
                 ...studentData,
                 academic_year_id: academicYear.id

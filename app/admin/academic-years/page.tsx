@@ -60,7 +60,7 @@ export default function AcademicYearsPage() {
         if (!confirm('Are you sure you want to activate this academic year? This will deactivate all others.')) return;
 
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             // PATCH endpoint we just created
             await ApiClient.request<{ id: number; is_active: boolean }>(`/admin/academic-years/${id}`, {
                 method: 'PATCH',

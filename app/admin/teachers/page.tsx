@@ -71,7 +71,7 @@ export default function TeachersPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setSaving(true);
-        const token = localStorage.getItem('hpc_token');
+        const token = sessionStorage.getItem('hpc_token');
 
         try {
             if (editingTeacher) {

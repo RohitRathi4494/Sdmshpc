@@ -46,7 +46,7 @@ export default function AdminReportViewPage() {
     const handleGeneratePDF = async () => {
         setGenerating(true);
         try {
-            const token = localStorage.getItem('hpc_token') || undefined;
+            const token = sessionStorage.getItem('hpc_token') || undefined;
             const response = await fetch(`/api/reports/student/${studentId}/pdf`, {
                 method: 'POST',
                 headers: {

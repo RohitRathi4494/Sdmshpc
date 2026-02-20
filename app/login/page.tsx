@@ -29,8 +29,8 @@ function LoginForm() {
 
     useEffect(() => {
         // Check if already logged in
-        const token = localStorage.getItem('hpc_token');
-        const role = localStorage.getItem('hpc_role');
+        const token = sessionStorage.getItem('hpc_token');
+        const role = sessionStorage.getItem('hpc_role');
         if (token && role) {
             if (role === 'ADMIN') router.push('/admin');
             else if (role === 'OFFICE') router.push('/office');

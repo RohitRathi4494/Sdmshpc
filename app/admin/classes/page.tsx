@@ -128,7 +128,7 @@ export default function ClassesPage() {
         if (!selectedClassId || !sectionForm.section_name.trim()) return;
 
         setSaving(true);
-        const token = localStorage.getItem('hpc_token') || '';
+        const token = sessionStorage.getItem('hpc_token') || '';
 
         try {
             const payload: any = {

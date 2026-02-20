@@ -43,7 +43,7 @@ export default function ReportsPage() {
     // Initial Load
     useEffect(() => {
         const fetchMasters = async () => {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const [cls, sec, yrs] = await Promise.all([
                 ApiClient.get<ClassData[]>('/admin/classes', token),
                 ApiClient.get<SectionData[]>('/admin/sections', token),

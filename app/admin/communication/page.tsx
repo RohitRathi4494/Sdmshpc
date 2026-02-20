@@ -41,7 +41,7 @@ export default function CommunicationPage() {
 
     const fetchClasses = async () => {
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             const res = await fetch('/api/admin/classes', {
                 headers: { 'Authorization': `Bearer ${token}` }
             });
@@ -80,7 +80,7 @@ export default function CommunicationPage() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             const recipients = [];
 
             if (recipientType === 'CLASS') {

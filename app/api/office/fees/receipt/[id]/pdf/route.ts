@@ -7,7 +7,14 @@ export const dynamic = 'force-dynamic';
 
 export async function GET(request: Request, { params }: { params: { id: string } }) {
     try {
-        const token = extractToken(request.headers.get('Authorization'));
+        const { searchParams } = new URL(request.url);
+
+        // Accept token from Authorization header OR from URL query param
+        // (window.open() cannot set headers, so we allow ?token=... for browser navigation)
+        const headerToken = extractToken(request.headers.get('Authorization'));
+        const queryToken = searchParams.get('token') || undefined;
+        const token = headerToken || queryToken;
+
         const user = await verifyAuth(token);
 
         if (!user || (user.role !== UserRole.OFFICE && user.role !== UserRole.ADMIN)) {

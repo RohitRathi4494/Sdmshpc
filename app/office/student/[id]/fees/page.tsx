@@ -90,8 +90,9 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                 setRemarks('');
                 fetchLedger();
 
-                // Open Receipt in new tab
-                window.open(`/api/office/fees/receipt/${receiptId}/pdf`, '_blank');
+                // Open Receipt in new tab (pass token as query param since window.open can't set headers)
+                const pdfToken = sessionStorage.getItem('hpc_token');
+                window.open(`/api/office/fees/receipt/${receiptId}/pdf?token=${pdfToken}`, '_blank');
             } else {
                 const err = await res.json();
                 alert(err.message || 'Payment failed');
@@ -192,7 +193,10 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                         <div className="text-xs text-gray-400">REC-{pay.id}</div>
                                     </div>
                                     <button
-                                        onClick={() => window.open(`/api/office/fees/receipt/${pay.id}/pdf`, '_blank')}
+                                        onClick={() => {
+                                            const pdfToken = sessionStorage.getItem('hpc_token');
+                                            window.open(`/api/office/fees/receipt/${pay.id}/pdf?token=${pdfToken}`, '_blank');
+                                        }}
                                         className="text-xs bg-indigo-50 text-indigo-600 px-3 py-1 rounded hover:bg-indigo-100"
                                     >
                                         Receipt PDF

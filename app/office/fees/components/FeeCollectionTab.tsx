@@ -45,9 +45,9 @@ export default function FeeCollectionTab() {
                 }
                 setStudents(filtered);
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
-            alert('Error fetching students');
+            alert(`Error: ${e.message || 'Unknown error occurred fetching students'}`);
         } finally {
             setLoading(false);
         }

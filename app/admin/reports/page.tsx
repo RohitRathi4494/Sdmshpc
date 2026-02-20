@@ -67,7 +67,7 @@ export default function ReportsPage() {
 
             setLoading(true);
             try {
-                const token = localStorage.getItem('hpc_token') || '';
+                const token = sessionStorage.getItem('hpc_token') || '';
                 let url = `/admin/students?class_id=${selectedClassId}&academic_year_id=${academicYear.id}`;
                 if (selectedSectionId) url += `&section_id=${selectedSectionId}`;
 

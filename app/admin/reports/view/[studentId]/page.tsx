@@ -16,7 +16,7 @@ export default function AdminReportViewPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
                 // Use a default academic year or fetch active one if needed. 
                 // For now, hardcoding 1 as per teacher view, or we could fetch the active year context.
                 // Better: fetch active year first if dynamic is needed, but usually report is for current active year.

@@ -22,7 +22,7 @@ export default function SubjectMaster({ onUpdate }: SubjectMasterProps) {
     const fetchSubjects = async () => {
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const data = await ApiClient.get<Subject[]>('/admin/subjects', token);
             setSubjects(data);
         } catch (error) {
@@ -40,7 +40,7 @@ export default function SubjectMaster({ onUpdate }: SubjectMasterProps) {
         if (!newName.trim()) return;
         setAdding(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.post('/admin/subjects', { subject_name: newName.trim() }, token);
             setNewName('');
             await fetchSubjects();
@@ -55,7 +55,7 @@ export default function SubjectMaster({ onUpdate }: SubjectMasterProps) {
     const handleUpdate = async (id: number) => {
         if (!editName.trim()) return;
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.put('/admin/subjects', { id, subject_name: editName.trim() }, token);
             setEditingId(null);
             await fetchSubjects();
@@ -68,7 +68,7 @@ export default function SubjectMaster({ onUpdate }: SubjectMasterProps) {
     const handleDelete = async (id: number) => {
         if (!confirm('Are you sure? This cannot be undone if not assigned.')) return;
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.request(`/admin/subjects?id=${id}`, { method: 'DELETE', token });
             await fetchSubjects();
             onUpdate();

@@ -16,7 +16,7 @@ export default function ReportPreviewPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
                 const report = await ApiClient.get<any>(`/reports/student/${studentId}?academic_year_id=1`, token);
                 setReportData(report);
             } catch (error) {

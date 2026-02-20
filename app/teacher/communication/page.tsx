@@ -103,7 +103,7 @@ export default function CommunicationPage() {
 
         setLoading(true);
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token') || '';
             const recipients = [];
 
             if (recipientType === 'CLASS') {

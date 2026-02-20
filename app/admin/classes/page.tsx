@@ -50,7 +50,7 @@ export default function ClassesPage() {
 
     const fetchData = async () => {
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
 
             // Fetch Classes
             const classesData = await ApiClient.get<ClassData[]>('/admin/classes', token);
@@ -88,7 +88,7 @@ export default function ClassesPage() {
 
         setSaving(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.post('/admin/classes', {
                 class_name: newClassName,
                 display_order: parseInt(newClassOrder) || 0

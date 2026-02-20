@@ -43,7 +43,7 @@ function StudentSelectionContent() {
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || '';
+                const token = sessionStorage.getItem('hpc_token') || '';
                 const data = await ApiClient.get<ClassData[]>('/teacher/classes', token);
                 setClasses(data);
 
@@ -83,7 +83,7 @@ function StudentSelectionContent() {
         setLoading(true);
         const fetchStudents = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
                 let url = `/teacher/students?class_id=${selectedClassId}&academic_year_id=1`; // Todo: dynamic year
                 if (selectedSectionId) url += `&section_id=${selectedSectionId}`;
 

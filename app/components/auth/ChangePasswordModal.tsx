@@ -37,7 +37,7 @@ export default function ChangePasswordModal({ isOpen, onClose }: ChangePasswordM
         setLoading(true);
 
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.post('/api/auth/change-password', {
                 currentPassword: formData.currentPassword,
                 newPassword: formData.newPassword,

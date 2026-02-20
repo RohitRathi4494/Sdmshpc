@@ -33,7 +33,7 @@ export default function TeachersPage() {
 
     const fetchTeachers = async () => {
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token') || '';
             const data = await ApiClient.get<Teacher[]>('/admin/teachers', token || '');
             setTeachers(data);
         } catch (error) {

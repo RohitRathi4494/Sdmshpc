@@ -30,7 +30,7 @@ export default function ParentDashboard() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const token = localStorage.getItem('hpc_parent_token');
+                const token = sessionStorage.getItem('hpc_token') || '';
                 if (!token) {
                     router.push('/parent/login');
                     return;

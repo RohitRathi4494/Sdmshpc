@@ -23,7 +23,7 @@ export default function ParentReportPage() {
     useEffect(() => {
         const fetchReport = async () => {
             try {
-                const token = localStorage.getItem('hpc_parent_token');
+                const token = sessionStorage.getItem('hpc_token') || undefined;
                 if (!token) {
                     console.log("No token, redirecting");
                     router.push('/parent/login');

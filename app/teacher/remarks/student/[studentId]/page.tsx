@@ -34,7 +34,7 @@ export default function RemarksEntryPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
                 const report = await ApiClient.get<any>(`/reports/student/${studentId}?academic_year_id=1`, token);
                 setStudentName(report.student.student_name);
 
@@ -65,7 +65,7 @@ export default function RemarksEntryPage() {
     const handleBlur = async (typeId: number, aspect: string | null, text: string) => {
         setSaving(true);
         try {
-            const token = localStorage.getItem('hpc_token') || undefined;
+            const token = sessionStorage.getItem('hpc_token') || undefined;
             await ApiClient.post('/teacher/remarks', {
                 student_id: studentId,
                 remark_type_id: typeId,

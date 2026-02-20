@@ -29,7 +29,7 @@ export default function AttendanceEntryPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const token = localStorage.getItem('hpc_token');
+                const token = sessionStorage.getItem('hpc_token');
                 // Force cast to any to workaround persistent build error about private property
                 const report = await (ApiClient as any).get(`/reports/student/${studentId}?academic_year_id=1`, token);
                 setStudentName(report.student.student_name);
@@ -63,7 +63,7 @@ export default function AttendanceEntryPage() {
         // Simple debounce or save on blur would be better, but keeping consistent with current file
         try {
             // ... save logic
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             await (ApiClient as any).post('/teacher/attendance', {
                 student_id: studentId,
                 month_id: monthId,

@@ -17,8 +17,8 @@ export default function OfficeLayout({ children }: { children: React.ReactNode }
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const role = localStorage.getItem(USER_ROLE_KEY);
+        const token = sessionStorage.getItem('hpc_token');
+        const role = sessionStorage.getItem('hpc_role');
 
         // Allow ADMIN to access OFFICE pages? Usually admins can access everything.
         // But for now, strict check or allow both?
@@ -74,9 +74,9 @@ export default function OfficeLayout({ children }: { children: React.ReactNode }
                 <div className="p-4">
                     <button
                         onClick={() => {
-                            localStorage.removeItem(ACCESS_TOKEN_KEY);
-                            localStorage.removeItem(USER_ROLE_KEY);
-                            router.push('/');
+                            sessionStorage.removeItem('hpc_token');
+                            sessionStorage.removeItem('hpc_role');
+                            router.push('/login');
                         }}
                         className={`flex items-center p-2 text-red-300 hover:bg-slate-700 w-full rounded ${!isSidebarOpen && 'justify-center'}`}
                     >

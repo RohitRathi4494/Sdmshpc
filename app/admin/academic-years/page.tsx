@@ -21,7 +21,7 @@ export default function AcademicYearsPage() {
 
     const fetchYears = async () => {
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             const data = await ApiClient.get<AcademicYear[]>('/admin/academic-years', token || '');
             setYears(data);
         } catch (error) {
@@ -42,7 +42,7 @@ export default function AcademicYearsPage() {
 
         setSaving(true);
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             await ApiClient.post('/admin/academic-years', { year_name: newYearName, is_active: false }, token || '');
             setNewYearName('');
             setIsModalOpen(false);

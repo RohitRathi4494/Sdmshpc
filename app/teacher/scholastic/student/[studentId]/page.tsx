@@ -68,7 +68,7 @@ export default function ScholasticEntryPage() {
         const loadData = async () => {
             try {
                 setFetchError(null);
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
 
                 const [report, componentsData] = await Promise.all([
                     ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=1`, token),
@@ -148,7 +148,7 @@ export default function ScholasticEntryPage() {
         setSaving(true);
 
         try {
-            const token = localStorage.getItem('hpc_token') || undefined;
+            const token = sessionStorage.getItem('hpc_token') || undefined;
             await ApiClient.post('/teacher/scholastic-scores', updated, token);
             setSaving(false);
         } catch (error: any) {

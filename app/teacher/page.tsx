@@ -12,7 +12,7 @@ export default function TeacherDashboard() {
     useEffect(() => {
         const fetchClasses = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || '';
+                const token = sessionStorage.getItem('hpc_token') || '';
                 const data = await ApiClient.get<any[]>('/teacher/classes', token);
                 setClasses(data);
             } catch (error) {
@@ -26,7 +26,7 @@ export default function TeacherDashboard() {
 
     const handleDownload = async (url: string, filename: string) => {
         try {
-            const token = localStorage.getItem('hpc_token');
+            const token = sessionStorage.getItem('hpc_token');
             if (!token) {
                 alert('Please login again');
                 return;

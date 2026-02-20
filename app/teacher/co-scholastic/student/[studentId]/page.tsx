@@ -43,7 +43,7 @@ export default function CoScholasticEntryPage() {
     useEffect(() => {
         const loadData = async () => {
             try {
-                const token = localStorage.getItem('hpc_token') || undefined;
+                const token = sessionStorage.getItem('hpc_token') || undefined;
 
                 // 0. Fetch Active Year ID
                 try {
@@ -107,7 +107,7 @@ export default function CoScholasticEntryPage() {
         setSaving(true);
 
         try {
-            const token = localStorage.getItem('hpc_token') || undefined;
+            const token = sessionStorage.getItem('hpc_token') || undefined;
 
             await ApiClient.post('/teacher/co-scholastic-scores', {
                 student_id: studentId,

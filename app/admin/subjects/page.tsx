@@ -44,7 +44,7 @@ export default function SubjectMappingPage() {
 
     const fetchMasters = async () => {
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             const [classesData, yearsData, subjectsData] = await Promise.all([
                 ApiClient.get<ClassData[]>('/admin/classes', token),
                 ApiClient.get<AcademicYear[]>('/admin/academic-years', token),
@@ -82,7 +82,7 @@ export default function SubjectMappingPage() {
         const fetchMapping = async () => {
             setLoadingMapping(true);
             try {
-                const token = localStorage.getItem('hpc_token') || '';
+                const token = sessionStorage.getItem('hpc_token') || '';
                 // API now returns { subject_id, max_marks }[]
                 const data = await ApiClient.get<Assignment[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`, token);
 
@@ -129,7 +129,7 @@ export default function SubjectMappingPage() {
 
         setSaving(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             // Convert map to array of objects
             const subjectsPayload = Array.from(assignments.entries()).map(([subject_id, max_marks]) => ({
                 subject_id,

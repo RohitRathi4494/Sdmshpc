@@ -9,13 +9,20 @@ export default function ParentLayout({ children }: { children: React.ReactNode }
     const [authorized, setAuthorized] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem('hpc_parent_token');
-        if (!token) {
+        const token = sessionStorage.getItem('hpc_token');
+        const role = sessionStorage.getItem('hpc_role');
+        if (!token || !role) {
             router.push('/parent/login');
         } else {
             setAuthorized(true);
         }
     }, [router]);
+
+    const handleLogout = () => {
+        sessionStorage.removeItem('hpc_token');
+        sessionStorage.removeItem('hpc_role');
+        router.push('/parent/login');
+    };
 
     if (!authorized) return null;
 
@@ -32,10 +39,7 @@ export default function ParentLayout({ children }: { children: React.ReactNode }
                         </div>
                     </div>
                     <button
-                        onClick={() => {
-                            localStorage.removeItem('hpc_parent_token');
-                            router.push('/parent/login');
-                        }}
+                        onClick={handleLogout}
                         className="bg-blue-700 hover:bg-blue-800 px-3 py-1 rounded text-sm transition-colors border border-blue-500"
                     >
                         Sign Out

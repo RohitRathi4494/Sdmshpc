@@ -30,7 +30,8 @@ export default function ParentLoginPage() {
             }
 
             // Login Successful
-            localStorage.setItem('hpc_parent_token', data.token);
+            sessionStorage.setItem('hpc_token', data.token);
+            sessionStorage.setItem('hpc_role', 'PARENT');
             router.push('/parent');
 
         } catch (err: any) {

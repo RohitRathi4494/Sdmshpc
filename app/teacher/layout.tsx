@@ -28,8 +28,8 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
     // Basic auth check
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const role = localStorage.getItem(USER_ROLE_KEY);
+        const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
+        const role = sessionStorage.getItem(USER_ROLE_KEY);
 
         if (!token) {
             router.push('/login');
@@ -39,6 +39,12 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
             // Or we can just let it slide since we're efficient.
         }
     }, [router]);
+
+    const handleLogout = () => {
+        sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+        sessionStorage.removeItem(USER_ROLE_KEY);
+        router.push('/login');
+    };
 
     const navItems = [
         { label: 'Dashboard', href: '/teacher', icon: '🏠' },
@@ -79,10 +85,7 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
                 </nav>
                 <div className="p-4 border-t shrink-0">
                     <button
-                        onClick={() => {
-                            localStorage.removeItem(ACCESS_TOKEN_KEY);
-                            router.push('/login');
-                        }}
+                        onClick={handleLogout}
                         className={`flex items-center p-2 text-red-600 hover:bg-red-50 w-full rounded ${!isSidebarOpen && 'justify-center'}`}
                     >
                         <span className="mr-2">🚪</span>

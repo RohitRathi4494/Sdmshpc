@@ -357,7 +357,7 @@ export default function OfficeStudentsPage() {
                         academicYearId={academicYear?.id}
                         onSave={async (updatedData: any) => {
                             try {
-                                const token = localStorage.getItem('hpc_token') || '';
+                                const token = sessionStorage.getItem('hpc_token') || '';
                                 await ApiClient.put(`/admin/students/${editingStudent.id}`, updatedData, token);
                                 alert('Student updated successfully');
                                 setEditingStudent(null);

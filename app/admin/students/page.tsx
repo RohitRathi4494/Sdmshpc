@@ -268,7 +268,7 @@ export default function StudentsPage() {
                                         if (!confirm('Are you sure you want to re-assign roll numbers alphabetically for this class? Existing roll numbers will be overwritten.')) return;
                                         setLoading(true);
                                         try {
-                                            const token = localStorage.getItem('hpc_token') || '';
+                                            const token = sessionStorage.getItem('hpc_token') || '';
                                             await ApiClient.post('/admin/students/auto-roll-no', {
                                                 class_id: filterClassId,
                                                 academic_year_id: academicYear?.id
@@ -356,7 +356,7 @@ export default function StudentsPage() {
                         academicYearId={academicYear?.id}
                         onSave={async (updatedData: any) => {
                             try {
-                                const token = localStorage.getItem('hpc_token') || '';
+                                const token = sessionStorage.getItem('hpc_token') || '';
                                 await ApiClient.put(`/admin/students/${editingStudent.id}`, updatedData, token);
                                 alert('Student updated successfully');
                                 setEditingStudent(null);

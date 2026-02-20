@@ -16,8 +16,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
     useEffect(() => {
-        const token = localStorage.getItem(ACCESS_TOKEN_KEY);
-        const role = localStorage.getItem(USER_ROLE_KEY);
+        const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
+        const role = sessionStorage.getItem(USER_ROLE_KEY);
 
         if (!token || role !== 'ADMIN') {
             router.push('/login');

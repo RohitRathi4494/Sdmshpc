@@ -60,9 +60,9 @@ function LoginForm() {
             }
 
             // Login Successful
-            localStorage.setItem('hpc_token', data.token);
-            localStorage.setItem('hpc_role', data.role);
-            localStorage.setItem('hpc_user', JSON.stringify(data.user)); // Store user info if useful
+            sessionStorage.setItem('hpc_token', data.token);
+            sessionStorage.setItem('hpc_role', data.role);
+            sessionStorage.setItem('hpc_user', JSON.stringify(data.user)); // Store user info if useful
 
             // Redirect based on role
             if (data.role === 'ADMIN') {

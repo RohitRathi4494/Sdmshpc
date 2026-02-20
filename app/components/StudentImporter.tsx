@@ -128,7 +128,7 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                 return;
             }
 
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             console.log('Sending request to API...');
             const res = await ApiClient.post<any>('/admin/students/import', { action: 'preview', data }, token);
             console.log('API Response:', res);
@@ -156,7 +156,7 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
         if (previewData.length === 0) return;
         setIsUploading(true);
         try {
-            const token = localStorage.getItem('hpc_token') || '';
+            const token = sessionStorage.getItem('hpc_token') || '';
             await ApiClient.post('/admin/students/import', { action: 'confirm', data: previewData }, token);
             alert('Students imported and enrolled successfully!');
             setFile(null);
@@ -235,7 +235,7 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                                     setIsUploading(false);
                                     return;
                                 }
-                                const token = localStorage.getItem('hpc_token') || '';
+                                const token = sessionStorage.getItem('hpc_token') || '';
                                 const res = await ApiClient.post<any>('/admin/students/import', { action: 'confirm', data }, token);
 
                                 let msg = res.message || 'Import successful';

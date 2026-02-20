@@ -24,7 +24,10 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     const fetchLedger = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/office/student/${studentId}/fees`);
+            const token = sessionStorage.getItem('hpc_token');
+            const res = await fetch(`/api/office/student/${studentId}/fees`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
             if (res.ok) {
                 const json = await res.json();
                 setData(json.data);
@@ -47,9 +50,13 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
         }
         setSubmitting(true);
         try {
+            const token = sessionStorage.getItem('hpc_token');
             const res = await fetch('/api/office/fees/pay', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
                 body: JSON.stringify({
                     student_id: studentId,
                     amount_paid: parseFloat(amount),

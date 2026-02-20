@@ -20,8 +20,21 @@ body {
     font-family: 'Work Sans', sans-serif;
     color: var(--text-dark);
     line-height: 1.3;
-    -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
+    background: white !important;
+}
+
+html {
+    background: white !important;
+}
+
+/* Ensure all table cells have white background */
+.input-cell {
+    background: white !important;
+}
+
+tr {
+    background: white !important;
 }
 
 /* Header Section */

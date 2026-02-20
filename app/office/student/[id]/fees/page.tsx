@@ -5,9 +5,14 @@ import { useRouter } from 'next/navigation';
 
 export default function StudentFeeLedgerPage({ params }: { params: { id: string } }) {
     const router = useRouter();
+    // In Next.js 15, params is a Promise. In 14 it's an object. 
+    // To be safe and fix potentially empty params issue:
+    // const resolvedParams = React.use(params as any) as { id: string }; 
     const studentId = params.id;
+
     const [data, setData] = useState<any>(null);
     const [loading, setLoading] = useState(true);
+    const [errorMsg, setErrorMsg] = useState('');
     const [isPayModalOpen, setPayModalOpen] = useState(false);
 
     // Payment Form
@@ -18,7 +23,9 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     const [submitting, setSubmitting] = useState(false);
 
     useEffect(() => {
-        fetchLedger();
+        if (studentId) {
+            fetchLedger();
+        }
     }, [studentId]);
 
     const fetchLedger = async () => {
@@ -35,9 +42,15 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                 if (json.data.balance > 0) {
                     setAmount(json.data.balance.toString());
                 }
+            } else {
+                const err = await res.json();
+                setErrorMsg(err.message || 'Failed to load data');
+                setData(null);
             }
-        } catch (e) {
+        } catch (e: any) {
             console.error(e);
+            setErrorMsg(e.message || 'Network error');
+            setData(null);
         } finally {
             setLoading(false);
         }
@@ -92,7 +105,13 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     };
 
     if (loading) return <div className="p-8 text-center text-gray-500">Loading Ledger...</div>;
-    if (!data) return <div className="p-8 text-center text-red-500">Student not found or error loading data.</div>;
+    if (!data) return (
+        <div className="p-8 text-center text-red-500">
+            <h3 className="font-bold text-lg mb-2">Error Loading Data</h3>
+            <p>{errorMsg || 'Student not found.'}</p>
+            <button onClick={() => window.location.reload()} className="mt-4 px-4 py-2 bg-gray-100 rounded hover:bg-gray-200 text-gray-800">Retry</button>
+        </div>
+    );
 
     const { student, structure, history, totalDue, totalPaid, balance } = data;
 

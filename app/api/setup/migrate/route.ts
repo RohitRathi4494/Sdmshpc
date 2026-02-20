@@ -9,7 +9,61 @@ export async function GET() {
     try {
         console.log('Starting Complete Migration & Seeding...');
 
-        // --- 1. Schema Updates ---
+        // --- 1. Create Base Fee Tables (if not exist) ---
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS fee_heads (
+                id SERIAL PRIMARY KEY,
+                head_name VARCHAR(100) NOT NULL UNIQUE,
+                applies_to_new_students_only BOOLEAN DEFAULT FALSE,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS fee_structures (
+                id SERIAL PRIMARY KEY,
+                class_id INT NOT NULL,
+                academic_year_id INT NOT NULL,
+                fee_head_id INT NOT NULL,
+                amount NUMERIC(10, 2) NOT NULL,
+                due_date DATE,
+                stream VARCHAR(50),
+                subject_count INT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT fk_fs_class FOREIGN KEY (class_id) REFERENCES classes(id),
+                CONSTRAINT fk_fs_year FOREIGN KEY (academic_year_id) REFERENCES academic_years(id),
+                CONSTRAINT fk_fs_head FOREIGN KEY (fee_head_id) REFERENCES fee_heads(id)
+            );
+        `);
+
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS student_fee_payments (
+                id SERIAL PRIMARY KEY,
+                student_id INT NOT NULL,
+                fee_structure_id INT,
+                amount_paid NUMERIC(10, 2) NOT NULL,
+                payment_date DATE DEFAULT CURRENT_DATE,
+                payment_mode VARCHAR(50) CHECK (payment_mode IN ('CASH', 'UPI', 'CHEQUE', 'ONLINE')),
+                transaction_reference VARCHAR(100),
+                remarks TEXT,
+                academic_year_id INT,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                CONSTRAINT fk_sfp_student FOREIGN KEY (student_id) REFERENCES students(id),
+                CONSTRAINT fk_sfp_structure FOREIGN KEY (fee_structure_id) REFERENCES fee_structures(id),
+                CONSTRAINT fk_sfp_year FOREIGN KEY (academic_year_id) REFERENCES academic_years(id)
+            );
+        `);
+
+        // Students: Add columns for Stream, Subject Count, Admission Date
+        await db.query(`
+            ALTER TABLE students
+            ADD COLUMN IF NOT EXISTS stream VARCHAR(50),
+            ADD COLUMN IF NOT EXISTS subject_count INT,
+            ADD COLUMN IF NOT EXISTS admission_date DATE;
+        `);
+
+        // --- 2. Schema Updates ---
 
         // Academic Years: Add Dates
         await db.query(`

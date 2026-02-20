@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 export default function FeeCollectionTab() {
@@ -53,6 +53,10 @@ export default function FeeCollectionTab() {
         }
     };
 
+    useEffect(() => {
+        handleSearch();
+    }, []);
+
     // Auto-search on mount?
     // Let's rely on user typing + button for now to avoid complexity without active year context.
     // Actually, getting active year ID is important.
@@ -102,12 +106,7 @@ export default function FeeCollectionTab() {
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{student.admission_no}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{student.student_name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                        {/* Class info might be missing in basic student object depending on API */}
-                                        {/* API returns students.*, se.roll_no, se.section_id. Need to join classes? */}
-                                        {/* GET /api/admin/students returns raw students or joined? */}
-                                        {/* Looked at API: returns joined if filtering by class, otherwise raw students */}
-                                        {/* Let's assume for search it might need enhancement, but for MVP just show name */}
-                                        --
+                                        {student.class_name || 'N/A'}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{student.father_name}</td>
                                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">

@@ -43,14 +43,29 @@ export async function GET(request: Request) {
             }
 
             query = `
-                SELECT s.*, se.roll_no, se.section_id
+                SELECT s.*, se.roll_no, se.section_id, c.class_name
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
+                JOIN classes c ON se.class_id = c.id
                 WHERE se.class_id = $1 AND se.academic_year_id = $2 ${sectionClause}
                 ORDER BY se.roll_no ASC, s.student_name ASC
             `;
             values.push(parseInt(class_id), parseInt(academic_year_id));
             if (section_id) values.push(parseInt(section_id));
+
+        } else if (academic_year_id) {
+            // [NEW] Find ALL students enrolled in the academic year (regardless of class)
+            // Useful for Fee Collection search
+            query = `
+                SELECT s.*, se.roll_no, se.section_id, c.class_name
+                FROM students s
+                JOIN student_enrollments se ON s.id = se.student_id
+                JOIN classes c ON se.class_id = c.id
+                WHERE se.academic_year_id = $1
+                ORDER BY c.display_order ASC, s.student_name ASC
+            `;
+            values.push(parseInt(academic_year_id));
+
         } else {
             // Default: List all students (maybe limit?)
             query = 'SELECT * FROM students ORDER BY id DESC LIMIT 100';

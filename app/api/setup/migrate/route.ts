@@ -30,6 +30,20 @@ export async function GET() {
             ADD COLUMN IF NOT EXISTS applies_to_new_students_only BOOLEAN DEFAULT FALSE;
         `);
 
+        // Fee Structures: Add columns for Stream and Subject Count
+        await db.query(`
+            ALTER TABLE fee_structures 
+            ADD COLUMN IF NOT EXISTS stream VARCHAR(50),
+            ADD COLUMN IF NOT EXISTS subject_count INT;
+        `);
+
+        // Students: Add columns for Stream and Subject Count (if missing)
+        await db.query(`
+            ALTER TABLE students 
+            ADD COLUMN IF NOT EXISTS stream VARCHAR(50),
+            ADD COLUMN IF NOT EXISTS subject_count INT;
+        `);
+
         // Fee Structures: Drop Constraints to allow Monthly Fees
         await db.query(`
             ALTER TABLE fee_structures DROP CONSTRAINT IF EXISTS uq_fee_structure;

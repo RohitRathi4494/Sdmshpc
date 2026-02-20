@@ -15,7 +15,10 @@ export default function DailyReportTab() {
     const fetchReport = async () => {
         setLoading(true);
         try {
-            const res = await fetch(`/api/office/fees/reports/daily?date=${date}`);
+            const token = sessionStorage.getItem('hpc_token');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
+            const res = await fetch(`/api/office/fees/reports/daily?date=${date}`, { headers });
             if (res.ok) {
                 const data = await res.json();
                 setReport(data.data);

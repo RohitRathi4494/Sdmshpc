@@ -17,8 +17,19 @@ export default function FeeCollectionTab() {
     const handleSearch = async () => {
         setLoading(true);
         try {
+            const token = sessionStorage.getItem('hpc_token');
+            if (!token) {
+                alert('Authentication missing. Please log in again.');
+                router.push('/login');
+                return;
+            }
+
+            const headers = {
+                'Authorization': `Bearer ${token}`
+            };
+
             // 1. Get Active Academic Year
-            const yearRes = await fetch('/api/admin/academic-years');
+            const yearRes = await fetch('/api/admin/academic-years', { headers });
             if (!yearRes.ok) throw new Error('Failed to fetch academic years');
             const yearData = await yearRes.json();
             const activeYear = yearData.data.find((y: any) => y.is_active);
@@ -30,7 +41,7 @@ export default function FeeCollectionTab() {
             }
 
             // 2. Fetch Students for Active Year
-            const allRes = await fetch(`/api/admin/students?academic_year_id=${activeYear.id}&status=enrolled`);
+            const allRes = await fetch(`/api/admin/students?academic_year_id=${activeYear.id}&status=enrolled`, { headers });
 
             if (allRes.ok) {
                 const data = await allRes.json();

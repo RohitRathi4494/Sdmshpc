@@ -25,10 +25,13 @@ export default function FeeConfigTab() {
 
     const fetchInitialData = async () => {
         try {
+            const token = sessionStorage.getItem('hpc_token');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
             const [headsRes, classesRes, yearsRes] = await Promise.all([
-                fetch('/api/office/fees/heads'),
-                fetch('/api/teacher/classes'), // Assuming this returns classes
-                fetch('/api/admin/academic-years') // Assuming this exists
+                fetch('/api/office/fees/heads', { headers }),
+                fetch('/api/teacher/classes', { headers }), // Assuming this returns classes
+                fetch('/api/admin/academic-years', { headers }) // Assuming this exists
             ]);
 
             if (headsRes.ok) {
@@ -56,7 +59,10 @@ export default function FeeConfigTab() {
     const fetchStructures = async () => {
         if (!selectedClass || !selectedYear) return;
         try {
-            const res = await fetch(`/api/office/fees/structure?class_id=${selectedClass}&academic_year_id=${selectedYear}`);
+            const token = sessionStorage.getItem('hpc_token');
+            const headers = { 'Authorization': `Bearer ${token}` };
+
+            const res = await fetch(`/api/office/fees/structure?class_id=${selectedClass}&academic_year_id=${selectedYear}`, { headers });
             if (res.ok) {
                 const data = await res.json();
                 setStructures(data.data || []);
@@ -73,9 +79,15 @@ export default function FeeConfigTab() {
     const handleAddHead = async () => {
         if (!newHeadName) return;
         try {
+            const token = sessionStorage.getItem('hpc_token');
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+
             const res = await fetch('/api/office/fees/heads', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({ head_name: newHeadName })
             });
             if (res.ok) {
@@ -95,9 +107,15 @@ export default function FeeConfigTab() {
             return;
         }
         try {
+            const token = sessionStorage.getItem('hpc_token');
+            const headers = {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`
+            };
+
             const res = await fetch('/api/office/fees/structure', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers,
                 body: JSON.stringify({
                     class_id: parseInt(selectedClass),
                     academic_year_id: parseInt(selectedYear),

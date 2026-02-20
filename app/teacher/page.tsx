@@ -132,15 +132,9 @@ export default function TeacherDashboard() {
                                                             `scholastic_${cls.class_name}_${sec.section_name}${selectedTerm ? '_' + selectedTerm.replace(' ', '') : ''}.xlsx`
                                                         );
                                                     }}
-                                                    className="flex-1 text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
+                                                    className="w-full text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
                                                 >
                                                     Scholastic
-                                                </button>
-                                                <button
-                                                    onClick={() => handleDownload(`/api/reports/cumulative/co-scholastic?class_id=${cls.id}&section_id=${sec.id}`, `co_scholastic_${cls.class_name}_${sec.section_name}.xlsx`)}
-                                                    className="flex-1 text-xs bg-teal-600 text-white py-1.5 rounded hover:bg-teal-700 transition"
-                                                >
-                                                    Co-Scholastic
                                                 </button>
                                             </div>
                                         </div>

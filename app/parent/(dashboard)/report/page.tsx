@@ -178,7 +178,7 @@ export default function ParentReportPage() {
                             </div>
                             <div className="info-row">
                                 <div className="info-label">Phone:</div>
-                                <div className="info-input">{reportData.student?.phone || ''}</div>
+                                <div className="info-input">{reportData.student?.phone_no || ''}</div>
                             </div>
                             <div className="info-row">
                                 <div className="info-label">Mother/Guardian Name:</div>

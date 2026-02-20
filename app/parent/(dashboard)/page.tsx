@@ -46,7 +46,7 @@ export default function ParentDashboard() {
                     setStudent(data.data.student);
                     setYear(data.data.academicYear);
                 } else if (studentRes.status === 401) {
-                    localStorage.removeItem('hpc_parent_token');
+                    sessionStorage.removeItem('hpc_token');
                     router.push('/parent/login');
                     return;
                 } else {
@@ -63,7 +63,7 @@ export default function ParentDashboard() {
                     const noticeData = await noticesRes.json();
                     setNotices(noticeData.data || []);
                 } else if (noticesRes.status === 401) {
-                    localStorage.removeItem('hpc_parent_token');
+                    sessionStorage.removeItem('hpc_token');
                     router.push('/parent/login');
                     return;
                 } else {

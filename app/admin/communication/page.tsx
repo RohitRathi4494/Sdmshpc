@@ -58,7 +58,7 @@ export default function CommunicationPage() {
         setLoading(true);
         try {
             const res = await fetch('/api/notices/sent', {
-                headers: { 'Authorization': `Bearer ${localStorage.getItem('hpc_token')}` }
+                headers: { 'Authorization': `Bearer ${sessionStorage.getItem('hpc_token')}` }
             });
             if (res.ok) {
                 const data = await res.json();

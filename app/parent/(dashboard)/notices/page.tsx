@@ -33,7 +33,7 @@ export default function NoticesPage() {
                     const data = await res.json();
                     setNotices(data.data || []);
                 } else if (res.status === 401) {
-                    localStorage.removeItem('hpc_parent_token');
+                    sessionStorage.removeItem('hpc_token');
                     router.push('/parent/login');
                 }
             } catch (error) {

@@ -73,8 +73,8 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                 <div className="p-4">
                     <button
                         onClick={() => {
-                            localStorage.removeItem(ACCESS_TOKEN_KEY);
-                            localStorage.removeItem(USER_ROLE_KEY);
+                            sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+                            sessionStorage.removeItem(USER_ROLE_KEY);
                             router.push('/');
                         }}
                         className={`flex items-center p-2 text-red-400 hover:bg-gray-800 w-full rounded ${!isSidebarOpen && 'justify-center'}`}

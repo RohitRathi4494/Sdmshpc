@@ -13,15 +13,24 @@ export default function FeeCollectionTab() {
     // Ideally this should use the search API with debounce, but for MVP we fetch all and filter client side 
     // OR fetch on button click. Let's do fetch on mount/button for now.
 
+    // Fetch active year and students
     const handleSearch = async () => {
         setLoading(true);
         try {
-            // Fetch all active students
-            // TODO: Optimize API to search by name/adm_no
-            const res = await fetch('/api/admin/students?academic_year_id=1&status=enrolled'); // Using ID 1 as placeholder, should use active year.
-            // Better: Retrieve active year first.
-            // But let's just fetch all students for now.
-            const allRes = await fetch('/api/admin/students?academic_year_id=1'); // Defaulting to 1 for MVP or fetch active year first
+            // 1. Get Active Academic Year
+            const yearRes = await fetch('/api/admin/academic-years');
+            if (!yearRes.ok) throw new Error('Failed to fetch academic years');
+            const yearData = await yearRes.json();
+            const activeYear = yearData.data.find((y: any) => y.is_active);
+
+            if (!activeYear) {
+                alert('No active academic year found. Please set one in settings.');
+                setLoading(false);
+                return;
+            }
+
+            // 2. Fetch Students for Active Year
+            const allRes = await fetch(`/api/admin/students?academic_year_id=${activeYear.id}&status=enrolled`);
 
             if (allRes.ok) {
                 const data = await allRes.json();
@@ -30,13 +39,15 @@ export default function FeeCollectionTab() {
                     const lower = search.toLowerCase();
                     filtered = filtered.filter((s: any) =>
                         s.student_name.toLowerCase().includes(lower) ||
-                        s.admission_no.toLowerCase().includes(lower)
+                        s.admission_no.toLowerCase().includes(lower) ||
+                        (s.father_name && s.father_name.toLowerCase().includes(lower))
                     );
                 }
                 setStudents(filtered);
             }
         } catch (e) {
             console.error(e);
+            alert('Error fetching students');
         } finally {
             setLoading(false);
         }

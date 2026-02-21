@@ -63,6 +63,18 @@ export async function GET() {
             ADD COLUMN IF NOT EXISTS admission_date DATE;
         `);
 
+        // Payments: Add batch_id for grouping multi-month receipts
+        await db.query(`
+            ALTER TABLE student_fee_payments
+            ADD COLUMN IF NOT EXISTS batch_id VARCHAR(36);
+        `);
+
+        // Payments: Drop old mode constraint and recreate with BANK_TRANSFER
+        try {
+            await db.query(`ALTER TABLE student_fee_payments DROP CONSTRAINT IF EXISTS student_fee_payments_payment_mode_check;`);
+            await db.query(`ALTER TABLE student_fee_payments ADD CONSTRAINT student_fee_payments_payment_mode_check CHECK (payment_mode IN ('CASH', 'UPI', 'CHEQUE', 'ONLINE', 'BANK_TRANSFER'));`);
+        } catch (e: any) { console.log('Payment mode constraint update skipped:', e.message); }
+
         // --- 2. Schema Updates ---
 
         // Academic Years: Add Dates

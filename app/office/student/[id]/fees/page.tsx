@@ -8,10 +8,12 @@ interface MonthFee {
     fee_structure_id: number;
     head_name: string;
     amount: number;
+    total_paid: number;
+    balance: number;
     due_date: string;
     month_label: string;
     month_short: string;
-    status: 'PAID' | 'PENDING' | 'OVERDUE';
+    status: 'PAID' | 'PARTIAL' | 'PENDING' | 'OVERDUE';
     payment_id: number | null;
     payment_date: string | null;
     payment_mode: string | null;
@@ -22,7 +24,9 @@ interface OtherFee {
     fee_structure_id: number;
     head_name: string;
     amount: number;
-    status: 'PAID' | 'PENDING';
+    total_paid: number;
+    balance: number;
+    status: 'PAID' | 'PARTIAL' | 'PENDING';
     payment_id: number | null;
 }
 
@@ -37,11 +41,7 @@ interface LedgerData {
 }
 
 // ─── Month Chip ───────────────────────────────────────────────────────────────
-function MonthChip({
-    fee, selected, onToggle,
-}: { fee: MonthFee; selected: boolean; onToggle: () => void }) {
-    const canSelect = fee.status !== 'PAID';
-
+function MonthChip({ fee, selected, onToggle }: { fee: MonthFee; selected: boolean; onToggle: () => void }) {
     if (fee.status === 'PAID') {
         return (
             <div className="flex flex-col items-center p-2 rounded-lg bg-emerald-50 border border-emerald-200 min-w-[62px]">
@@ -52,8 +52,25 @@ function MonthChip({
         );
     }
 
-    const isOverdue = fee.status === 'OVERDUE';
+    if (fee.status === 'PARTIAL') {
+        return (
+            <button
+                onClick={onToggle}
+                className={`flex flex-col items-center p-2 rounded-lg border-2 min-w-[62px] transition-all cursor-pointer ${selected
+                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-105'
+                    : 'bg-amber-50 border-amber-400 hover:bg-amber-100'
+                    }`}
+            >
+                <span className={`text-xs font-bold ${selected ? 'text-white' : 'text-amber-700'}`}>{fee.month_short}</span>
+                <span className={`text-lg ${selected ? 'text-white' : 'text-amber-500'}`}>{selected ? '☑' : '◑'}</span>
+                <span className={`text-[10px] ${selected ? 'text-indigo-100' : 'text-amber-600 font-semibold'}`}>
+                    {selected ? `₹${fee.balance.toLocaleString()}` : 'Partial'}
+                </span>
+            </button>
+        );
+    }
 
+    const isOverdue = fee.status === 'OVERDUE';
     return (
         <button
             onClick={onToggle}
@@ -77,6 +94,19 @@ function MonthChip({
     );
 }
 
+// ─── Distribute partial amount across items (oldest-first) ───────────────────
+function distributeAmount(
+    items: Array<{ fee_structure_id: number; balance: number }>,
+    totalAmount: number
+): { fee_structure_id: number; amount_paid: number }[] {
+    let remaining = totalAmount;
+    return items.map(item => {
+        const pay = Math.min(item.balance, remaining);
+        remaining -= pay;
+        return { fee_structure_id: item.fee_structure_id, amount_paid: Math.round(pay * 100) / 100 };
+    }).filter(i => i.amount_paid > 0);
+}
+
 // ─── Main Page ─────────────────────────────────────────────────────────────────
 export default function StudentFeeLedgerPage({ params }: { params: { id: string } }) {
     const router = useRouter();
@@ -94,6 +124,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     const [mode, setMode] = useState('CASH');
     const [refNo, setRefNo] = useState('');
     const [remarks, setRemarks] = useState('');
+    const [customAmount, setCustomAmount] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     const fetchLedger = useCallback(async () => {
@@ -107,7 +138,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
             const json = await res.json();
             if (res.ok && json.success) {
                 setData(json.data);
-                setSelected(new Set()); // Reset selection on refresh
+                setSelected(new Set());
             } else {
                 setErrorMsg(json.message || 'Failed to load data');
             }
@@ -118,59 +149,53 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
         }
     }, [studentId]);
 
-    useEffect(() => {
-        fetchLedger();
-    }, [fetchLedger]);
+    useEffect(() => { fetchLedger(); }, [fetchLedger]);
 
-    const toggleMonth = (id: number) => {
+    const toggleFee = (id: number) => {
         setSelected(prev => {
             const next = new Set(prev);
             next.has(id) ? next.delete(id) : next.add(id);
             return next;
         });
-    };
-
-    const toggleOther = (id: number) => {
-        setSelected(prev => {
-            const next = new Set(prev);
-            next.has(id) ? next.delete(id) : next.add(id);
-            return next;
-        });
-    };
-
-    const selectAllPending = () => {
-        if (!data) return;
-        const pendingIds = [
-            ...data.monthlyFees.filter(f => f.status !== 'PAID').map(f => f.fee_structure_id),
-            ...data.otherFees.filter(f => f.status !== 'PAID').map(f => f.fee_structure_id),
-        ];
-        setSelected(new Set(pendingIds));
     };
 
     const clearSelection = () => setSelected(new Set());
 
-    // Compute selected amount
-    const selectedItems = data
-        ? [
-            ...data.monthlyFees.filter(f => selected.has(f.fee_structure_id)),
-            ...data.otherFees.filter(f => selected.has(f.fee_structure_id)),
-        ]
-        : [];
-    const selectedTotal = selectedItems.reduce((s, f) => s + f.amount, 0);
+    // Selected items with their balance amounts
+    const selectedItems = data ? [
+        ...data.monthlyFees.filter(f => selected.has(f.fee_structure_id)),
+        ...data.otherFees.filter(f => selected.has(f.fee_structure_id)),
+    ] : [];
+
+    // Default = sum of remaining balances
+    const selectedTotal = selectedItems.reduce((s, f) => s + f.balance, 0);
+
+    // Amount actually being collected (editable by staff)
+    const amountBeingCollected = parseFloat(customAmount) || selectedTotal;
+
+    const openModal = () => {
+        setCustomAmount(selectedTotal.toFixed(2));
+        setShowModal(true);
+    };
 
     const handleCollect = async () => {
         if (selectedItems.length === 0) return;
+        const total = parseFloat(customAmount);
+        if (isNaN(total) || total <= 0) { alert('Enter a valid amount'); return; }
+        if (total > selectedTotal) { alert(`Cannot exceed total balance of ₹${selectedTotal.toFixed(2)}`); return; }
+
         setSubmitting(true);
         try {
             const token = sessionStorage.getItem('hpc_token');
-            const items = Array.from(selected).map(id => ({ fee_structure_id: id }));
+            // Distribute amount across items oldest-first
+            const distributedItems = distributeAmount(selectedItems, total);
 
             const res = await fetch('/api/office/fees/pay', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
                 body: JSON.stringify({
                     student_id: parseInt(studentId),
-                    items,
+                    items: distributedItems,
                     payment_mode: mode,
                     transaction_reference: refNo || null,
                     remarks: remarks || null,
@@ -180,11 +205,8 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
             const json = await res.json();
             if (res.ok && json.success) {
                 setShowModal(false);
-                setRefNo('');
-                setRemarks('');
+                setRefNo(''); setRemarks(''); setCustomAmount('');
                 await fetchLedger();
-
-                // Open receipt
                 const pdfToken = sessionStorage.getItem('hpc_token');
                 window.open(`/api/office/fees/receipt/${json.data.first_payment_id}/pdf?token=${pdfToken}`, '_blank');
             } else {
@@ -216,9 +238,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     );
 
     const { student, monthlyFees, otherFees, history, totalPaid, totalDue } = data;
-    const pendingCount = monthlyFees.filter(f => f.status !== 'PAID').length + otherFees.filter(f => f.status !== 'PAID').length;
 
-    // Group monthly fees by head_name (there might be multiple monthly heads)
     const monthlyGroups = monthlyFees.reduce((acc: Record<string, MonthFee[]>, f) => {
         if (!acc[f.head_name]) acc[f.head_name] = [];
         acc[f.head_name].push(f);
@@ -226,7 +246,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
     }, {});
 
     return (
-        <div className="space-y-4 pb-28"> {/* pb-28 for sticky footer */}
+        <div className="space-y-4 pb-28">
 
             {/* ── Back + Student Header ─────────────────────────────────── */}
             <button onClick={() => router.back()} className="text-gray-400 hover:text-gray-700 flex items-center gap-1 text-sm mb-2">
@@ -243,30 +263,54 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                         {student.stream && <span>Stream: <strong className="text-gray-800">{student.stream}</strong></span>}
                     </div>
                 </div>
-                <div className="flex gap-6 text-right">
-                    <div>
-                        <div className="text-xs text-gray-400 uppercase tracking-wider">Total Paid</div>
-                        <div className="text-xl font-bold text-emerald-600">₹{totalPaid.toLocaleString()}</div>
-                    </div>
-                    <div>
-                        <div className="text-xs text-gray-400 uppercase tracking-wider">Outstanding</div>
-                        <div className={`text-xl font-bold ${totalDue > 0 ? 'text-red-500' : 'text-emerald-600'}`}>
-                            ₹{totalDue.toLocaleString()}
+                <div className="flex gap-4 items-center">
+                    <div className="flex gap-6 text-right">
+                        <div>
+                            <div className="text-xs text-gray-400 uppercase tracking-wider">Total Paid</div>
+                            <div className="text-xl font-bold text-emerald-600">₹{totalPaid.toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div className="text-xs text-gray-400 uppercase tracking-wider">Outstanding</div>
+                            <div className={`text-xl font-bold ${totalDue > 0 ? 'text-red-500' : 'text-emerald-600'}`}>
+                                ₹{totalDue.toLocaleString()}
+                            </div>
                         </div>
                     </div>
+                    {/* Balance Statement Button */}
+                    <button
+                        onClick={() => {
+                            const t = sessionStorage.getItem('hpc_token');
+                            window.open(`/print/balance/${studentId}?token=${t}`, '_blank');
+                        }}
+                        className="px-3 py-2 text-xs font-semibold border border-orange-300 text-orange-600 rounded-lg hover:bg-orange-50 transition whitespace-nowrap"
+                    >
+                        📄 Balance Statement
+                    </button>
                 </div>
+            </div>
+
+            {/* ── Legend ──────────────────────────────────────────────── */}
+            <div className="flex flex-wrap gap-3 text-xs text-gray-500 px-1">
+                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-emerald-200 inline-block"></span> Paid</span>
+                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-amber-200 inline-block"></span> Partial (balance pending)</span>
+                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-red-200 inline-block"></span> Overdue</span>
+                <span className="flex items-center gap-1"><span className="w-3 h-3 rounded bg-gray-200 inline-block"></span> Pending</span>
             </div>
 
             {/* ── Monthly Fees ─────────────────────────────────────────── */}
             {Object.entries(monthlyGroups).map(([headName, fees]) => {
                 const paidCount = fees.filter(f => f.status === 'PAID').length;
+                const partialCount = fees.filter(f => f.status === 'PARTIAL').length;
                 const monthAmount = fees[0]?.amount || 0;
                 return (
                     <div key={headName} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5">
                         <div className="flex justify-between items-center mb-4">
                             <div>
                                 <h3 className="font-semibold text-gray-800">{headName}</h3>
-                                <p className="text-sm text-gray-500">₹{monthAmount.toLocaleString()} / month • {paidCount}/12 months paid</p>
+                                <p className="text-sm text-gray-500">
+                                    ₹{monthAmount.toLocaleString()} / month • {paidCount}/12 months paid
+                                    {partialCount > 0 && <span className="ml-2 text-amber-600 font-medium">• {partialCount} partial</span>}
+                                </p>
                             </div>
                             <div className="flex gap-2">
                                 {fees.some(f => f.status !== 'PAID') && (
@@ -288,17 +332,27 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                             </div>
                         </div>
 
-                        {/* Month chips grid */}
                         <div className="flex flex-wrap gap-2">
                             {fees.map(fee => (
                                 <MonthChip
                                     key={fee.fee_structure_id}
                                     fee={fee}
                                     selected={selected.has(fee.fee_structure_id)}
-                                    onToggle={() => toggleMonth(fee.fee_structure_id)}
+                                    onToggle={() => toggleFee(fee.fee_structure_id)}
                                 />
                             ))}
                         </div>
+
+                        {/* Partial info row */}
+                        {fees.some(f => f.status === 'PARTIAL') && (
+                            <div className="mt-3 flex flex-wrap gap-2">
+                                {fees.filter(f => f.status === 'PARTIAL').map(fee => (
+                                    <span key={fee.fee_structure_id} className="text-xs bg-amber-50 text-amber-700 border border-amber-200 rounded px-2 py-1">
+                                        {fee.month_short}: ₹{fee.total_paid.toLocaleString()} paid, ₹{fee.balance.toLocaleString()} pending
+                                    </span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 );
             })}
@@ -315,18 +369,25 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                 <div>
                                     <span className="font-medium text-gray-800">{fee.head_name}</span>
                                     <span className="ml-3 text-sm text-gray-500">₹{fee.amount.toLocaleString()}</span>
+                                    {fee.status === 'PARTIAL' && (
+                                        <span className="ml-2 text-xs text-amber-600">
+                                            (₹{fee.total_paid.toLocaleString()} paid, ₹{fee.balance.toLocaleString()} due)
+                                        </span>
+                                    )}
                                 </div>
                                 {fee.status === 'PAID' ? (
                                     <span className="px-3 py-1 bg-emerald-100 text-emerald-700 text-xs font-bold rounded-full">✓ PAID</span>
                                 ) : (
                                     <button
-                                        onClick={() => toggleOther(fee.fee_structure_id)}
+                                        onClick={() => toggleFee(fee.fee_structure_id)}
                                         className={`px-3 py-1 text-xs font-bold rounded-full border-2 transition ${selected.has(fee.fee_structure_id)
                                             ? 'bg-indigo-600 border-indigo-600 text-white'
-                                            : 'border-indigo-300 text-indigo-600 hover:bg-indigo-50'
+                                            : fee.status === 'PARTIAL'
+                                                ? 'border-amber-400 text-amber-700 hover:bg-amber-50'
+                                                : 'border-indigo-300 text-indigo-600 hover:bg-indigo-50'
                                             }`}
                                     >
-                                        {selected.has(fee.fee_structure_id) ? '☑ Selected' : '☐ Select'}
+                                        {selected.has(fee.fee_structure_id) ? '☑ Selected' : fee.status === 'PARTIAL' ? '◑ Partial' : '☐ Select'}
                                     </button>
                                 )}
                             </div>
@@ -403,7 +464,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                 <div className="font-bold text-gray-800">{selected.size} item{selected.size > 1 ? 's' : ''}</div>
                             </div>
                             <div>
-                                <div className="text-xs text-gray-500 uppercase tracking-wider">Total Amount</div>
+                                <div className="text-xs text-gray-500 uppercase tracking-wider">Balance Due</div>
                                 <div className="text-2xl font-bold text-indigo-600">₹{selectedTotal.toLocaleString()}</div>
                             </div>
                             <div className="hidden md:block text-sm text-gray-400">
@@ -418,7 +479,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                 Clear
                             </button>
                             <button
-                                onClick={() => setShowModal(true)}
+                                onClick={openModal}
                                 className="px-6 py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 shadow-lg transition-all hover:scale-105 flex items-center gap-2"
                             >
                                 Collect Now →
@@ -436,24 +497,51 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                             <div>
                                 <h3 className="text-lg font-bold text-gray-800">Record Payment</h3>
                                 <p className="text-sm text-gray-500">
-                                    {selected.size} item{selected.size > 1 ? 's' : ''} • <strong className="text-indigo-600">₹{selectedTotal.toLocaleString()}</strong>
+                                    {selected.size} item{selected.size > 1 ? 's' : ''} • balance <strong className="text-indigo-600">₹{selectedTotal.toLocaleString()}</strong>
                                 </p>
                             </div>
                             <button onClick={() => setShowModal(false)} className="text-gray-400 hover:text-gray-700 text-xl">✕</button>
                         </div>
 
-                        {/* Month summary in modal */}
+                        {/* Item summary */}
                         <div className="px-5 pt-4">
-                            <div className="flex flex-wrap gap-1 mb-4">
+                            <div className="flex flex-wrap gap-1 mb-2">
                                 {selectedItems.map(f => (
                                     <span key={f.fee_structure_id} className="px-2 py-0.5 bg-indigo-50 text-indigo-700 text-xs rounded-full font-medium">
-                                        {'month_short' in f ? (f as MonthFee).month_label : f.head_name} — ₹{f.amount.toLocaleString()}
+                                        {'month_short' in f ? (f as MonthFee).month_label : f.head_name} — ₹{f.balance.toLocaleString()}
                                     </span>
                                 ))}
                             </div>
                         </div>
 
                         <div className="px-5 pb-5 space-y-4">
+
+                            {/* Amount Being Collected */}
+                            <div>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">
+                                    Amount Being Collected
+                                    <span className="ml-2 text-xs text-gray-400 font-normal">(max ₹{selectedTotal.toLocaleString()})</span>
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 font-bold">₹</span>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        max={selectedTotal}
+                                        step="0.01"
+                                        className="w-full pl-8 pr-4 py-3 border-2 border-indigo-300 rounded-lg text-lg font-bold text-indigo-800 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none bg-indigo-50"
+                                        value={customAmount}
+                                        onChange={e => setCustomAmount(e.target.value)}
+                                    />
+                                </div>
+                                {parseFloat(customAmount) < selectedTotal && parseFloat(customAmount) > 0 && (
+                                    <p className="text-xs text-amber-600 mt-1">
+                                        ⚠ Partial payment — ₹{(selectedTotal - parseFloat(customAmount)).toFixed(2)} will remain as balance
+                                    </p>
+                                )}
+                            </div>
+
+                            {/* Payment Mode */}
                             <div>
                                 <label className="block text-sm font-semibold text-gray-700 mb-1">Payment Mode</label>
                                 <div className="grid grid-cols-3 gap-2">
@@ -498,18 +586,12 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                 />
                             </div>
 
-                            {/* Total Confirm */}
-                            <div className="bg-indigo-50 rounded-xl p-4 flex justify-between items-center">
-                                <span className="text-gray-700 font-semibold">Total to Collect</span>
-                                <span className="text-2xl font-black text-indigo-700">₹{selectedTotal.toLocaleString()}</span>
-                            </div>
-
                             <button
                                 onClick={handleCollect}
                                 disabled={submitting}
                                 className="w-full py-3 bg-indigo-600 text-white font-bold rounded-xl hover:bg-indigo-700 disabled:opacity-50 shadow-md transition text-lg"
                             >
-                                {submitting ? '⏳ Processing...' : '✓ Collect & Generate Receipt'}
+                                {submitting ? '⏳ Processing...' : `✓ Collect ₹${parseFloat(customAmount) > 0 ? parseFloat(customAmount).toLocaleString() : selectedTotal.toLocaleString()} & Receipt`}
                             </button>
                         </div>
                     </div>

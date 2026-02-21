@@ -25,7 +25,8 @@ export async function POST(request: Request) {
         const body = await request.json();
         const { student_id, items, payment_mode, transaction_reference, remarks } = body;
 
-        // items = [{ fee_structure_id: number }, ...]
+        // items = [{ fee_structure_id: number, amount_paid: number }, ...]
+        // amount_paid is the EXPLICIT amount staff is collecting for that fee (can be partial)
         if (!student_id || !items || !Array.isArray(items) || items.length === 0 || !payment_mode) {
             return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
         }
@@ -36,26 +37,40 @@ export async function POST(request: Request) {
 
         const batch_id = generateUUID();
         const insertedPayments: any[] = [];
-        const skipped: number[] = [];
+        const skipped: any[] = [];
 
         for (const item of items) {
-            const { fee_structure_id } = item;
+            const { fee_structure_id, amount_paid: explicitAmount } = item;
 
             // Get fee amount
             const fsRes = await db.query(
                 'SELECT amount FROM fee_structures WHERE id = $1',
                 [fee_structure_id]
             );
-            if (!fsRes.rows[0]) { skipped.push(fee_structure_id); continue; }
+            if (!fsRes.rows[0]) { skipped.push({ fee_structure_id, reason: 'not_found' }); continue; }
 
-            const amount = Number(fsRes.rows[0].amount);
+            const feeAmount = Number(fsRes.rows[0].amount);
 
-            // Skip if already paid
-            const existingRes = await db.query(
-                'SELECT id FROM student_fee_payments WHERE fee_structure_id = $1 AND student_id = $2',
+            // Get already paid for this fee structure
+            const alreadyPaidRes = await db.query(
+                'SELECT COALESCE(SUM(amount_paid), 0) AS total_paid FROM student_fee_payments WHERE fee_structure_id = $1 AND student_id = $2',
                 [fee_structure_id, student_id]
             );
-            if (existingRes.rows.length > 0) { skipped.push(fee_structure_id); continue; }
+            const alreadyPaid = Number(alreadyPaidRes.rows[0].total_paid);
+            const remaining = feeAmount - alreadyPaid;
+
+            if (remaining <= 0) {
+                // Already fully paid
+                skipped.push({ fee_structure_id, reason: 'already_paid' });
+                continue;
+            }
+
+            // Use explicit amount if provided, else use remaining balance
+            // Cap at remaining to prevent overpayment
+            const amountToRecord = Math.min(
+                explicitAmount !== undefined && explicitAmount > 0 ? explicitAmount : remaining,
+                remaining
+            );
 
             // Insert payment
             const result = await db.query(`
@@ -65,7 +80,7 @@ export async function POST(request: Request) {
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_DATE)
                 RETURNING id, amount_paid, payment_date
             `, [
-                student_id, fee_structure_id, amount, payment_mode,
+                student_id, fee_structure_id, amountToRecord, payment_mode,
                 transaction_reference || null, remarks || null,
                 academic_year_id, batch_id,
             ]);
@@ -76,8 +91,8 @@ export async function POST(request: Request) {
         if (insertedPayments.length === 0) {
             return NextResponse.json({
                 success: false,
-                message: skipped.length > 0
-                    ? 'All selected months are already paid.'
+                message: skipped.some(s => s.reason === 'already_paid')
+                    ? 'All selected items are already fully paid.'
                     : 'No payments to record.',
             }, { status: 400 });
         }

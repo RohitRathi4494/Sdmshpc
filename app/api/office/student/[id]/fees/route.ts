@@ -51,7 +51,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         );
         isNewStudent = newStudentRes.rows[0]?.is_new_student === true;
 
-        // 3. Fetch all fee structures WITH payment status for this student
+        // 3. Fetch all fee structures WITH aggregated payment totals for this student
         let feeItems: any[] = [];
         if (class_id && academic_year_id) {
             const res = await db.query(`
@@ -65,16 +65,25 @@ export async function GET(request: Request, { params }: { params: { id: string }
                     COUNT(fs.id) OVER (
                         PARTITION BY fh.id, fs.class_id, fs.academic_year_id
                     ) AS entry_count,
-                    sfp.id AS payment_id,
-                    sfp.payment_date,
-                    sfp.payment_mode,
-                    sfp.batch_id,
-                    sfp.amount_paid AS paid_amount
+                    COALESCE(p.total_paid, 0) AS total_paid,
+                    p.last_payment_date,
+                    p.last_payment_mode,
+                    p.last_batch_id,
+                    p.last_payment_id
                 FROM fee_structures fs
                 JOIN fee_heads fh ON fs.fee_head_id = fh.id
-                LEFT JOIN student_fee_payments sfp
-                    ON sfp.fee_structure_id = fs.id
-                    AND sfp.student_id = $1
+                LEFT JOIN (
+                    SELECT
+                        fee_structure_id,
+                        SUM(amount_paid) AS total_paid,
+                        MAX(id) AS last_payment_id,
+                        MAX(payment_date) AS last_payment_date,
+                        MAX(payment_mode) AS last_payment_mode,
+                        MAX(batch_id) AS last_batch_id
+                    FROM student_fee_payments
+                    WHERE student_id = $1
+                    GROUP BY fee_structure_id
+                ) p ON p.fee_structure_id = fs.id
                 WHERE fs.class_id = $2
                   AND fs.academic_year_id = $3
                   AND (fs.stream IS NULL OR fs.stream = $4)
@@ -107,7 +116,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
             if (isMonthly) {
                 for (const item of items) {
                     const dueDate = item.due_date ? new Date(item.due_date) : null;
-                    const isPaid = !!item.payment_id;
+                    const amount = Number(item.amount);
+                    const totalPaidForItem = Number(item.total_paid || 0);
+                    const balance = Math.max(0, amount - totalPaidForItem);
+                    const isPaid = totalPaidForItem >= amount;
+                    const isPartial = totalPaidForItem > 0 && !isPaid;
                     const isOverdue = !isPaid && dueDate && dueDate < now;
                     const monthIdx = dueDate ? dueDate.getUTCMonth() : -1;
 
@@ -115,31 +128,39 @@ export async function GET(request: Request, { params }: { params: { id: string }
                         fee_structure_id: item.fee_structure_id,
                         fee_head_id: item.fee_head_id,
                         head_name: item.head_name,
-                        amount: Number(item.amount),
+                        amount,
+                        total_paid: totalPaidForItem,
+                        balance,
                         due_date: item.due_date,
                         month_label: dueDate ? `${MONTHS_FULL[monthIdx]} ${dueDate.getUTCFullYear()}` : 'N/A',
                         month_short: dueDate ? MONTHS_SHORT[monthIdx] : 'N/A',
-                        status: isPaid ? 'PAID' : (isOverdue ? 'OVERDUE' : 'PENDING'),
-                        payment_id: item.payment_id || null,
-                        payment_date: item.payment_date || null,
-                        payment_mode: item.payment_mode || null,
-                        batch_id: item.batch_id || null,
+                        status: isPaid ? 'PAID' : isPartial ? 'PARTIAL' : (isOverdue ? 'OVERDUE' : 'PENDING'),
+                        payment_id: item.last_payment_id || null,
+                        payment_date: item.last_payment_date || null,
+                        payment_mode: item.last_payment_mode || null,
+                        batch_id: item.last_batch_id || null,
                     });
                 }
             } else {
                 const item = items[0];
-                const isPaid = !!item.payment_id;
+                const amount = Number(item.amount);
+                const totalPaidForItem = Number(item.total_paid || 0);
+                const balance = Math.max(0, amount - totalPaidForItem);
+                const isPaid = totalPaidForItem >= amount;
+                const isPartial = totalPaidForItem > 0 && !isPaid;
                 otherFees.push({
                     fee_structure_id: item.fee_structure_id,
                     fee_head_id: item.fee_head_id,
                     head_name: item.head_name,
-                    amount: Number(item.amount),
+                    amount,
+                    total_paid: totalPaidForItem,
+                    balance,
                     due_date: item.due_date,
-                    status: isPaid ? 'PAID' : 'PENDING',
-                    payment_id: item.payment_id || null,
-                    payment_date: item.payment_date || null,
-                    payment_mode: item.payment_mode || null,
-                    batch_id: item.batch_id || null,
+                    status: isPaid ? 'PAID' : isPartial ? 'PARTIAL' : 'PENDING',
+                    payment_id: item.last_payment_id || null,
+                    payment_date: item.last_payment_date || null,
+                    payment_mode: item.last_payment_mode || null,
+                    batch_id: item.last_batch_id || null,
                 });
             }
         }
@@ -156,7 +177,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const totalPaid = historyRes.rows.reduce((s, p) => s + Number(p.amount_paid), 0);
         const totalDue = [...monthlyFees, ...otherFees]
             .filter(f => f.status !== 'PAID')
-            .reduce((s, f) => s + f.amount, 0);
+            .reduce((s, f) => s + f.balance, 0);
 
         return NextResponse.json({
             success: true,

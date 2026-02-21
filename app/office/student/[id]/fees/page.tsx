@@ -58,10 +58,10 @@ function MonthChip({
         <button
             onClick={onToggle}
             className={`flex flex-col items-center p-2 rounded-lg border-2 min-w-[62px] transition-all cursor-pointer ${selected
-                    ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-105'
-                    : isOverdue
-                        ? 'bg-red-50 border-red-400 hover:bg-red-100'
-                        : 'bg-gray-50 border-gray-300 hover:bg-gray-100 hover:border-gray-400'
+                ? 'bg-indigo-600 border-indigo-600 text-white shadow-md scale-105'
+                : isOverdue
+                    ? 'bg-red-50 border-red-400 hover:bg-red-100'
+                    : 'bg-gray-50 border-gray-300 hover:bg-gray-100 hover:border-gray-400'
                 }`}
         >
             <span className={`text-xs font-bold ${selected ? 'text-white' : isOverdue ? 'text-red-700' : 'text-gray-700'}`}>
@@ -163,7 +163,7 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
         setSubmitting(true);
         try {
             const token = sessionStorage.getItem('hpc_token');
-            const items = [...selected].map(id => ({ fee_structure_id: id }));
+            const items = Array.from(selected).map(id => ({ fee_structure_id: id }));
 
             const res = await fetch('/api/office/fees/pay', {
                 method: 'POST',
@@ -322,8 +322,8 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                     <button
                                         onClick={() => toggleOther(fee.fee_structure_id)}
                                         className={`px-3 py-1 text-xs font-bold rounded-full border-2 transition ${selected.has(fee.fee_structure_id)
-                                                ? 'bg-indigo-600 border-indigo-600 text-white'
-                                                : 'border-indigo-300 text-indigo-600 hover:bg-indigo-50'
+                                            ? 'bg-indigo-600 border-indigo-600 text-white'
+                                            : 'border-indigo-300 text-indigo-600 hover:bg-indigo-50'
                                             }`}
                                     >
                                         {selected.has(fee.fee_structure_id) ? '☑ Selected' : '☐ Select'}
@@ -462,8 +462,8 @@ export default function StudentFeeLedgerPage({ params }: { params: { id: string 
                                             key={m}
                                             onClick={() => setMode(m)}
                                             className={`py-2 px-3 rounded-lg border-2 text-sm font-medium transition ${mode === m
-                                                    ? 'bg-indigo-600 border-indigo-600 text-white'
-                                                    : 'border-gray-200 text-gray-600 hover:border-indigo-300'
+                                                ? 'bg-indigo-600 border-indigo-600 text-white'
+                                                : 'border-gray-200 text-gray-600 hover:border-indigo-300'
                                                 }`}
                                         >
                                             {m === 'BANK_TRANSFER' ? 'Bank' : m === 'ONLINE' ? 'Online' : m.charAt(0) + m.slice(1).toLowerCase()}

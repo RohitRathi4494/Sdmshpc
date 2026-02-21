@@ -107,7 +107,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const monthlyFees: any[] = [];
         const otherFees: any[] = [];
 
-        for (const [, items] of grouped.entries()) {
+        for (const [, items] of Array.from(grouped.entries())) {
             const isMonthly = parseInt(items[0].entry_count) > 1;
 
             if (isMonthly) {

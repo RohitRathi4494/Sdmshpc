@@ -179,6 +179,18 @@ export async function GET() {
             const startYear = new Date(ayRes.rows[0].start_date || '2025-04-01').getFullYear();
 
             // CLEAR EXISTING FEES FOR THIS YEAR
+            // Skip if payments already reference these structures (FK constraint would fail)
+            const pmtCountRes = await db.query(
+                'SELECT COUNT(*) AS cnt FROM student_fee_payments WHERE academic_year_id = $1', [ayId]
+            );
+            const hasPayments = parseInt(pmtCountRes.rows[0]?.cnt || '0') > 0;
+
+            if (hasPayments) {
+                console.log('Skipping fee structure reseed — payments already exist for this year.');
+                // Skip fee seeding block entirely
+                return NextResponse.json({ success: true, message: 'Migration completed. Fee structures preserved (payments exist).' });
+            }
+
             await db.query('DELETE FROM fee_structures WHERE academic_year_id = $1', [ayId]);
 
             const insertFee = async (classIds: number[], headId: number, amount: number, isMonthly: boolean, stream: string | null = null, subjectCount: number | null = null) => {

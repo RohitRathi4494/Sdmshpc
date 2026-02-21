@@ -77,7 +77,7 @@ export default function BalanceStatementPage({ params }: { params: { studentId: 
             {/* Summary Band */}
             <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
                 {[
-                    { label: 'Total Demand', value: fmt(summary.totalDemand), color: '#1a56db', bg: '#eff6ff' },
+                    { label: 'Total Amount', value: fmt(summary.totalDemand), color: '#1a56db', bg: '#eff6ff' },
                     { label: 'Total Paid', value: fmt(summary.totalPaid), color: '#065f46', bg: '#ecfdf5' },
                     { label: 'Outstanding Balance', value: fmt(summary.totalBalance), color: '#b91c1c', bg: '#fef2f2' },
                 ].map(s => (

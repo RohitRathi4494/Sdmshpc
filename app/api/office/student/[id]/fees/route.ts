@@ -44,17 +44,23 @@ export async function GET(request: Request, { params }: { params: { id: string }
         const { class_id, academic_year_id, stream, subject_count } = student;
 
         // 2. New-student check
+        // A student is "new" if they have NO enrollment in any academic year
+        // that started BEFORE the current one (i.e., this is their first year in the school).
+        // This correctly handles students pre-admitted before the academic year starts.
         let isNewStudent = false;
         if (academic_year_id) {
-            const [ayRes, admRes] = await Promise.all([
-                db.query('SELECT start_date FROM academic_years WHERE id = $1', [academic_year_id]),
-                db.query('SELECT admission_date FROM students WHERE id = $1', [studentId]),
-            ]);
-            const startDate = ayRes.rows[0]?.start_date;
-            const admDate = admRes.rows[0]?.admission_date;
-            if (startDate && admDate) {
-                isNewStudent = new Date(admDate) >= new Date(startDate);
-            }
+            const prevEnrollRes = await db.query(`
+                SELECT COUNT(*) AS cnt
+                FROM student_enrollments se2
+                JOIN academic_years ay2 ON se2.academic_year_id = ay2.id
+                WHERE se2.student_id = $1
+                  AND se2.academic_year_id != $2
+                  AND ay2.start_date < (
+                      SELECT start_date FROM academic_years WHERE id = $2 LIMIT 1
+                  )
+            `, [studentId, academic_year_id]);
+            const prevCount = parseInt(prevEnrollRes.rows[0]?.cnt || '0');
+            isNewStudent = prevCount === 0; // No prior year enrollment = new student
         }
 
         // 3. Fetch all fee structures WITH payment status for this student

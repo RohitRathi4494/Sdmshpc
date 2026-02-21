@@ -90,6 +90,23 @@ export async function GET() {
             SET start_date = '2025-04-01', end_date = '2026-03-31' 
             WHERE year_name = '2025-2026' AND start_date IS NULL;
         `);
+        await db.query(`
+            UPDATE academic_years 
+            SET start_date = '2026-04-01', end_date = '2027-03-31' 
+            WHERE year_name = '2026-2027' AND start_date IS NULL;
+        `);
+
+        // Fix fee structure due dates that were seeded with wrong year (2025 instead of 2026)
+        // This happens when start_date was NULL and the fallback '2025-04-01' was used.
+        await db.query(`
+            UPDATE fee_structures
+            SET due_date = due_date + INTERVAL '1 year'
+            WHERE academic_year_id = (
+                SELECT id FROM academic_years WHERE year_name = '2026-2027' LIMIT 1
+            )
+            AND due_date < '2026-04-01';
+        `);
+
 
         // Fee Heads: New Student Flag
         await db.query(`

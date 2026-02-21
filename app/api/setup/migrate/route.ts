@@ -55,12 +55,13 @@ export async function GET() {
             );
         `);
 
-        // Students: Add columns for Stream, Subject Count, Admission Date
+        // Students: Add columns for Stream, Subject Count, Admission Date, New Student Flag
         await db.query(`
             ALTER TABLE students
             ADD COLUMN IF NOT EXISTS stream VARCHAR(50),
             ADD COLUMN IF NOT EXISTS subject_count INT,
-            ADD COLUMN IF NOT EXISTS admission_date DATE;
+            ADD COLUMN IF NOT EXISTS admission_date DATE,
+            ADD COLUMN IF NOT EXISTS is_new_student BOOLEAN DEFAULT FALSE;
         `);
 
         // Payments: Add batch_id for grouping multi-month receipts

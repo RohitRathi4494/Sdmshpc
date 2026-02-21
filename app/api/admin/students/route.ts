@@ -113,7 +113,9 @@ export async function POST(request: Request) {
             aadhar_no, ppp_id, apaar_id, srn_no,
             board_roll_x, board_roll_xii, education_reg_no,
             // Senior Secondary Fields
-            stream, subject_count
+            stream, subject_count,
+            // Fee Flag
+            is_new_student
         } = body;
 
         if (!admission_no || !student_name || !father_name || !dob) {
@@ -158,9 +160,9 @@ export async function POST(request: Request) {
                     admission_no, student_code, student_name, father_name, mother_name, dob, admission_date,
                     gender, blood_group, category, address, phone_no, emergency_no,
                     aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no,
-                    stream, subject_count
+                    stream, subject_count, is_new_student
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
                 RETURNING id;
             `;
 
@@ -171,7 +173,7 @@ export async function POST(request: Request) {
                 address || '', phone_no || '', emergency_no || '',
                 aadhar_no || '', ppp_id || '', apaar_id || '', srn_no || '',
                 board_roll_x || '', board_roll_xii || '', education_reg_no || '',
-                stream || null, subject_count || 5
+                stream || null, subject_count || 5, is_new_student === true
             ]);
 
             const studentId = studentRes.rows[0].id;

@@ -47,12 +47,15 @@ export default function StudentForm({ student = {}, classes = [], sections = [],
         // Enrollment
         class_id: student.class_id || (student.section_id ? sections.find(s => s.id === student.section_id)?.class_id : '') || '',
         section_id: student.section_id || '',
-        roll_no: student.roll_no || ''
+        roll_no: student.roll_no || '',
+
+        // Fee flag
+        is_new_student: student.is_new_student ?? false,
     });
 
     const handleChange = (e: any) => {
-        const { name, value } = e.target;
-        setFormData(prev => ({ ...prev, [name]: value }));
+        const { name, value, type, checked } = e.target;
+        setFormData(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }));
     };
 
     const handleClassChange = (e: any) => {
@@ -114,6 +117,24 @@ export default function StudentForm({ student = {}, classes = [], sections = [],
                         <label className="block text-xs font-medium text-gray-500">Roll No</label>
                         <input type="number" name="roll_no" value={formData.roll_no} onChange={handleChange} className="w-full border rounded p-2 text-sm" />
                     </div>
+                </div>
+
+                {/* New Student Toggle */}
+                <div className="mt-3 flex items-center gap-3 bg-amber-50 border border-amber-200 rounded-lg p-3">
+                    <input
+                        type="checkbox"
+                        id="is_new_student"
+                        name="is_new_student"
+                        checked={formData.is_new_student}
+                        onChange={handleChange}
+                        className="w-4 h-4 text-amber-600 rounded border-amber-400 focus:ring-amber-500"
+                    />
+                    <label htmlFor="is_new_student" className="text-sm font-semibold text-amber-800 cursor-pointer select-none">
+                        🆕 New Student
+                        <span className="ml-1 text-xs font-normal text-amber-600">
+                            (Check if joining for the first time — will show one-time fees like Admission Fee)
+                        </span>
+                    </label>
                 </div>
             </div>
 

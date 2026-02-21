@@ -41,7 +41,7 @@ export default function BalanceStatementPage({ params }: { params: { studentId: 
 
             {/* Header */}
             <div style={{ textAlign: 'center', borderBottom: '2px solid #1a56db', paddingBottom: '12px', marginBottom: '16px' }}>
-                <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#1a56db' }}>SDMS HPC SCHOOL</div>
+                <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#1a56db' }}>S D Memorial Sr. Sec. School</div>
                 <div style={{ fontSize: '11px', color: '#666' }}>Fee Balance Statement</div>
                 <div style={{ fontSize: '10px', color: '#888', marginTop: '4px' }}>As of {today}</div>
             </div>

@@ -204,7 +204,10 @@ export default function DailyReportTab() {
                             className="px-2 py-1 bg-white/20 hover:bg-white/30 rounded text-lg transition">›</button>
                     )}
                     <button
-                        onClick={() => window.print()}
+                        onClick={() => {
+                            const tok = sessionStorage.getItem('hpc_token');
+                            window.open(`/print/daily-report?date=${date}&token=${tok}`, '_blank');
+                        }}
                         className="px-4 py-2 bg-white text-indigo-700 font-semibold rounded-lg hover:bg-indigo-50 transition text-sm ml-2"
                     >
                         🖨 Print

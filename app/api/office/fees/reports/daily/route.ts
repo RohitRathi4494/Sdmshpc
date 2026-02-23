@@ -19,7 +19,8 @@ export async function GET(request: Request) {
             queryDate = now.toISOString().split('T')[0];
         }
 
-        const token = extractToken(request.headers.get('Authorization'));
+        const token = extractToken(request.headers.get('Authorization')) ||
+            new URL(request.url).searchParams.get('token') || '';
         const user = await verifyAuth(token);
 
         if (!user || (user.role !== UserRole.OFFICE && user.role !== UserRole.ADMIN)) {

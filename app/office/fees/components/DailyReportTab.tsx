@@ -56,7 +56,7 @@ function DonutChart({ data }: { data: Record<string, number> }) {
     return (
         <div className="flex flex-col items-center gap-4">
             <div className="relative">
-                <svg viewBox="0 0 36 36" className="w-44 h-44 -rotate-90">
+                <svg viewBox="-3 -3 42 42" className="w-44 h-44 -rotate-90">
                     <circle cx="18" cy="18" r={R} fill="none" stroke="#f3f4f6" strokeWidth="5" />
                     {segments.map(s => (
                         <circle

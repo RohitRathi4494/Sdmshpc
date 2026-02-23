@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 
 const fmt = (n: number) => '₹' + Number(n).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -10,7 +10,7 @@ const MODE_COLOR: Record<string, string> = {
     ONLINE: '#ea580c', BANK_TRANSFER: '#0891b2',
 };
 
-export default function PrintDailyReportPage() {
+function PrintDailyReportContent() {
     const searchParams = useSearchParams();
     const date = searchParams.get('date') || '';
     const token = searchParams.get('token') || '';
@@ -198,5 +198,13 @@ export default function PrintDailyReportPage() {
                 }
             `}</style>
         </div>
+    );
+}
+
+export default function PrintDailyReportPage() {
+    return (
+        <Suspense fallback={<div style={{ padding: 40, textAlign: 'center', color: '#666' }}>Loading report...</div>}>
+            <PrintDailyReportContent />
+        </Suspense>
     );
 }

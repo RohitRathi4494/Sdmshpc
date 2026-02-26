@@ -287,6 +287,51 @@ export async function GET() {
             ON CONFLICT (username) DO UPDATE SET password_hash = $2, role = $4, is_active = $5
         `, ['office', passwordHash, 'School Office', 'OFFICE', true]);
 
+        // 4. Create Sections for all classes (including foundational)
+        // First get all existing classes
+        const allClasses = await db.query(`SELECT id, class_name FROM classes ORDER BY id`);
+        const sectionNames = ['Rose', 'Lily', 'Lotus', 'Jasmine'];
+        for (const cls of allClasses.rows) {
+            for (const secName of sectionNames) {
+                await db.query(`
+                    INSERT INTO sections (class_id, section_name)
+                    SELECT $1, $2
+                    WHERE NOT EXISTS (
+                        SELECT 1 FROM sections WHERE class_id = $1 AND LOWER(section_name) = LOWER($2)
+                    )
+                `, [cls.id, secName]);
+            }
+        }
+
+        // 5. Foundational HPC tables
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS foundational_skill_ratings (
+                id               SERIAL PRIMARY KEY,
+                student_id       INT NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+                academic_year_id INT NOT NULL,
+                term             VARCHAR(10) NOT NULL CHECK (term IN ('TERM1','TERM2')),
+                domain           VARCHAR(80) NOT NULL,
+                skill_key        VARCHAR(120) NOT NULL,
+                rating           VARCHAR(5) CHECK (rating IN ('A','B','C')),
+                created_at       TIMESTAMPTZ DEFAULT NOW(),
+                updated_at       TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE (student_id, academic_year_id, term, domain, skill_key)
+            );
+        `);
+        await db.query(`
+            CREATE TABLE IF NOT EXISTS foundational_text_fields (
+                id               SERIAL PRIMARY KEY,
+                student_id       INT NOT NULL REFERENCES students(id) ON DELETE CASCADE,
+                academic_year_id INT NOT NULL,
+                term             VARCHAR(10) NOT NULL CHECK (term IN ('TERM1','TERM2')),
+                field_key        VARCHAR(80) NOT NULL,
+                field_value      TEXT,
+                created_at       TIMESTAMPTZ DEFAULT NOW(),
+                updated_at       TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE (student_id, academic_year_id, term, field_key)
+            );
+        `);
+
         return NextResponse.json({
             success: true,
             message: 'Migration and Fee Seeding Completed Successfully.'

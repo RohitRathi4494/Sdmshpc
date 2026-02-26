@@ -6,6 +6,11 @@ import bcrypt from 'bcryptjs';
 
 const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'default-secret-key-change-me');
 
+// ─── Feature flag ────────────────────────────────────────────────────────────
+// Set to true when the office portal is ready to use again.
+const OFFICE_PORTAL_ENABLED = false;
+// ─────────────────────────────────────────────────────────────────────────────
+
 const loginSchema = z.object({
     username: z.string().min(1),
     password: z.string().min(1),
@@ -51,6 +56,14 @@ export async function POST(request: Request) {
             return NextResponse.json(
                 { success: false, error_code: 'AUTH_FAILED', message: 'Invalid credentials' },
                 { status: 401 }
+            );
+        }
+
+        // Block OFFICE logins while portal is disabled
+        if (user.role === 'OFFICE' && !OFFICE_PORTAL_ENABLED) {
+            return NextResponse.json(
+                { success: false, error_code: 'PORTAL_DISABLED', message: 'The Office Portal is temporarily unavailable. Please contact the administrator.' },
+                { status: 403 }
             );
         }
 

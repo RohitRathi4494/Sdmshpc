@@ -3,11 +3,15 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-// Reusing the ChangePasswordModal for now, assuming it handles generic user
 import ChangePasswordModal from '../components/auth/ChangePasswordModal';
 
 const ACCESS_TOKEN_KEY = 'hpc_token';
 const USER_ROLE_KEY = 'hpc_role';
+
+// ─── Feature flag ────────────────────────────────────────────────────────────
+// Set to true when the office portal is ready to use again.
+const OFFICE_PORTAL_ENABLED = false;
+// ─────────────────────────────────────────────────────────────────────────────
 
 export default function OfficeLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setSidebarOpen] = useState(true);
@@ -19,11 +23,6 @@ export default function OfficeLayout({ children }: { children: React.ReactNode }
     useEffect(() => {
         const token = sessionStorage.getItem('hpc_token');
         const role = sessionStorage.getItem('hpc_role');
-
-        // Allow ADMIN to access OFFICE pages? Usually admins can access everything.
-        // But for now, strict check or allow both?
-        // Let's stick to strict OFFICE role for this specific portal to test separation.
-        // Or if user is ADMIN, they should probably go to /admin.
         if (!token || (role !== 'OFFICE' && role !== 'ADMIN')) {
             router.push('/login');
         } else {
@@ -34,6 +33,33 @@ export default function OfficeLayout({ children }: { children: React.ReactNode }
     if (!authorized) {
         return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
     }
+
+    // ── Portal disabled screen ──────────────────────────────────────────────
+    if (!OFFICE_PORTAL_ENABLED) {
+        return (
+            <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6">
+                <div className="bg-white rounded-2xl shadow-lg max-w-md w-full text-center p-10">
+                    <div className="text-6xl mb-4">🔒</div>
+                    <h1 className="text-2xl font-bold text-slate-800 mb-2">Office Portal Unavailable</h1>
+                    <p className="text-slate-500 text-sm mb-6">
+                        The Office Portal and Fee Management module are temporarily disabled.<br />
+                        Please contact the system administrator for more information.
+                    </p>
+                    <button
+                        onClick={() => {
+                            sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+                            sessionStorage.removeItem(USER_ROLE_KEY);
+                            router.push('/login');
+                        }}
+                        className="px-6 py-2 bg-slate-700 hover:bg-slate-800 text-white rounded-lg text-sm font-medium transition"
+                    >
+                        🚪 Logout
+                    </button>
+                </div>
+            </div>
+        );
+    }
+    // ────────────────────────────────────────────────────────────────────────
 
     const navItems = [
         { label: 'Dashboard', href: '/office', icon: '📊' },

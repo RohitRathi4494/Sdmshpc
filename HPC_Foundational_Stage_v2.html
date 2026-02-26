@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Holistic Progress Card – Foundational Stage – SD Memorial Sr. Sec. School</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ───────────────────────────────────────────
+   DESIGN TOKENS  (mirrors Aakriti's card)
+─────────────────────────────────────────── */
+:root {
+  --navy:        #1B3D6F;
+  --navy-mid:    #244d8a;
+  --gold:        #C8922A;
+  --gold-light:  #f0c060;
+  --pale-bg:     #F5F8FF;
+  --row-odd:     #FFFFFF;
+  --row-even:    #EFF4FB;
+  --border:      #c9d8ee;
+  --subhead-bg:  #dbe8fa;
+  --tag-a:       #1a7a3b;
+  --tag-b:       #2563EB;
+  --tag-c:       #d97706;
+  --text:        #1a2840;
+  --muted:       #4B5563;
+  --white:       #FFFFFF;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: #dde8f5;
+  color: var(--text);
+  padding: 24px 12px;
+  font-size: 13px;
+}
+
+/* ── A4 page card (210mm × 297mm ≈ 794px × 1123px at 96dpi) ── */
+.page {
+  width: 794px;
+  min-height: 1123px;
+  margin: 0 auto 36px;
+  background: var(--white);
+  border-radius: 4px;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  overflow: hidden;
+  page-break-after: always;
+}
+
+@media print {
+  @page { size: A4; margin: 0; }
+  body  { padding: 0; background: white; }
+  .page { margin: 0; border-radius: 0; box-shadow: none;
+          width: 210mm; min-height: 297mm; }
+}
+
+/* ── School header (every page) ── */
+.school-header {
+  background: var(--navy);
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 14px 24px;
+}
+.school-header .logo-ring {
+  width: 56px; height: 56px;
+  border-radius: 50%;
+  border: 2px solid var(--gold-light);
+  background: var(--white);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 8px; font-weight: 800; color: var(--navy);
+  text-align: center; line-height: 1.2; padding: 6px;
+  flex-shrink: 0;
+}
+.school-header .titles {
+  flex: 1;
+  text-align: center;
+}
+.school-header .titles h1 {
+  font-size: 19px; font-weight: 800; color: var(--white);
+  letter-spacing: 0.4px;
+}
+.school-header .titles h2 {
+  font-size: 12px; font-weight: 600; color: var(--gold-light);
+  letter-spacing: 2px; text-transform: uppercase; margin-top: 2px;
+}
+
+/* ── Gold section divider bar ── */
+.gold-bar {
+  height: 4px;
+  background: linear-gradient(90deg, var(--gold), var(--gold-light), var(--gold));
+}
+
+/* ── Page body padding ── */
+.page-body { padding: 22px 28px 28px; }
+
+/* ── Section heading ── */
+.section-heading {
+  display: flex; align-items: center; gap: 10px;
+  margin: 22px 0 6px;
+}
+.section-heading::before {
+  content: '';
+  display: block; width: 5px; height: 22px;
+  background: var(--gold); border-radius: 3px; flex-shrink: 0;
+}
+.section-heading h3 {
+  font-size: 14px; font-weight: 800; color: var(--navy);
+  text-transform: uppercase; letter-spacing: 0.5px;
+}
+
+/* ── Curricular goal text ── */
+.curr-goal {
+  font-size: 12px; color: var(--muted);
+  margin: 0 0 10px 15px;
+  line-height: 1.5;
+}
+.curr-goal strong { color: var(--navy); }
+
+/* ── Observation tables ── */
+.obs-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 6px;
+  font-size: 12.5px;
+  outline: 1px solid var(--border);
+  outline-offset: 0;
+}
+.obs-table thead th {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+  padding: 9px 14px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.obs-table thead th:first-child { text-align: left; }
+.obs-table thead th.gold-head {
+  background: var(--gold);
+  color: var(--white);
+}
+
+.obs-table tbody tr:nth-child(odd)  td { background: var(--row-odd); }
+.obs-table tbody tr:nth-child(even) td { background: var(--row-even); }
+
+.obs-table tbody tr.subheader td {
+  background: var(--subhead-bg);
+  color: var(--navy);
+  font-weight: 700;
+  font-size: 12px;
+  padding: 7px 14px;
+}
+.obs-table tbody td {
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  color: var(--text);
+  vertical-align: middle;
+}
+.obs-table tbody td:not(:first-child) {
+  text-align: center;
+  min-width: 88px;
+}
+
+/* ── Rating scale box ── */
+.rating-box {
+  background: var(--subhead-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 20px;
+  margin: 16px 0;
+}
+.rating-box h4 {
+  font-size: 13px; font-weight: 800; color: var(--navy);
+  text-align: center; margin-bottom: 10px; text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.rating-items {
+  display: flex; justify-content: space-around; gap: 10px; flex-wrap: wrap;
+}
+.rating-item {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12.5px; font-weight: 700; color: var(--text);
+}
+.stars { color: #f59e0b; }
+
+/* ── Grade / level badges ── */
+.badge {
+  display: inline-block;
+  padding: 2px 9px;
+  border-radius: 4px;
+  font-weight: 700; font-size: 12px;
+  color: var(--white);
+}
+.badge-a { background: var(--tag-a); }
+.badge-b { background: var(--tag-b); }
+.badge-c { background: var(--tag-c); }
+
+/* ── General info grid ── */
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.info-row {
+  display: contents;
+}
+.info-label {
+  background: var(--row-even);
+  padding: 9px 14px;
+  font-weight: 700; font-size: 12.5px; color: var(--navy);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+}
+.info-value {
+  background: var(--row-odd);
+  padding: 9px 14px;
+  font-size: 12.5px; color: var(--text);
+  border-bottom: 1px solid var(--border);
+}
+.info-full-label {
+  background: var(--row-even);
+  padding: 9px 14px;
+  font-weight: 700; font-size: 12.5px; color: var(--navy);
+  border-bottom: 1px solid var(--border);
+  border-right: 1px solid var(--border);
+  grid-column: 1;
+}
+.info-full-value {
+  background: var(--row-odd);
+  padding: 9px 14px;
+  font-size: 12.5px; color: var(--text);
+  border-bottom: 1px solid var(--border);
+  grid-column: 2 / 3;
+}
+
+/* ── Big write box (profile / portfolio) ── */
+.write-box {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--row-even);
+  min-height: 160px;
+  padding: 12px;
+  margin-top: 6px;
+}
+
+/* ── Signature table ── */
+.sig-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-top: 8px;
+  font-size: 12.5px;
+  outline: 1px solid var(--border);
+  outline-offset: 0;
+}
+.sig-table thead th {
+  background: var(--navy); color: var(--white);
+  font-weight: 700; padding: 9px 10px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.sig-table tbody td {
+  background: var(--row-odd);
+  padding: 22px 10px 8px;
+  text-align: center;
+  border: 1px solid var(--border);
+  font-size: 12px; color: var(--muted);
+}
+.sig-table tbody tr:nth-child(even) td { background: var(--row-even); }
+
+/* ── All About Me section ── */
+.about-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-top: 10px;
+}
+.about-card {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.about-card .card-head {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700; font-size: 12.5px;
+  padding: 8px 14px;
+}
+.about-card .card-body {
+  background: var(--row-even);
+  padding: 12px 14px;
+  min-height: 90px;
+}
+.write-line-wrap { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+.bullet-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); flex-shrink: 0; }
+.write-line { flex: 1; border-bottom: 1.5px solid var(--border); height: 20px; }
+
+.photo-box {
+  border: 1.5px dashed var(--border);
+  border-radius: 6px;
+  height: 130px;
+  display: flex; align-items: center; justify-content: center;
+  color: #aaa; font-style: italic; font-size: 12px;
+  background: var(--white);
+}
+
+/* ── Self-assessment note ── */
+.sa-note {
+  background: var(--subhead-bg);
+  border-left: 4px solid var(--gold);
+  border-radius: 4px;
+  padding: 10px 14px;
+  font-size: 12px; color: var(--navy);
+  margin-bottom: 10px;
+  line-height: 1.5;
+}
+.sa-note em { font-style: italic; }
+
+/* ── Grading framework ── */
+.grade-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  font-size: 12px;
+  margin-top: 8px;
+  outline: 1px solid var(--border);
+  outline-offset: 0;
+}
+.grade-table thead th {
+  background: var(--navy); color: var(--white);
+  padding: 8px 12px; text-align: center; font-weight: 700;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+.grade-table tbody td {
+  padding: 8px 12px;
+  border: 1px solid var(--border);
+  vertical-align: top;
+}
+.grade-table tbody tr:nth-child(odd) td  { background: var(--row-odd); }
+.grade-table tbody tr:nth-child(even) td { background: var(--row-even); }
+.grade-cell { font-weight: 800; color: var(--navy); text-align: center; font-size: 14px; }
+
+/* old print block removed — consolidated above */
+
+/* ── Attendance table: compact to prevent overflow ── */
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  overflow: hidden;
+  font-size: 11px;
+  table-layout: fixed;
+  outline: 1px solid var(--border);
+  outline-offset: 0;
+}
+.attendance-table thead th {
+  background: var(--navy);
+  color: var(--white);
+  font-weight: 700;
+  padding: 7px 3px;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.15);
+  white-space: nowrap;
+  overflow: hidden;
+  font-size: 10.5px;
+}
+.attendance-table thead th:first-child {
+  text-align: left;
+  padding-left: 8px;
+  width: 16%;
+}
+.attendance-table thead th.gold-head {
+  background: var(--gold);
+  color: var(--white);
+  width: 7%;
+}
+.attendance-table tbody td {
+  padding: 8px 3px;
+  border: 1px solid var(--border);
+  text-align: center;
+  vertical-align: middle;
+  font-size: 11px;
+}
+.attendance-table tbody td:first-child {
+  text-align: left;
+  padding-left: 8px;
+  font-weight: 600;
+  color: var(--navy);
+  background: var(--row-even);
+}
+.attendance-table tbody tr:nth-child(odd) td:not(:first-child)  { background: var(--row-odd); }
+.attendance-table tbody tr:nth-child(even) td:not(:first-child) { background: var(--row-even); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════
+  PAGE 1 · GENERAL INFORMATION + ATTENDANCE  (mirrors Aakriti Page 1)
+══════════════════════════════════════════ -->
+<div class="page" id="page-general">
+  <div class="school-header">
+    <div class="logo-ring">SD MEM SR SEC GURGAON</div>
+    <div class="titles">
+      <h1>S D MEMORIAL SR. SEC. SCHOOL, GURUGRAM</h1>
+      <h2>Holistic Progress Card — Foundational Stage</h2>
+    </div>
+  </div>
+  <div class="gold-bar"></div>
+
+  <div class="page-body">
+
+    <!-- General Information -->
+    <div class="section-heading"><h3>General Information</h3></div>
+    <div class="info-grid">
+      <div class="info-label">Student Name:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Roll No.:</div>
+      <div class="info-value" style="display:flex;gap:30px;">
+        <span></span>
+        <span style="font-weight:700;color:var(--navy);">Adm No.:</span>
+        <span></span>
+      </div>
+
+      <div class="info-label">Class / Section:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Date of Birth:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Address:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Phone:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Mother/Guardian Name:</div>
+      <div class="info-value"></div>
+
+      <div class="info-label">Father/Guardian Name:</div>
+      <div class="info-value"></div>
+    </div>
+
+    <!-- Attendance Record -->
+    <div class="section-heading" style="margin-top:26px;"><h3>Attendance Record</h3></div>
+    <table class="attendance-table">
+      <thead>
+        <tr>
+          <th>Months</th>
+          <th>Apr</th><th>May</th><th>Jun</th><th>Jul</th><th>Aug</th><th>Sep</th>
+          <th>Oct</th><th>Nov</th><th>Dec</th><th>Jan</th><th>Feb</th><th>Mar</th>
+          <th class="gold-head">Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>No. of Working Days</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>No. of Days Present</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>% of Attendance</td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td><td></td><td></td><td></td><td></td><td></td>
+          <td></td>
+        </tr>
+        <tr>
+          <td>If Attendance is Low, Reason</td>
+          <td colspan="13"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- All About Me -->
+    <div class="section-heading" style="margin-top:26px;"><h3>All About Me</h3></div>
+    <div class="about-grid">
+      <div class="about-card">
+        <div class="card-head">My Self</div>
+        <div class="card-body"><div class="photo-box">[Paste Student Photo Here]</div></div>
+      </div>
+      <div class="about-card">
+        <div class="card-head">My Family Photo</div>
+        <div class="card-body"><div class="photo-box">[Paste Family Photo Here]</div></div>
+      </div>
+      <div class="about-card">
+        <div class="card-head">My Age</div>
+        <div class="card-body" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:10px 14px;">
+          <!-- Birthday cake SVG -->
+          <svg xmlns="http://www.w3.org/2000/svg" width="90" height="100" viewBox="0 0 90 100">
+            <!-- Candles -->
+            <rect x="25" y="8" width="6" height="18" rx="3" fill="#4FC3F7"/>
+            <rect x="43" y="4" width="6" height="22" rx="3" fill="#FF8A65"/>
+            <rect x="61" y="8" width="6" height="18" rx="3" fill="#81C784"/>
+            <!-- Flames -->
+            <ellipse cx="28" cy="7" rx="4" ry="5" fill="#FFD54F"/>
+            <ellipse cx="28" cy="7" rx="2" ry="3" fill="#FF8F00"/>
+            <ellipse cx="46" cy="3" rx="4" ry="5" fill="#FFD54F"/>
+            <ellipse cx="46" cy="3" rx="2" ry="3" fill="#FF8F00"/>
+            <ellipse cx="64" cy="7" rx="4" ry="5" fill="#FFD54F"/>
+            <ellipse cx="64" cy="7" rx="2" ry="3" fill="#FF8F00"/>
+            <!-- Top cake layer -->
+            <rect x="12" y="28" width="66" height="22" rx="5" fill="#F48FB1"/>
+            <!-- Frosting drips top layer -->
+            <path d="M12 33 Q18 26 24 33 Q30 26 36 33 Q42 26 48 33 Q54 26 60 33 Q66 26 72 33 Q78 26 78 33" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <!-- Bottom cake layer -->
+            <rect x="6" y="50" width="78" height="28" rx="5" fill="#CE93D8"/>
+            <!-- Frosting drips bottom layer -->
+            <path d="M6 56 Q14 48 22 56 Q30 48 38 56 Q46 48 54 56 Q62 48 70 56 Q78 48 84 56" fill="none" stroke="white" stroke-width="3" stroke-linecap="round"/>
+            <!-- Decorative dots -->
+            <circle cx="24" cy="63" r="3" fill="#FFD54F"/>
+            <circle cx="38" cy="60" r="2.5" fill="#FF8A65"/>
+            <circle cx="52" cy="65" r="3" fill="#81C784"/>
+            <circle cx="66" cy="61" r="2.5" fill="#4FC3F7"/>
+            <!-- Plate -->
+            <ellipse cx="45" cy="79" rx="42" ry="5" fill="#BCAAA4"/>
+          </svg>
+          <div style="font-size:12.5px;font-weight:700;color:var(--navy);text-align:center;">
+            I am <span style="border-bottom:2px solid var(--gold);padding:0 18px;margin:0 2px;"></span> years old
+          </div>
+        </div>
+      </div>
+      <div class="about-card">
+        <div class="card-head">My Best Friends</div>
+        <div class="card-body">
+          <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+          <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+          <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="about-card" style="margin-top:12px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div class="card-head">My Favourite Things to Do</div>
+      <div class="card-body" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 20px;">
+        <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+        <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+        <div class="write-line-wrap"><div class="bullet-dot"></div><div class="write-line"></div></div>
+      </div>
+    </div>
+
+  </div><!-- /page-body -->
+</div><!-- /page-general -->
+
+
+<!-- ═══════════════════════════════════════
+  PAGE 2 · WELL-BEING + SOCIO-EMOTIONAL + AESTHETIC
+══════════════════════════════════════════ -->
+<div class="page" id="page-wb-se-ae">
+  <div class="gold-bar"></div>
+  <div class="page-body">
+
+    <!-- Well-Being -->
+    <div class="section-heading"><h3>Well-Being and Physical Development</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To develop gross and fine motor skills, coordination, independence, healthy habits, and positive participation in play.</p>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">Skills</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Demonstrates coordination and balance during physical activities</td><td></td><td></td></tr>
+        <tr><td>Participates actively in outdoor play</td><td></td><td></td></tr>
+        <tr><td>Demonstrates independence in routine tasks</td><td></td><td></td></tr>
+        <tr><td>Maintains hygiene and healthy practices</td><td></td><td></td></tr>
+        <tr><td>Performs paper folding, tearing, pasting, and clay work with ease</td><td></td><td></td></tr>
+        <tr><td>Draws and writes independently</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Socio-Emotional -->
+    <div class="section-heading"><h3>Socio-Emotional Development</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To nurture emotional awareness, responsibility, cooperation, and positive social behaviour.</p>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">Skills</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Expresses thoughts and feelings clearly</td><td></td><td></td></tr>
+        <tr><td>Listens attentively and follows directions</td><td></td><td></td></tr>
+        <tr><td>Accepts and fulfils responsibilities</td><td></td><td></td></tr>
+        <tr><td>Cooperates and shares with classmates</td><td></td><td></td></tr>
+        <tr><td>Participates actively in collaborative activities</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Aesthetic & Cultural -->
+    <div class="section-heading"><h3>Aesthetic and Cultural Development</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To encourage creativity, rhythm awareness, and artistic expression through art, music, and movement.</p>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">Skills</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Shows imaginative and creative expression in art</td><td></td><td></td></tr>
+        <tr><td>Responds to rhythm and dances confidently</td><td></td><td></td></tr>
+        <tr><td>Sings tunefully</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+  PAGE 3 · LANGUAGE & LITERACY  (English + Hindi)
+══════════════════════════════════════════ -->
+<div class="page" id="page-language">
+  <div class="gold-bar"></div>
+  <div class="page-body">
+
+    <div class="section-heading"><h3>Language and Literacy Development</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To develop listening, speaking, reading, and writing skills for effective communication.</p>
+
+    <!-- English -->
+    <table class="obs-table" style="margin-bottom:18px;">
+      <thead>
+        <tr>
+          <th style="width:68%">English (L1)</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="subheader"><td colspan="3">Listening Skills</td></tr>
+        <tr><td>Pays attention and listens carefully</td><td></td><td></td></tr>
+        <tr><td>Demonstrates understanding of stories</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">Verbal Skills</td></tr>
+        <tr><td>Uses vocabulary in meaningful conversations</td><td></td><td></td></tr>
+        <tr><td>Expresses ideas clearly</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">Reading Skills</td></tr>
+        <tr><td>Identifies rhyming words</td><td></td><td></td></tr>
+        <tr><td>Blends sounds to read words</td><td></td><td></td></tr>
+        <tr><td>Reads selected sight words</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">Writing Skills</td></tr>
+        <tr><td>Attempts phonetic spelling</td><td></td><td></td></tr>
+        <tr><td>Writes simple words</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Hindi -->
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">हिंदी</th>
+          <th>प्रथम सत्र</th>
+          <th>द्वितीय सत्र</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="subheader"><td colspan="3">श्रवण कौशल</td></tr>
+        <tr><td>समझना और प्रतिक्रिया देना</td><td></td><td></td></tr>
+        <tr><td>कहानी को समझने का प्रयास</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">मौखिक कौशल</td></tr>
+        <tr><td>शब्दावली का उचित प्रयोग</td><td></td><td></td></tr>
+        <tr><td>सही उच्चारण</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">पठन कौशल</td></tr>
+        <tr><td>अक्षरों की पहचान</td><td></td><td></td></tr>
+        <tr><td>ध्वनि को अक्षर से जोड़ना</td><td></td><td></td></tr>
+        <tr class="subheader"><td colspan="3">लेखन कौशल</td></tr>
+        <tr><td>अक्षरों की सही बनावट</td><td></td><td></td></tr>
+        <tr><td>साधारण शब्द लिखना</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+  PAGE 4 · COGNITIVE + POSITIVE LEARNING HABITS
+══════════════════════════════════════════ -->
+<div class="page" id="page-cognitive-habits">
+  <div class="gold-bar"></div>
+  <div class="page-body">
+
+    <!-- Cognitive Development -->
+    <div class="section-heading"><h3>Cognitive Development</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To build foundational numeracy, inquiry, problem-solving, and early technology skills.</p>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">Skills</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Understands number value</td><td></td><td></td></tr>
+        <tr><td>Explores and applies basic concepts</td><td></td><td></td></tr>
+        <tr><td>Shows curiosity and connects learning to real life</td><td></td><td></td></tr>
+        <tr><td>Observes and assimilates new concepts</td><td></td><td></td></tr>
+        <tr><td>Demonstrates good mouse control</td><td></td><td></td></tr>
+        <tr><td>Expresses ideas clearly</td><td></td><td></td></tr>
+        <tr><td>Uses the keyboard appropriately</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Positive Learning Habits -->
+    <div class="section-heading"><h3>Positive Learning Habits</h3></div>
+    <p class="curr-goal"><strong>Curricular Goals:</strong> To develop focus, responsibility, respect, and independence for lifelong learning.</p>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:68%">Skills</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>Follows class routines</td><td></td><td></td></tr>
+        <tr><td>Respects others and follows basic etiquettes</td><td></td><td></td></tr>
+        <tr><td>Takes turns and shares with peers</td><td></td><td></td></tr>
+        <tr><td>Concentrates on assigned tasks</td><td></td><td></td></tr>
+        <tr><td>Maintains neatness of materials and workspace</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Self-Assessment -->
+    <div class="section-heading"><h3>Self-Assessment</h3></div>
+    <p style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:8px;">
+      (Self reflection on inter-disciplinary activity done by the child — e.g. clay work, drawing, playing a game, colouring, puppet-making, model-making etc.)
+    </p>
+    <div class="sa-note">
+      <strong>The teacher must help the children fill this section.</strong><br>
+      <em>For young children, the teacher may fill it based on observation and discussion.</em>
+    </div>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:60%"></th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>1. Activities that I enjoy the most</td><td></td><td></td></tr>
+        <tr><td>2. Activities that I find difficult to do</td><td></td><td></td></tr>
+        <tr><td>3. Activities that I enjoy doing with my friends</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+  PAGE 5 · LEARNER PROFILE + PARENT FEEDBACK + PORTFOLIO + SIGNATURES
+══════════════════════════════════════════ -->
+<div class="page" id="page-profile-portfolio">
+  <div class="gold-bar"></div>
+  <div class="page-body">
+
+    <!-- Learner Profile -->
+    <div class="section-heading"><h3>Learner's Profile by the Teacher</h3></div>
+    <div class="write-box" style="min-height:180px;"></div>
+
+    <!-- Parent Feedback -->
+    <div class="section-heading"><h3>Parent's Feedback</h3></div>
+    <table class="obs-table">
+      <thead>
+        <tr>
+          <th style="width:55%">Aspect</th>
+          <th>Term I</th>
+          <th>Term II</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr style="height:52px;"><td>My child enjoys participating in…</td><td></td><td></td></tr>
+        <tr style="height:52px;"><td>My child can be supported for…</td><td></td><td></td></tr>
+        <tr style="height:52px;"><td>I would also like to share…</td><td></td><td></td></tr>
+        <tr style="height:52px;"><td>Have I completed age-appropriate vaccination schedule for my child?</td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+    <!-- Learner Portfolio -->
+    <div class="section-heading"><h3>Learner's Portfolio</h3></div>
+    <p style="font-size:12px;color:var(--muted);font-style:italic;margin-bottom:6px;">
+      NOTE: Paste pictures / display selected work done by student in various experiential and inter-disciplinary tasks done in class.
+    </p>
+    <div class="write-box" style="min-height:140px;"></div>
+
+    <!-- Signatures -->
+    <div class="section-heading"><h3>Signature with Date</h3></div>
+    <table class="sig-table">
+      <thead>
+        <tr>
+          <th style="width:12%">Term</th>
+          <th>Parent / Guardian</th>
+          <th>Class Teacher</th>
+          <th>Block Incharge</th>
+          <th>Principal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td style="font-weight:700;color:var(--navy);">Term I</td><td></td><td></td><td></td><td></td></tr>
+        <tr><td style="font-weight:700;color:var(--navy);">Term II</td><td></td><td></td><td></td><td></td></tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════
+  PAGE 6 · EVALUATION FRAMEWORK
+══════════════════════════════════════════ -->
+<div class="page" id="page-framework">
+  <div class="gold-bar"></div>
+  <div class="page-body">
+
+    <div class="section-heading"><h3>Assessment &amp; Grading Framework</h3></div>
+    <table class="grade-table">
+      <thead>
+        <tr>
+          <th style="width:12%">Rating</th>
+          <th style="width:22%">Level</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-a">★★★</span></td>
+          <td style="font-weight:700;">Advanced</td>
+          <td>Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.</td>
+        </tr>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-b">★★</span></td>
+          <td style="font-weight:700;">Age Appropriate</td>
+          <td>Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.</td>
+        </tr>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-c">★</span></td>
+          <td style="font-weight:700;">Getting There</td>
+          <td>Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="section-heading" style="margin-top:28px;"><h3>Evaluation Levels — Observation Key</h3></div>
+    <table class="grade-table">
+      <thead>
+        <tr>
+          <th style="width:12%">Level</th>
+          <th>Meaning</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-a">A</span></td>
+          <td>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
+        </tr>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-b">B</span></td>
+          <td>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
+        </tr>
+        <tr>
+          <td class="grade-cell"><span class="badge badge-c">C</span></td>
+          <td>Requires support to understand and apply the skill effectively.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- Domains covered note -->
+    <div class="sa-note" style="margin-top:28px;">
+      <strong>Domains Assessed in this Foundational Stage HPC:</strong><br>
+      Well-Being &amp; Physical Development · Socio-Emotional Development · Aesthetic &amp; Cultural Development ·
+      Language &amp; Literacy (English &amp; Hindi) · Cognitive Development (Numeracy, EVS &amp; ICT) ·
+      Positive Learning Habits
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

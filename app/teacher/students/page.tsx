@@ -3,6 +3,7 @@
 import React, { useState, useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
+import { isFoundationalClass } from '@/app/lib/foundational-skills';
 
 interface Student {
     id: number;
@@ -212,42 +213,68 @@ function StudentSelectionContent() {
                                         {student.admission_no}
                                     </td>
                                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                                        <div className="flex space-x-2">
-                                            <button
-                                                onClick={() => router.push(`/teacher/scholastic/student/${student.id}`)}
-                                                className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
-                                                title="Scholastic Assessment"
-                                            >
-                                                Scholastic
-                                            </button>
-                                            <button
-                                                onClick={() => router.push(`/teacher/co-scholastic/student/${student.id}`)}
-                                                className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
-                                                title="Co-Scholastic Assessment"
-                                            >
-                                                Co-Scholastic
-                                            </button>
-                                            <button
-                                                onClick={() => router.push(`/teacher/attendance/student/${student.id}`)}
-                                                className="px-3 py-1 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition"
-                                                title="Attendance"
-                                            >
-                                                Attendance
-                                            </button>
-                                            <button
-                                                onClick={() => router.push(`/teacher/remarks/student/${student.id}`)}
-                                                className="px-3 py-1 bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition"
-                                                title="Remarks"
-                                            >
-                                                Remarks
-                                            </button>
-                                            <button
-                                                onClick={() => router.push(`/teacher/preview/student/${student.id}`)}
-                                                className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
-                                                title="Preview Report"
-                                            >
-                                                Preview
-                                            </button>
+                                        <div className="flex space-x-2 flex-wrap gap-y-1">
+                                            {selectedClass && isFoundationalClass(selectedClass.class_name) ? (
+                                                // ── Foundational Stage (Nursery / LKG / UKG) ──
+                                                <>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/foundational/student/${student.id}?academic_year_id=1`)}
+                                                        className="px-3 py-1 bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
+                                                        title="HPC Entry"
+                                                    >
+                                                        🌟 HPC Entry
+                                                    </button>
+                                                    <button
+                                                        onClick={() => {
+                                                            const t = sessionStorage.getItem('hpc_token');
+                                                            window.open(`/print/foundational/${student.id}?academic_year_id=1&token=${t}`, '_blank');
+                                                        }}
+                                                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                                                        title="Preview HPC Card"
+                                                    >
+                                                        Preview
+                                                    </button>
+                                                </>
+                                            ) : (
+                                                // ── Regular Classes (III–VIII) ──
+                                                <>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/scholastic/student/${student.id}`)}
+                                                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
+                                                        title="Scholastic Assessment"
+                                                    >
+                                                        Scholastic
+                                                    </button>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/co-scholastic/student/${student.id}`)}
+                                                        className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
+                                                        title="Co-Scholastic Assessment"
+                                                    >
+                                                        Co-Scholastic
+                                                    </button>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/attendance/student/${student.id}`)}
+                                                        className="px-3 py-1 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition"
+                                                        title="Attendance"
+                                                    >
+                                                        Attendance
+                                                    </button>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/remarks/student/${student.id}`)}
+                                                        className="px-3 py-1 bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition"
+                                                        title="Remarks"
+                                                    >
+                                                        Remarks
+                                                    </button>
+                                                    <button
+                                                        onClick={() => router.push(`/teacher/preview/student/${student.id}`)}
+                                                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                                                        title="Preview Report"
+                                                    >
+                                                        Preview
+                                                    </button>
+                                                </>
+                                            )}
                                         </div>
                                     </td>
                                 </tr>

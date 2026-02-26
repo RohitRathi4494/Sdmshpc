@@ -206,7 +206,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto', borderRadius: '4px', border: `1px solid ${C.navy}` }}>
-                            <table className="foundational-table">
+                            <table className="foundational-table scholastic-table">
                                 <thead>
                                     <tr>
                                         <th rowSpan={2} style={{ width: '15%' }}>Subjects</th>
@@ -311,15 +311,11 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <>
                                                 {rows}
                                                 <tr className="domain-header">
-                                                    <td colSpan={9} style={{ textAlign: 'left', paddingLeft: '12px' }}>Grand Total</td>
-                                                    <td style={{ fontWeight: 800 }}>{max1 > 0 ? `${grandTotal1.toFixed(1)} / ${max1}` : ''}</td>
-                                                    <td style={{ fontWeight: 800 }}>{max2 > 0 ? `${grandTotal2.toFixed(1)} / ${max2}` : ''}</td>
+                                                    <td colSpan={11} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{maxAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxAvg}` : ''}</td>
                                                 </tr>
                                                 <tr className="domain-header" style={{ background: '#d1e0f7' }}>
-                                                    <td colSpan={9} style={{ textAlign: 'left', paddingLeft: '12px' }}>Percentage</td>
-                                                    <td style={{ fontWeight: 800 }}>{p1 ? `${p1}%` : ''}</td>
-                                                    <td style={{ fontWeight: 800 }}>{p2 ? `${p2}%` : ''}</td>
+                                                    <td colSpan={11} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{pAvg ? `${pAvg}%` : ''}</td>
                                                 </tr>
                                             </>
@@ -730,7 +726,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.gold} !important;
         }
         .foundational-table td {
-            padding: 4px 4px !important;
+            padding: 6px 10px !important;
             border: 1px solid ${C.border} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
@@ -804,7 +800,12 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 display: table-footer-group !important;
             }
         }
-    `}</style>
+
+        .scholastic-table th, .scholastic-table td {
+            padding-left: 2px !important;
+            padding-right: 2px !important;
+        }
+        `}</style>
         </div>
     );
 }

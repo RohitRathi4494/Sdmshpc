@@ -21,6 +21,9 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
 
     const [activeTerm, setActiveTerm] = useState<TermKey>('TERM1');
     const [studentName, setStudentName] = useState('');
+    const [studentClass, setStudentClass] = useState('');
+    const [studentSection, setStudentSection] = useState('');
+    const [showPreview, setShowPreview] = useState(false);
 
     // {term}:{domain}:{skillKey} → Rating
     const [ratings, setRatings] = useState<Record<string, Rating>>({});
@@ -38,11 +41,18 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
         Authorization: `Bearer ${token()}`,
     }), []);
 
-    // Load student name
+    // Load student name + class/section
     useEffect(() => {
         fetch(`/api/teacher/students?student_id=${studentId}`, { headers: authH() })
             .then(r => r.json())
-            .then(j => { if (j.success && j.data?.[0]) setStudentName(j.data[0].student_name); })
+            .then(j => {
+                if (j.success && j.data?.[0]) {
+                    const s = j.data[0];
+                    setStudentName(s.student_name || '');
+                    setStudentClass(s.class_name || '');
+                    setStudentSection(s.section_name || '');
+                }
+            })
             .catch(() => { });
     }, [studentId, authH]);
 
@@ -150,7 +160,7 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                         <span className="text-green-600">✓ Saved {lastSaved}</span>
                     ) : null}
                     <button
-                        onClick={() => window.open(`/print/foundational/${studentId}?academic_year_id=${academicYearId}&token=${token()}`, '_blank')}
+                        onClick={() => setShowPreview(true)}
                         className="px-4 py-1.5 bg-indigo-600 text-white rounded-lg text-sm font-medium hover:bg-indigo-700 transition"
                     >
                         🖨 Preview Card
@@ -259,6 +269,44 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                     ))}
                 </div>
             </div>
+
+            {/* ── Preview Modal ── */}
+            {showPreview && (
+                <div className="fixed inset-0 z-50 flex flex-col bg-black/70">
+                    <div className="flex items-center justify-between bg-[#1B3D6F] px-5 py-3 shrink-0">
+                        <span className="text-white font-semibold text-sm">
+                            Preview — {studentName}{studentClass && studentSection ? ` (${studentClass} ${studentSection})` : ''}
+                        </span>
+                        <div className="flex items-center gap-3">
+                            <button
+                                onClick={() => {
+                                    const iframe = document.getElementById('hpc-preview-frame') as HTMLIFrameElement;
+                                    if (iframe?.contentWindow) {
+                                        const fileName = [studentName, studentClass, studentSection].filter(Boolean).join('_').replace(/\s+/g, '_');
+                                        if (iframe.contentDocument) iframe.contentDocument.title = fileName;
+                                        iframe.contentWindow.print();
+                                    }
+                                }}
+                                className="px-4 py-1.5 bg-amber-500 hover:bg-amber-600 text-white rounded-lg text-sm font-semibold transition"
+                            >
+                                ⬇ Download PDF
+                            </button>
+                            <button
+                                onClick={() => setShowPreview(false)}
+                                className="px-4 py-1.5 bg-white/20 hover:bg-white/30 text-white rounded-lg text-sm font-medium transition"
+                            >
+                                ✕ Close
+                            </button>
+                        </div>
+                    </div>
+                    <iframe
+                        id="hpc-preview-frame"
+                        src={`/print/foundational/${studentId}?academic_year_id=${academicYearId}&token=${token()}`}
+                        className="flex-1 w-full bg-white border-0"
+                        title="HPC Preview"
+                    />
+                </div>
+            )}
         </div>
     );
 }

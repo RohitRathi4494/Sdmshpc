@@ -439,9 +439,9 @@ function FoundationalReportContent() {
                     </thead>
                     <tbody>
                         {[
-                            { badge: '★★★', bg: C.tagA, level: 'Advanced', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
-                            { badge: '★★', bg: C.tagB, level: 'Age Appropriate', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
-                            { badge: '★', bg: C.tagC, level: 'Getting There', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
+                            { badge: 'A', bg: C.tagA, level: 'Advanced', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
+                            { badge: 'B', bg: C.tagB, level: 'Age Appropriate', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
+                            { badge: 'C', bg: C.tagC, level: 'Getting There', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
@@ -454,31 +454,7 @@ function FoundationalReportContent() {
                     </tbody>
                 </table>
 
-                <SectionHeading mt={28}>Evaluation Levels — Observation Key</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12, marginTop: 8 }}>
-                    <thead>
-                        <tr>
-                            <th style={{ ...obsThStyle, width: '12%' }}>Level</th>
-                            <th style={obsThStyle}>Meaning</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            { badge: 'A', bg: C.tagA, desc: 'Demonstrates clear understanding of the skill and applies it independently with confidence.' },
-                            { badge: 'B', bg: C.tagB, desc: 'Demonstrates understanding of the skill but requires time and guidance for consistent performance.' },
-                            { badge: 'C', bg: C.tagC, desc: 'Requires support to understand and apply the skill effectively.' },
-                        ].map((r, ri) => (
-                            <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
-                                <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ background: r.bg, color: '#fff', borderRadius: 4, padding: '2px 9px', fontWeight: 700, fontSize: 12 }}>{r.badge}</span>
-                                </td>
-                                <td style={obsTdStyle}>{r.desc}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-
-                <div style={{ background: C.subheadBg, borderLeft: `4px solid ${C.gold}`, borderRadius: 4, padding: '10px 14px', fontSize: 12, color: C.navy, marginTop: 28, lineHeight: 1.5 }}>
+                <div style={{ background: C.subheadBg, borderLeft: `4px solid ${C.gold}`, borderRadius: 4, padding: '10px 14px', fontSize: 12, color: C.navy, marginTop: 20, lineHeight: 1.5 }}>
                     <strong>Domains Assessed in this Foundational Stage HPC:</strong><br />
                     Well-Being & Physical Development · Socio-Emotional Development · Aesthetic & Cultural Development ·
                     Language & Literacy (English & Hindi) · Cognitive Development (Numeracy, EVS & ICT) · Positive Learning Habits

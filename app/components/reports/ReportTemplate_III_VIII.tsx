@@ -190,7 +190,19 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    {/* SCHOLASTIC DOMAINS */}
+                    
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <SchoolHeader />
+                <div style={{ padding: '22px 28px 28px' }}>
+{/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto', borderRadius: '4px', border: `1px solid ${C.navy}` }}>
@@ -276,6 +288,33 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         </tr>
                                     ))}
 
+                                                                    </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <SchoolHeader />
+                <div style={{ padding: '22px 28px 28px' }}>
+
+                    {/* CO-SCHOLASTIC DOMAINS (Continued) */}
+                    <div className="section" style={{ marginTop: 0 }}>
+                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden', borderTop: 'none' }}>
+                            <table className="foundational-table">
+                                                                <tbody>
+                                    <tr style={{ visibility: 'collapse' }}>
+                                        <th style={{ width: '50%' }}></th>
+                                        <th style={{ width: '25%' }}></th>
+                                        <th style={{ width: '25%' }}></th>
+                                    </tr>
                                     {/* Performing Art - Dance */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
@@ -372,7 +411,19 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    {/* FEEDBACK SECTIONS */}
+                    
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <SchoolHeader />
+                <div style={{ padding: '22px 28px 28px' }}>
+{/* FEEDBACK SECTIONS */}
                     <div className="section">
                         <div className="feedback-grid">
                             <div className="feedback-card">
@@ -417,7 +468,19 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         ))}
                     </div>
 
-                    {/* GRADING FRAMEWORK */}
+                    
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <SchoolHeader />
+                <div style={{ padding: '22px 28px 28px' }}>
+{/* GRADING FRAMEWORK */}
                     <div className="grading-section">
                         <h3>Assessment & Grading Framework</h3>
                         <div className="grading-grid">
@@ -612,6 +675,10 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
         /* Print formatting to prevent huge empty spaces */
         @media print {
+            .page-break {
+                page-break-before: always;
+                break-before: page;
+            }
             .foundational-page, .print-page { 
                 background: white !important; 
                 padding: 0 !important; 

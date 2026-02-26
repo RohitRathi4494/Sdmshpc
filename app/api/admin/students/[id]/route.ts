@@ -57,20 +57,30 @@ export async function PUT(
 
         // 2. Update Enrollment Info if academic_year_id is provided
         if (academic_year_id) {
-            // Check if enrollment exists
             const existing = await db.query(`
                 SELECT id FROM student_enrollments 
                 WHERE student_id = $1 AND academic_year_id = $2
             `, [studentId, academic_year_id]);
 
             if (existing.rows.length > 0) {
-                await db.query(`
-                    UPDATE student_enrollments
-                    SET roll_no = $1, section_id = $2
-                    WHERE student_id = $3 AND academic_year_id = $4
-                `, [roll_no, section_id, studentId, academic_year_id]);
+                if (section_id) {
+                    // Derive class_id from the chosen section so it stays in sync
+                    await db.query(`
+                        UPDATE student_enrollments
+                        SET roll_no = $1,
+                            section_id = $2,
+                            class_id = (SELECT class_id FROM sections WHERE id = $2)
+                        WHERE student_id = $3 AND academic_year_id = $4
+                    `, [roll_no, section_id, studentId, academic_year_id]);
+                } else {
+                    // Only roll_no changed
+                    await db.query(`
+                        UPDATE student_enrollments
+                        SET roll_no = $1
+                        WHERE student_id = $2 AND academic_year_id = $3
+                    `, [roll_no, studentId, academic_year_id]);
+                }
             } else if (section_id) {
-                // Insert logic if missing
                 await db.query(`
                     INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, roll_no)
                     SELECT $1, s.class_id, $2, $3, $4

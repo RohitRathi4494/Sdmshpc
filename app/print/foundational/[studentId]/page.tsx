@@ -378,13 +378,13 @@ function FoundationalReportContent() {
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To build foundational numeracy, inquiry, problem-solving, and early technology skills.
                 </p>
-                <DomainTable domainKey="cognitive" ratings={ratings} />
+                <DomainTable domainKey="cognitive" ratings={ratings} rowHeight={40} />
 
                 <SectionHeading>Positive Learning Habits</SectionHeading>
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To develop focus, responsibility, respect, and independence for lifelong learning.
                 </p>
-                <DomainTable domainKey="learning_habits" ratings={ratings} />
+                <DomainTable domainKey="learning_habits" ratings={ratings} rowHeight={40} />
 
                 <SectionHeading>Self-Assessment</SectionHeading>
                 <p style={{ fontSize: 12, color: C.muted, fontStyle: 'italic', marginBottom: 8 }}>
@@ -400,7 +400,7 @@ function FoundationalReportContent() {
                     </thead>
                     <tbody>
                         {SELF_ASSESS_FIELDS.map((f, ri) => (
-                            <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
+                            <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven, height: 44 }}>
                                 <td style={obsTdStyle}>{f.label}</td>
                                 <td style={{ ...obsTdStyle, textAlign: 'center', fontSize: 11 }}>{getText('TERM1', f.key)}</td>
                                 <td style={{ ...obsTdStyle, textAlign: 'center', fontSize: 11 }}>{getText('TERM2', f.key)}</td>

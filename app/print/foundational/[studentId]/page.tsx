@@ -100,14 +100,16 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
     domain.sections.forEach(sec => {
         if (isSubSection(sec)) {
             rows.push(
-                <tr key={`sub-${i++}`}><td colSpan={3} style={subheadTd}>{sec.subLabel}</td></tr>
+                <tr key={`sub-${i++}`} style={{ background: C.subheadBg, pageBreakInside: 'avoid' }}>
+                    <td colSpan={3} style={subheadTd}>{sec.subLabel}</td>
+                </tr>
             );
-            sec.skills.forEach(sk => {
-                const rt1 = ratings[`TERM1:${domainKey}:${sk.key}`] || '';
-                const rt2 = ratings[`TERM2:${domainKey}:${sk.key}`] || '';
+            sec.skills.forEach(sub => {
+                const rt1 = ratings[`TERM1:${domainKey}:${sub.key}`] || '';
+                const rt2 = ratings[`TERM2:${domainKey}:${sub.key}`] || '';
                 rows.push(
-                    <tr key={sk.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven }}>
-                        <td style={{ ...obsTdStyle, width: '68%' }}>{sk.label}</td>
+                    <tr key={sub.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid' }}>
+                        <td style={{ ...obsTdStyle, paddingLeft: 24, width: '68%' }}>{sub.label}</td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
                     </tr>
@@ -117,7 +119,7 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
             const rt1 = ratings[`TERM1:${domainKey}:${sec.key}`] || '';
             const rt2 = ratings[`TERM2:${domainKey}:${sec.key}`] || '';
             rows.push(
-                <tr key={sec.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven }}>
+                <tr key={sec.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid' }}>
                     <td style={{ ...obsTdStyle, width: '68%' }}>{sec.label}</td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
@@ -126,7 +128,7 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
         }
     });
     return (
-        <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5, marginBottom: 6 }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5, marginBottom: 6, pageBreakInside: 'avoid' }}>
             <thead>
                 <tr>
                     <th style={{ ...obsThStyle, textAlign: 'left', width: '68%' }}>Skills</th>
@@ -143,9 +145,9 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
 function Page({ children, showHeader = false }: { children: React.ReactNode; showHeader?: boolean }) {
     return (
         <div style={{
-            width: 794, minHeight: 1123, margin: '0 auto 36px', background: C.white,
+            width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
             borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-            pageBreakAfter: 'always',
+            pageBreakAfter: 'always', boxSizing: 'border-box', position: 'relative'
         }}>
             {showHeader ? <SchoolHeader /> : <GoldBar />}
             <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
@@ -209,7 +211,7 @@ function FoundationalReportContent() {
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>
                 {/* GENERAL INFORMATION */}
-                <div className="section" style={{ marginTop: 24 }}>
+                <div className="section" style={{ marginTop: 16 }}>
                     <h2 className="section-title">General Information</h2>
                     <div className="info-grid">
                         <div className="info-row">
@@ -254,7 +256,7 @@ function FoundationalReportContent() {
                 </div>
 
                 {/* ATTENDANCE RECORD */}
-                <div className="section" style={{ marginTop: 24 }}>
+                <div className="section" style={{ marginTop: 16 }}>
                     <h2 className="section-title">Attendance Record</h2>
                     <table className="attendance-table">
                         <thead>
@@ -297,12 +299,12 @@ function FoundationalReportContent() {
                     </table>
                 </div>
 
-                <SectionHeading mt={26}>All About Me</SectionHeading>
+                <SectionHeading mt={20}>All About Me</SectionHeading>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 10 }}>
                     {['My Self', 'My Family Photo'].map(title => (
-                        <div key={title} style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' }}>
+                        <div key={title} style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                             <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>{title}</div>
-                            <div style={{ background: C.rowEven, padding: 12, height: 130, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontStyle: 'italic', fontSize: 12, border: '1.5px dashed #c9d8ee', margin: 10, borderRadius: 6 }}>
+                            <div style={{ background: C.rowEven, padding: 12, height: 110, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontStyle: 'italic', fontSize: 12, border: '1.5px dashed #c9d8ee', margin: 10, borderRadius: 6 }}>
                                 Paste Photo Here
                             </div>
                         </div>
@@ -310,12 +312,12 @@ function FoundationalReportContent() {
                 </div>
 
                 {/* My Age + My Best Friends */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 12 }}>
                     {/* My Age */}
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' }}>
+                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Age</div>
-                        <div style={{ background: C.rowEven, padding: '16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 110 }}>
-                            <div style={{ fontSize: 36, marginBottom: 8 }}>🎂</div>
+                        <div style={{ background: C.rowEven, padding: '16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 90 }}>
+                            <div style={{ fontSize: 32, marginBottom: 4 }}>🎂</div>
                             <div style={{ fontSize: 13, color: C.navy }}>
                                 I am{' '}
                                 <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 700 }}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
@@ -324,7 +326,7 @@ function FoundationalReportContent() {
                         </div>
                     </div>
                     {/* My Best Friends */}
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' }}>
+                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
                             {[1, 2, 3].map(n => (
@@ -493,7 +495,18 @@ function FoundationalReportContent() {
                 html, body { margin: 0; padding: 0; }
                 @media print {
                     @page { size: A4 portrait; margin: 0; }
-                    html, body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    html, body { 
+                        margin: 0; 
+                        padding: 0; 
+                        -webkit-print-color-adjust: exact; 
+                        print-color-adjust: exact; 
+                        width: 210mm;
+                        height: 297mm;
+                    }
+                    .foundational-page { 
+                        padding: 0 !important; 
+                        background: white !important;
+                    }
                     .page-break { page-break-after: always; break-after: page; }
                     * { box-sizing: border-box; }
                 }

@@ -190,7 +190,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    
+
                 </div>
             </div>
 
@@ -202,7 +202,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <SchoolHeader />
                 <div style={{ padding: '22px 28px 28px' }}>
-{/* SCHOLASTIC DOMAINS */}
+                    {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto', borderRadius: '4px', border: `1px solid ${C.navy}` }}>
@@ -288,7 +288,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         </tr>
                                     ))}
 
-                                                                    </tbody>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -309,7 +309,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     <div className="section" style={{ marginTop: 0 }}>
                         <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden', borderTop: 'none' }}>
                             <table className="foundational-table">
-                                                                <tbody>
+                                <tbody>
                                     <tr style={{ visibility: 'collapse' }}>
                                         <th style={{ width: '50%' }}></th>
                                         <th style={{ width: '25%' }}></th>
@@ -411,7 +411,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    
+
                 </div>
             </div>
 
@@ -423,7 +423,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <SchoolHeader />
                 <div style={{ padding: '22px 28px 28px' }}>
-{/* FEEDBACK SECTIONS */}
+                    {/* FEEDBACK SECTIONS */}
                     <div className="section">
                         <div className="feedback-grid">
                             <div className="feedback-card">
@@ -468,7 +468,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         ))}
                     </div>
 
-                    
+
                 </div>
             </div>
 
@@ -480,7 +480,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <SchoolHeader />
                 <div style={{ padding: '22px 28px 28px' }}>
-{/* GRADING FRAMEWORK */}
+                    {/* GRADING FRAMEWORK */}
                     <div className="grading-section">
                         <h3>Assessment & Grading Framework</h3>
                         <div className="grading-grid">
@@ -648,7 +648,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.gold} !important;
         }
         .foundational-table td {
-            padding: 8px 10px !important;
+            padding: 6px 10px !important;
             border: 1px solid ${C.border} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
@@ -665,7 +665,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 12px !important;
-            padding: 10px 14px !important;
+            padding: 6px 14px !important;
             border: none !important;
         }
         .foundational-table tr td:first-child {

@@ -29,6 +29,7 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
 
     const [saving, setSaving] = useState(false);
     const [lastSaved, setLastSaved] = useState('');
+    const [saveError, setSaveError] = useState('');
     const textDebounce = useRef<NodeJS.Timeout | null>(null);
 
     const token = () => sessionStorage.getItem('hpc_token') || '';
@@ -72,15 +73,23 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
 
         setRatings(r => ({ ...r, [mapKey]: value as Rating }));
         setSaving(true);
+        setSaveError('');
         try {
-            await fetch('/api/teacher/foundational-ratings', {
+            const res = await fetch('/api/teacher/foundational-ratings', {
                 method: 'POST', headers: authH(),
                 body: JSON.stringify({
                     student_id: parseInt(studentId), academic_year_id: parseInt(academicYearId),
                     term: activeTerm, domain, skill_key: skillKey, rating: value || null,
                 }),
             });
-            setLastSaved(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+            const json = await res.json();
+            if (!res.ok || !json.success) {
+                setSaveError(json.message || 'Save failed');
+            } else {
+                setLastSaved(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+            }
+        } catch (e: any) {
+            setSaveError(e.message || 'Network error');
         } finally { setSaving(false); }
     }, [activeTerm, ratings, studentId, academicYearId, authH]);
 
@@ -91,15 +100,23 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
         if (textDebounce.current) clearTimeout(textDebounce.current);
         textDebounce.current = setTimeout(async () => {
             setSaving(true);
+            setSaveError('');
             try {
-                await fetch('/api/teacher/foundational-text', {
+                const res = await fetch('/api/teacher/foundational-text', {
                     method: 'POST', headers: authH(),
                     body: JSON.stringify({
                         student_id: parseInt(studentId), academic_year_id: parseInt(academicYearId),
                         term: activeTerm, field_key: fieldKey, field_value: value,
                     }),
                 });
-                setLastSaved(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+                const json = await res.json();
+                if (!res.ok || !json.success) {
+                    setSaveError(json.message || 'Save failed');
+                } else {
+                    setLastSaved(new Date().toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', hour12: true }));
+                }
+            } catch (e: any) {
+                setSaveError(e.message || 'Network error');
             } finally { setSaving(false); }
         }, 600);
     }, [activeTerm, studentId, academicYearId, authH]);
@@ -127,6 +144,8 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                 <div className="flex items-center gap-3 text-sm">
                     {saving ? (
                         <span className="text-amber-600 animate-pulse">● Saving…</span>
+                    ) : saveError ? (
+                        <span className="text-red-600 text-xs bg-red-50 border border-red-200 px-2 py-1 rounded">⚠ {saveError}</span>
                     ) : lastSaved ? (
                         <span className="text-green-600">✓ Saved {lastSaved}</span>
                     ) : null}

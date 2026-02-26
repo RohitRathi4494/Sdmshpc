@@ -209,13 +209,13 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                             <table className="foundational-table">
                                 <thead>
                                     <tr>
-                                        <th rowSpan={2} style={{ width: '18%' }}>Subjects</th>
+                                        <th rowSpan={2} style={{ width: '15%' }}>Subjects</th>
                                         <th colSpan={2}>Periodic Assessment</th>
                                         <th colSpan={2}>Subject Enrichment Activities</th>
                                         <th colSpan={2}>Internal Assessment</th>
                                         <th colSpan={2}>Terminal Assessment</th>
                                         <th colSpan={2} className="gold-bg">Total</th>
-                                        <th rowSpan={2} className="gold-bg">Final Result<br />(Avg)</th>
+                                        <th rowSpan={2}>Final Result<br />(Avg)</th>
                                     </tr>
                                     <tr>
                                         <th>Term I</th>
@@ -231,52 +231,100 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reportData.subjects?.map((sub: any) => {
-                                        const subject = sub.subject_name;
+                                    {(() => {
+                                        let grandTotal1 = 0;
+                                        let grandTotal2 = 0;
+                                        let grandTotalAvg = 0;
+                                        let subjectCount1 = 0;
+                                        let subjectCount2 = 0;
 
-                                        const getVal = (comp: string, term: string) => {
-                                            const s = getScholasticScore(subject, comp, term);
-                                            if (!s || !s.marks) return 0;
-                                            const num = parseFloat(s.marks);
-                                            return isNaN(num) ? 0 : num;
-                                        };
+                                        const rows = reportData.subjects?.map((sub: any) => {
+                                            const subject = sub.subject_name;
+                                            
+                                            const getVal = (comp: string, term: string) => {
+                                                const s = getScholasticScore(subject, comp, term);
+                                                if (!s || !s.marks) return 0;
+                                                const num = parseFloat(s.marks);
+                                                return isNaN(num) ? 0 : num;
+                                            };
+                                            
+                                            const hasMarks = (term: string) => {
+                                                return getScholasticScore(subject, 'Periodic Assessment', term) || 
+                                                       getScholasticScore(subject, 'Terminal Assessment', term);
+                                            };
 
-                                        const hasMarks = (term: string) => {
-                                            return getScholasticScore(subject, 'Periodic Assessment', term) ||
-                                                getScholasticScore(subject, 'Terminal Assessment', term);
-                                        };
+                                            const total1 = getVal('Periodic Assessment', 'Term I') + 
+                                                           getVal('Subject Enrichment Activities', 'Term I') + 
+                                                           getVal('Internal Assessment', 'Term I') + 
+                                                           getVal('Terminal Assessment', 'Term I');
+                                                           
+                                            const total2 = getVal('Periodic Assessment', 'Term II') + 
+                                                           getVal('Subject Enrichment Activities', 'Term II') + 
+                                                           getVal('Internal Assessment', 'Term II') + 
+                                                           getVal('Terminal Assessment', 'Term II');
+                                            
+                                            if (hasMarks('Term I')) {
+                                                grandTotal1 += total1;
+                                                subjectCount1++;
+                                            }
+                                            if (hasMarks('Term II')) {
+                                                grandTotal2 += total2;
+                                                subjectCount2++;
+                                            }
+                                            
+                                            const avg = (total1 + total2) / 2;
+                                            if (hasMarks('Term I') || hasMarks('Term II')) {
+                                                grandTotalAvg += avg;
+                                            }
 
-                                        const total1 = getVal('Periodic Assessment', 'Term I') +
-                                            getVal('Subject Enrichment Activities', 'Term I') +
-                                            getVal('Internal Assessment', 'Term I') +
-                                            getVal('Terminal Assessment', 'Term I');
+                                            const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
+                                            const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
+                                            const displayAvg = (hasMarks('Term I') || hasMarks('Term II')) ? parseFloat(avg.toFixed(2)) : '';
 
-                                        const total2 = getVal('Periodic Assessment', 'Term II') +
-                                            getVal('Subject Enrichment Activities', 'Term II') +
-                                            getVal('Internal Assessment', 'Term II') +
-                                            getVal('Terminal Assessment', 'Term II');
+                                            return (
+                                                <tr key={subject}>
+                                                    <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
+                                                    {renderScoreCell(subject, 'Periodic Assessment', 'Term I')}
+                                                    {renderScoreCell(subject, 'Periodic Assessment', 'Term II')}
+                                                    {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term I')}
+                                                    {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term II')}
+                                                    {renderScoreCell(subject, 'Internal Assessment', 'Term I')}
+                                                    {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
+                                                    {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
+                                                    {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
+                                                    <td style={{ fontWeight: 700 }}>{displayTotal1}</td>
+                                                    <td style={{ fontWeight: 700 }}>{displayTotal2}</td>
+                                                    <td style={{ fontWeight: 800, color: C.navy }}>{displayAvg}</td>
+                                                </tr>
+                                            );
+                                        });
+                                        
+                                        const max1 = subjectCount1 * 100;
+                                        const max2 = subjectCount2 * 100;
+                                        const maxAvg = Math.max(subjectCount1, subjectCount2) * 100;
 
-                                        const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
-                                        const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
-                                        const displayAvg = (hasMarks('Term I') || hasMarks('Term II')) ? parseFloat(((total1 + total2) / 2).toFixed(2)) : '';
+                                        const p1 = max1 > 0 ? ((grandTotal1 / max1) * 100).toFixed(2) : '';
+                                        const p2 = max2 > 0 ? ((grandTotal2 / max2) * 100).toFixed(2) : '';
+                                        const pAvg = maxAvg > 0 ? ((grandTotalAvg / maxAvg) * 100).toFixed(2) : '';
 
                                         return (
-                                            <tr key={subject}>
-                                                <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
-                                                {renderScoreCell(subject, 'Periodic Assessment', 'Term I')}
-                                                {renderScoreCell(subject, 'Periodic Assessment', 'Term II')}
-                                                {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term I')}
-                                                {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term II')}
-                                                {renderScoreCell(subject, 'Internal Assessment', 'Term I')}
-                                                {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
-                                                {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
-                                                {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
-                                                <td style={{ fontWeight: 700 }}>{displayTotal1}</td>
-                                                <td style={{ fontWeight: 700 }}>{displayTotal2}</td>
-                                                <td style={{ fontWeight: 800, color: C.navy }}>{displayAvg}</td>
-                                            </tr>
+                                            <>
+                                                {rows}
+                                                <tr className="domain-header">
+                                                    <td colSpan={9} style={{ textAlign: 'left', paddingLeft: '12px' }}>Grand Total</td>
+                                                    <td style={{ fontWeight: 800 }}>{max1 > 0 ? `${grandTotal1.toFixed(1)} / ${max1}` : ''}</td>
+                                                    <td style={{ fontWeight: 800 }}>{max2 > 0 ? `${grandTotal2.toFixed(1)} / ${max2}` : ''}</td>
+                                                    <td style={{ fontWeight: 800, color: C.navy }}>{maxAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxAvg}` : ''}</td>
+                                                </tr>
+                                                <tr className="domain-header" style={{ background: '#d1e0f7' }}>
+                                                    <td colSpan={9} style={{ textAlign: 'left', paddingLeft: '12px' }}>Percentage</td>
+                                                    <td style={{ fontWeight: 800 }}>{p1 ? `${p1}%` : ''}</td>
+                                                    <td style={{ fontWeight: 800 }}>{p2 ? `${p2}%` : ''}</td>
+                                                    <td style={{ fontWeight: 800, color: C.navy }}>{pAvg ? `${pAvg}%` : ''}</td>
+                                                </tr>
+                                            </>
                                         );
-                                    })}
+                                    })()}
                                 </tbody>
                             </table>
                         </div>
@@ -621,7 +669,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-label {
             background: ${C.rowEven} !important;
-            padding: 9px 14px !important;
+            padding: 6px 4px !important;
             font-weight: 700 !important;
             font-size: 12.5px !important;
             color: ${C.navy} !important;
@@ -632,7 +680,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-input {
             background: ${C.rowOdd} !important;
-            padding: 9px 14px !important;
+            padding: 6px 4px !important;
             font-size: 12.5px !important;
             color: ${C.text} !important;
             border: none !important;
@@ -644,7 +692,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.navy} !important;
             color: ${C.white} !important;
             font-weight: 700 !important;
-            padding: 9px 14px !important;
+            padding: 6px 4px !important;
             text-align: center !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
             font-size: 10.5px !important;
@@ -671,7 +719,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.navy} !important;
             color: ${C.white} !important;
             font-weight: 700 !important;
-            padding: 9px 14px !important;
+            padding: 6px 4px !important;
             text-align: center !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
             font-size: 10.5px !important;
@@ -682,7 +730,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.gold} !important;
         }
         .foundational-table td {
-            padding: 6px 10px !important;
+            padding: 4px 4px !important;
             border: 1px solid ${C.border} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;

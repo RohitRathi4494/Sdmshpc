@@ -14,7 +14,7 @@ export default function Home() {
             description: 'School Administration',
             icon: '🛡️',
             color: 'bg-indigo-600',
-            path: '/login?role=admin' // Direct link to login with context
+            path: '/login?role=admin'
         },
         {
             id: 'office',
@@ -22,7 +22,8 @@ export default function Home() {
             description: 'Fees & Student Data',
             icon: '💼',
             color: 'bg-emerald-600',
-            path: '/login?role=office'
+            path: '/login?role=office',
+            hidden: true, // Office portal temporarily disabled
         },
         {
             id: 'teacher',
@@ -40,7 +41,7 @@ export default function Home() {
             color: 'bg-purple-600',
             path: '/parent/login'
         }
-    ];
+    ].filter(r => !r.hidden);
 
     return (
         <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">

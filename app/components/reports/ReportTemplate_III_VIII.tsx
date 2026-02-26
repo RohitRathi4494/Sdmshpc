@@ -236,279 +236,268 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    {/* PHYSICAL EDUCATION (Split from Co-Scholastic) */}
+                    {/* CO-SCHOLASTIC DOMAINS */}
+                    <div className="section" style={{ marginTop: 16 }}>
+                        <SectionHeading>Co-Scholastic Domains</SectionHeading>
+                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
+                            <table className="foundational-table">
+                                <thead>
+                                    <tr>
+                                        <th rowSpan={2} style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th colSpan={2}>Grades</th>
+                                    </tr>
+                                    <tr>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Physical Education */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Physical Education</td>
+                                    </tr>
+                                    {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Visual Art */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Visual Art</td>
+                                    </tr>
+                                    {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Performing Art - Dance */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
+                                    </tr>
+                                    {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Performing Art - Music */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Music</td>
+                                    </tr>
+                                    {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* PERSONALITY DEVELOPMENT SKILLS */}
+                    <div className="section" style={{ marginTop: 16 }}>
+                        <SectionHeading>Personality Development Skills</SectionHeading>
+                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
+                            <table className="foundational-table">
+                                <thead>
+                                    <tr>
+                                        <th rowSpan={2} style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th colSpan={2}>Grades</th>
+                                    </tr>
+                                    <tr>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* Social Skills */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Social Skills</td>
+                                    </tr>
+                                    {['Maintains cordial relationship with peers and adults', 'Demonstrates teamwork and cooperation', 'Respects school property and personal belongings'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Emotional Skills */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Emotional Skills</td>
+                                    </tr>
+                                    {['Shows sensitivity towards rules and norms', 'Demonstrates self-regulation of emotions and behaviour', 'Displays empathy and concern for others'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Work Habit */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Work Habit</td>
+                                    </tr>
+                                    {['Maintains regularity and punctuality', 'Demonstrates responsible citizenship', 'Shows care and concern for the environment'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* Health & Wellness */}
+                                    <tr className="domain-header">
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Health & Wellness</td>
+                                    </tr>
+                                    {['Follows good hygiene practices', 'Maintains cleanliness of self and surroundings', 'Demonstrates resilience and positive coping skills'].map(skill => (
+                                        <tr key={skill}>
+                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
+                                            <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
+                                            <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* FEEDBACK SECTIONS */}
                     <div className="section">
-                        <h2 className="section-title">Co-Scholastic Domains</h2>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
-                                    <th style={{ width: '25%' }}>Term I</th>
-                                    <th style={{ width: '25%' }}>Term II</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* Physical Education */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Physical Education</td>
-                                </tr>
-                                {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-
-                            <tbody>
-                                {/* Visual Art */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Visual Art</td>
-                                </tr>
-                                {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* CO-SCHOLASTIC DOMAINS (Remaining) */}
-                <div className="section" style={{ marginTop: 16 }}>
-                    <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
-                        <table className="foundational-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
-                                    <th style={{ width: '25%' }}>Term I</th>
-                                    <th style={{ width: '25%' }}>Term II</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-
-                                {/* Performing Art - Dance */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
-                                </tr>
-                                {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-
-                                {/* Performing Art - Music */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Music</td>
-                                </tr>
-                                {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* PERSONALITY DEVELOPMENT SKILLS */}
-                <div className="section" style={{ marginTop: 16 }}>
-                    <SectionHeading>Personality Development Skills</SectionHeading>
-                    <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
-                        <table className="foundational-table">
-                            <thead>
-                                <tr>
-                                    <th style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
-                                    <th style={{ width: '25%' }}>Term I</th>
-                                    <th style={{ width: '25%' }}>Term II</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {/* Social Skills */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Social Skills</td>
-                                </tr>
-                                {['Maintains cordial relationship with peers and adults', 'Demonstrates teamwork and cooperation', 'Respects school property and personal belongings'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-
-                                {/* Emotional Skills */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Emotional Skills</td>
-                                </tr>
-                                {['Shows sensitivity towards rules and norms', 'Demonstrates self-regulation of emotions and behaviour', 'Displays empathy and concern for others'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-
-                                {/* Work Habit */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Work Habit</td>
-                                </tr>
-                                {['Maintains regularity and punctuality', 'Demonstrates responsible citizenship', 'Shows care and concern for the environment'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-
-                                {/* Health & Wellness */}
-                                <tr className="domain-header">
-                                    <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Health & Wellness</td>
-                                </tr>
-                                {['Follows good hygiene practices', 'Maintains cleanliness of self and surroundings', 'Demonstrates resilience and positive coping skills'].map(skill => (
-                                    <tr key={skill}>
-                                        <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                        <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
-                                        <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-
-                {/* FEEDBACK SECTIONS */}
-                <div className="section">
-                    <div className="feedback-grid">
-                        <div className="feedback-card">
-                            <h3>Learner's Profile by the Teacher</h3>
-                            <div className="feedback-input" style={{ minHeight: '120px' }}>
-                                {getRemark('Learner’s Profile by the teacher')}
+                        <div className="feedback-grid">
+                            <div className="feedback-card">
+                                <h3>Learner's Profile by the Teacher</h3>
+                                <div className="feedback-input" style={{ minHeight: '120px' }}>
+                                    {getRemark('Learner’s Profile by the teacher')}
+                                </div>
                             </div>
+
+                            <div className="feedback-card">
+                                <h3>Parent's Feedback</h3>
+                                {['My child enjoys participating in...', 'My child can be supported for...', 'Any additional observations'].map(label => (
+                                    <div className="feedback-row" key={label}>
+                                        <div className="feedback-label">{label}</div>
+                                        <div className="feedback-input">{getRemark("Parent’s Feedback", label)}</div>
+                                    </div>
+                                ))}
+                            </div>
+
+                            {/* Self Assessment */}
+                            <div className="feedback-card">
+                                <h3>Self-Assessment</h3>
+                                {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
+                                    <div className="feedback-row" key={label}>
+                                        <div className="feedback-label">{label}</div>
+                                        <div className="feedback-input">{getRemark("Self-Assessment", label)}</div>
+                                    </div>
+                                ))}
+                            </div>
+
+
                         </div>
-
-                        <div className="feedback-card">
-                            <h3>Parent's Feedback</h3>
-                            {['My child enjoys participating in...', 'My child can be supported for...', 'Any additional observations'].map(label => (
-                                <div className="feedback-row" key={label}>
-                                    <div className="feedback-label">{label}</div>
-                                    <div className="feedback-input">{getRemark("Parent’s Feedback", label)}</div>
-                                </div>
-                            ))}
-                        </div>
-
-                        {/* Self Assessment */}
-                        <div className="feedback-card">
-                            <h3>Self-Assessment</h3>
-                            {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
-                                <div className="feedback-row" key={label}>
-                                    <div className="feedback-label">{label}</div>
-                                    <div className="feedback-input">{getRemark("Self-Assessment", label)}</div>
-                                </div>
-                            ))}
-                        </div>
-
-
-                    </div>
-                </div>
-
-                {/* SIGNATURE SECTION */}
-                <div className="signature-section">
-                    {['Class Teacher', 'Parents', 'Block Incharge', 'Vice Principal', 'Principal'].map(role => (
-                        <div className="signature-box" key={role}>
-                            <div className="signature-line"></div>
-                            <div className="signature-label">{role}</div>
-                        </div>
-                    ))}
-                </div>
-
-                {/* GRADING FRAMEWORK */}
-                <div className="grading-section">
-                    <h3>Assessment & Grading Framework</h3>
-                    <div className="grading-grid">
-                        <div className="grading-cell grading-header">Grade</div>
-                        <div className="grading-cell grading-header">Marks Range in %</div>
-                        <div className="grading-cell grading-header">Achievement Level</div>
-
-                        <div className="grading-cell grade-label">A1</div>
-                        <div className="grading-cell grade-range">91-100</div>
-                        <div className="grading-cell">Consistently produces high-quality, innovative work; demonstrates comprehensive conceptual understanding, critical and creative thinking, and independent application of knowledge in complex situations.</div>
-
-                        <div className="grading-cell grade-label">A2</div>
-                        <div className="grading-cell grade-range">81 – 90</div>
-                        <div className="grading-cell">Produces high-quality work; shows extensive understanding of concepts and applies learning independently in familiar and unfamiliar situations.</div>
-
-                        <div className="grading-cell grade-label">B1</div>
-                        <div className="grading-cell grade-range">71 – 80</div>
-                        <div className="grading-cell">Produces generally high-quality work; demonstrates secure understanding and applies knowledge with occasional support.</div>
-
-                        <div className="grading-cell grade-label">B2</div>
-                        <div className="grading-cell grade-range">61 – 70</div>
-                        <div className="grading-cell">Produces good quality work; shows basic understanding and requires support in unfamiliar situations.</div>
-
-                        <div className="grading-cell grade-label">C1</div>
-                        <div className="grading-cell grade-range">51 – 60</div>
-                        <div className="grading-cell">Produces acceptable work; shows basic understanding with gaps and requires regular support.</div>
-
-                        <div className="grading-cell grade-label">C2</div>
-                        <div className="grading-cell grade-range">41 – 50</div>
-                        <div className="grading-cell">Produces limited quality work; demonstrates significant conceptual gaps and minimal application skills.</div>
-
-                        <div className="grading-cell grade-label">D</div>
-                        <div className="grading-cell grade-range">33 – 40</div>
-                        <div className="grading-cell">Produces very limited work; shows inadequate understanding of concepts.</div>
-
-                        <div className="grading-cell grade-label">E</div>
-                        <div className="grading-cell grade-range">33 & below</div>
-                        <div className="grading-cell">Not yet assessed / Needs improvement</div>
                     </div>
 
-                    {/* EVALUATION LEVELS */}
-                    <div className="section compact-section">
-                        <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
-                        <table className="compact-table">
-                            <tbody>
-                                <tr>
-                                    <td style={{ fontWeight: 700, width: '50px' }}>A</td>
-                                    <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ fontWeight: 700 }}>B</td>
-                                    <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ fontWeight: 700 }}>C</td>
-                                    <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    {/* SIGNATURE SECTION */}
+                    <div className="signature-section">
+                        {['Class Teacher', 'Parents', 'Block Incharge', 'Vice Principal', 'Principal'].map(role => (
+                            <div className="signature-box" key={role}>
+                                <div className="signature-line"></div>
+                                <div className="signature-label">{role}</div>
+                            </div>
+                        ))}
                     </div>
 
-                    <div className="section compact-section">
-                        <h2 className="section-title">Evaluation Levels: Physical Education</h2>
-                        <table className="compact-table">
-                            <tbody>
-                                <tr>
-                                    <td style={{ fontWeight: 700, width: '50px' }}>A</td>
-                                    <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ fontWeight: 700 }}>B</td>
-                                    <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
-                                </tr>
-                                <tr>
-                                    <td style={{ fontWeight: 700 }}>C</td>
-                                    <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    {/* GRADING FRAMEWORK */}
+                    <div className="grading-section">
+                        <h3>Assessment & Grading Framework</h3>
+                        <div className="grading-grid">
+                            <div className="grading-cell grading-header">Grade</div>
+                            <div className="grading-cell grading-header">Marks Range in %</div>
+                            <div className="grading-cell grading-header">Achievement Level</div>
+
+                            <div className="grading-cell grade-label">A1</div>
+                            <div className="grading-cell grade-range">91-100</div>
+                            <div className="grading-cell">Consistently produces high-quality, innovative work; demonstrates comprehensive conceptual understanding, critical and creative thinking, and independent application of knowledge in complex situations.</div>
+
+                            <div className="grading-cell grade-label">A2</div>
+                            <div className="grading-cell grade-range">81 – 90</div>
+                            <div className="grading-cell">Produces high-quality work; shows extensive understanding of concepts and applies learning independently in familiar and unfamiliar situations.</div>
+
+                            <div className="grading-cell grade-label">B1</div>
+                            <div className="grading-cell grade-range">71 – 80</div>
+                            <div className="grading-cell">Produces generally high-quality work; demonstrates secure understanding and applies knowledge with occasional support.</div>
+
+                            <div className="grading-cell grade-label">B2</div>
+                            <div className="grading-cell grade-range">61 – 70</div>
+                            <div className="grading-cell">Produces good quality work; shows basic understanding and requires support in unfamiliar situations.</div>
+
+                            <div className="grading-cell grade-label">C1</div>
+                            <div className="grading-cell grade-range">51 – 60</div>
+                            <div className="grading-cell">Produces acceptable work; shows basic understanding with gaps and requires regular support.</div>
+
+                            <div className="grading-cell grade-label">C2</div>
+                            <div className="grading-cell grade-range">41 – 50</div>
+                            <div className="grading-cell">Produces limited quality work; demonstrates significant conceptual gaps and minimal application skills.</div>
+
+                            <div className="grading-cell grade-label">D</div>
+                            <div className="grading-cell grade-range">33 – 40</div>
+                            <div className="grading-cell">Produces very limited work; shows inadequate understanding of concepts.</div>
+
+                            <div className="grading-cell grade-label">E</div>
+                            <div className="grading-cell grade-range">33 & below</div>
+                            <div className="grading-cell">Not yet assessed / Needs improvement</div>
+                        </div>
+
+                        {/* EVALUATION LEVELS */}
+                        <div className="section compact-section">
+                            <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
+                            <table className="compact-table">
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                        <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 700 }}>B</td>
+                                        <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 700 }}>C</td>
+                                        <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="section compact-section">
+                            <h2 className="section-title">Evaluation Levels: Physical Education</h2>
+                            <table className="compact-table">
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                        <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 700 }}>B</td>
+                                        <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 700 }}>C</td>
+                                        <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -160,26 +160,36 @@ function Page({ children, showHeader = false }: { children: React.ReactNode; sho
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN CONTENT COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-function FoundationalReportContent() {
+export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: boolean }) {
     const searchParams = useSearchParams();
-    const studentId = searchParams.get('student_id') || searchParams.get('studentId') || '';
-    const token = searchParams.get('token') || '';
-    const ayId = searchParams.get('academic_year_id') || '1';
+    const studentIdParam = searchParams.get('student_id') || searchParams.get('studentId') || '';
+    const tokenParam = searchParams.get('token') || '';
+    const ayIdParam = searchParams.get('academic_year_id') || '1';
 
     const [data, setData] = useState<any>(null);
     const [error, setError] = useState('');
 
     useEffect(() => {
+        const token = tokenParam || sessionStorage.getItem('hpc_token');
+        const ayId = ayIdParam || '1';
         if (!token) { setError('Missing token'); return; }
-        const id = window.location.pathname.split('/').pop();
+
+        const id = studentIdParam || window.location.pathname.split('/').pop();
+
         fetch(`/api/reports/foundational/${id}?academic_year_id=${ayId}&token=${token}`)
             .then(r => r.json())
             .then(j => {
-                if (j.success) { setData(j.data); setTimeout(() => window.print(), 800); }
-                else setError(j.message || 'Failed to load');
+                if (j.success) {
+                    setData(j.data);
+                    if (autoPrint) {
+                        setTimeout(() => window.print(), 800);
+                    }
+                } else {
+                    setError(j.message || 'Failed to load');
+                }
             })
             .catch(() => setError('Network error'));
-    }, [token, ayId]);
+    }, [tokenParam, ayIdParam, studentIdParam, autoPrint]);
 
     if (error) return <div style={{ padding: 40, color: 'red', textAlign: 'center', fontFamily: 'Arial' }}>{error}</div>;
     if (!data) return <div style={{ padding: 40, textAlign: 'center', color: '#666', fontFamily: 'Arial' }}>Loading report…</div>;

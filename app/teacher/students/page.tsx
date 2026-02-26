@@ -225,10 +225,7 @@ function StudentSelectionContent() {
                                                         🌟 HPC Entry
                                                     </button>
                                                     <button
-                                                        onClick={() => {
-                                                            const t = sessionStorage.getItem('hpc_token');
-                                                            window.open(`/print/foundational/${student.id}?academic_year_id=1&token=${t}`, '_blank');
-                                                        }}
+                                                        onClick={() => router.push(`/teacher/preview/student/${student.id}`)}
                                                         className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
                                                         title="Preview HPC Card"
                                                     >

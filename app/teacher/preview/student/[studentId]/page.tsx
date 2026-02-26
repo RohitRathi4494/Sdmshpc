@@ -7,6 +7,7 @@ import { ApiClient } from '@/app/lib/api-client';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
+import { FoundationalReportContent } from '@/app/print/foundational/[studentId]/page';
 
 export default function ReportPreviewPage() {
     const params = useParams();
@@ -33,6 +34,17 @@ export default function ReportPreviewPage() {
     const handleGeneratePDF = async () => {
         setGenerating(true);
         try {
+            const template = getTemplateForClass(reportData?.student?.class_name);
+            if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
+                // Foundational uses purely native browser CSS printing 
+                const oldTitle = document.title;
+                const filename = `${reportData.student.student_name}_${reportData.student.class_name}_${reportData.student.section_name}`.replace(/[^a-zA-Z0-9._-]/g, '_');
+                document.title = filename;
+                window.print();
+                document.title = oldTitle;
+                return;
+            }
+
             const token = sessionStorage.getItem('hpc_token') || undefined;
             const response = await fetch(`/api/reports/student/${studentId}/pdf`, {
                 method: 'POST',
@@ -106,9 +118,8 @@ export default function ReportPreviewPage() {
                         return <ReportTemplate_III_VIII reportData={reportData} />;
                     } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
                         return (
-                            <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">
-                                <h2 className="text-xl font-semibold text-gray-600">Report Card Template Coming Soon</h2>
-                                <p className="text-gray-500 mt-2">The design for Class {reportData.student?.class_name} is under development.</p>
+                            <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                                <FoundationalReportContent autoPrint={false} />
                             </div>
                         );
                     } else {

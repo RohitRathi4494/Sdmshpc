@@ -409,10 +409,7 @@ function FoundationalReportContent() {
                         ))}
                     </tbody>
                 </table>
-            </Page>
-
-            {/* ── PAGE 6: Evaluation Framework ── */}
-            <Page>
+                <div style={{ marginTop: 28 }} />
                 <SectionHeading mt={0}>Assessment & Grading Framework</SectionHeading>
                 <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12, marginTop: 8 }}>
                     <thead>

@@ -609,6 +609,52 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             font-weight: 600;
             color: ${C.navyMid};
         }
+
+        /* Print formatting to prevent huge empty spaces */
+        @media print {
+            .foundational-page, .print-page { 
+                background: white !important; 
+                padding: 0 !important; 
+                margin: 0 !important; 
+                box-shadow: none !important; 
+                border-radius: 0 !important;
+                width: 100% !important; 
+                min-height: auto !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+            /* Override any inline overflow: hidden or auto that prevents page breaks */
+            .section > div {
+                overflow: visible !important;
+                overflow-x: visible !important;
+            }
+            .section, .foundational-page div {
+                break-inside: auto !important;
+                page-break-inside: auto !important;
+            }
+            table.foundational-table, table.attendance-table, table.compact-table {
+                break-inside: auto !important;
+                page-break-inside: auto !important;
+            }
+            table.foundational-table tr, table.attendance-table tr, table.compact-table tr, .domain-header {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            .signature-section, .grading-section, .feedback-card, .feedback-row, .info-row, .info-row-split {
+                break-inside: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            h2, h3, .section-title {
+                break-after: avoid !important;
+                page-break-after: avoid !important;
+            }
+            thead {
+                display: table-header-group !important;
+            }
+            tfoot {
+                display: table-footer-group !important;
+            }
+        }
     `}</style>
         </div>
     );

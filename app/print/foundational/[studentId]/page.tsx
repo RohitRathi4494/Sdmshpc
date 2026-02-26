@@ -6,6 +6,7 @@ import {
     FOUNDATIONAL_DOMAINS, SELF_ASSESS_FIELDS, PARENT_FEEDBACK_FIELDS,
     RATINGS, isSubSection,
 } from '@/app/lib/foundational-skills';
+import { PRINT_STYLES } from '@/app/lib/print-styles';
 
 // ── style tokens matching the HTML reference ──────────────────────────────────
 const C = {
@@ -203,55 +204,98 @@ function FoundationalReportContent() {
     );
 
     return (
-        <div style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
 
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>
-                <SectionHeading mt={0}>General Information</SectionHeading>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', border: `1px solid ${C.border}`, borderRadius: 6, overflow: 'hidden', marginTop: 8 }}>
-                    {infoRow('Student Name:', student.student_name || '')}
-                    {infoRow('Roll No.:', `${student.roll_no || ''}   Adm No.: ${student.admission_no || ''}`)}
-                    {infoRow('Class / Section:', `${student.class_name || ''} ${student.section_name ? '— ' + student.section_name : ''}`)}
-                    {infoRow('Date of Birth:', student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('en-IN') : '')}
-                    {infoRow('Address:', student.address || '')}
-                    {infoRow('Phone:', student.phone || '')}
-                    {infoRow("Mother's Name:", student.mother_name || '')}
-                    {infoRow("Father's Name:", student.father_name || '')}
+                {/* GENERAL INFORMATION */}
+                <div className="section" style={{ marginTop: 24 }}>
+                    <h2 className="section-title">General Information</h2>
+                    <div className="info-grid">
+                        <div className="info-row">
+                            <div className="info-label">Student Name:</div>
+                            <div className="info-input">{student.student_name}</div>
+                        </div>
+                        <div className="info-row-split">
+                            <div className="info-row-half">
+                                <div className="info-label">Roll No.:</div>
+                                <div className="info-input">{student.roll_no}</div>
+                            </div>
+                            <div className="info-row-compact">
+                                <div className="info-label" style={{ marginLeft: 20 }}>Adm No.:</div>
+                                <div className="info-input">{student.admission_no}</div>
+                            </div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Class / Section:</div>
+                            <div className="info-input">{student.class_name || ''} {student.section_name ? '— ' + student.section_name : ''}</div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Date of Birth:</div>
+                            <div className="info-input">{student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('en-GB') : ''}</div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Address:</div>
+                            <div className="info-input" style={{ minHeight: '40px' }}>{student.address || ''}</div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Phone:</div>
+                            <div className="info-input">{student.phone || ''}</div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Mother/Guardian Name:</div>
+                            <div className="info-input">{student.mother_name || ''}</div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Father/Guardian Name:</div>
+                            <div className="info-input">{student.father_name || ''}</div>
+                        </div>
+                    </div>
                 </div>
 
-                <SectionHeading mt={26}>Attendance Record</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 11, tableLayout: 'fixed' }}>
-                    <thead>
-                        <tr>
-                            <th style={{ ...obsThStyle, textAlign: 'left', paddingLeft: 8, width: '16%', fontSize: 10.5 }}>Months</th>
-                            {MONTHS.map(m => <th key={m} style={{ ...obsThStyle, fontSize: 10.5 }}>{m}</th>)}
-                            <th style={{ background: C.gold, color: C.white, fontWeight: 700, padding: '7px 3px', textAlign: 'center', fontSize: 10.5, border: '1px solid rgba(255,255,255,0.15)', width: '7%' }}>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {[
-                            { label: 'No. of Working Days', get: (m: string) => attMap[m]?.total ?? '' },
-                            { label: 'No. of Days Present', get: (m: string) => attMap[m]?.present ?? '' },
-                            { label: '% of Attendance', get: (m: string) => attMap[m] ? Math.round((attMap[m].present / attMap[m].total) * 100) + '%' : '' },
-                        ].map((row, ri) => {
-                            const totP = attendance.reduce((s: number, a: any) => s + Number(a.present), 0);
-                            const totT = attendance.reduce((s: number, a: any) => s + Number(a.total), 0);
-                            return (
-                                <tr key={ri}>
-                                    <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 8, fontWeight: 600, color: C.navy, background: C.rowEven, fontSize: 11 }}>{row.label}</td>
-                                    {MONTHS.map(m => <td key={m} style={{ ...obsTdStyle, textAlign: 'center', fontSize: 11, padding: '8px 3px' }}>{row.get(m)}</td>)}
-                                    <td style={{ ...obsTdStyle, textAlign: 'center', fontWeight: 700, fontSize: 11, padding: '8px 3px', background: C.rowEven }}>
-                                        {ri === 0 ? totT : ri === 1 ? totP : totT ? Math.round((totP / totT) * 100) + '%' : ''}
-                                    </td>
-                                </tr>
-                            );
-                        })}
-                        <tr>
-                            <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 8, fontWeight: 600, color: C.navy, background: C.rowEven, fontSize: 11 }}>If Attendance is Low, Reason</td>
-                            <td colSpan={13} style={{ ...obsTdStyle, fontSize: 11 }}></td>
-                        </tr>
-                    </tbody>
-                </table>
+                {/* ATTENDANCE RECORD */}
+                <div className="section" style={{ marginTop: 24 }}>
+                    <h2 className="section-title">Attendance Record</h2>
+                    <table className="attendance-table">
+                        <thead>
+                            <tr>
+                                <th style={{ width: '15%' }}>Months</th>
+                                {MONTHS.map(m => <th key={m}>{m}</th>)}
+                                <th style={{ width: '8%' }}>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                {MONTHS.map(m => <td key={m} className="input-cell">{attMap[m]?.total ?? ''}</td>)}
+                                <td className="input-cell">{attendance.reduce((s: number, a: any) => s + Number(a.total), 0) || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Days Present</td>
+                                {MONTHS.map(m => <td key={m} className="input-cell">{attMap[m]?.present ?? ''}</td>)}
+                                <td className="input-cell">{attendance.reduce((s: number, a: any) => s + Number(a.present), 0) || ''}</td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>% of attendance</td>
+                                {MONTHS.map(m => {
+                                    const att = attMap[m];
+                                    return <td key={m} className="input-cell">{att && att.total ? Math.round((att.present / att.total) * 100) : ''}</td>;
+                                })}
+                                <td className="input-cell">
+                                    {(() => {
+                                        const totT = attendance.reduce((s: number, a: any) => s + Number(a.total), 0);
+                                        const totP = attendance.reduce((s: number, a: any) => s + Number(a.present), 0);
+                                        return totT ? Math.round((totP / totT) * 100) + '%' : '';
+                                    })()}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
+                                <td colSpan={13} className="input-cell"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
                 <SectionHeading mt={26}>All About Me</SectionHeading>
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 10 }}>
@@ -444,6 +488,7 @@ function FoundationalReportContent() {
             </Page>
 
             <style>{`
+                ${PRINT_STYLES}
                 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
                 html, body { margin: 0; padding: 0; }
                 @media print {
@@ -452,8 +497,73 @@ function FoundationalReportContent() {
                     .page-break { page-break-after: always; break-after: page; }
                     * { box-sizing: border-box; }
                 }
-            `}</style>
-        </div>
+
+                /* Foundational specifics overrides */
+                .foundational-page {
+                    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif !important;
+                }
+                .foundational-page .section-title {
+                    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif !important;
+                    text-transform: uppercase;
+                    border-bottom: none !important;
+                }
+                .foundational-page .info-grid {
+                    border: 1px solid ${C.border};
+                    border-radius: 6px;
+                    padding: 0;
+                    background: transparent;
+                }
+                .foundational-page .info-row,
+                .foundational-page .info-row-half,
+                .foundational-page .info-row-split {
+                    margin-bottom: 0;
+                    gap: 0;
+                }
+                .foundational-page .info-label {
+                    background: ${C.rowEven};
+                    padding: 9px 14px;
+                    font-weight: 700;
+                    font-size: 12.5px;
+                    color: ${C.navy} !important;
+                    border-bottom: 1px solid ${C.border};
+                    border-right: 1px solid ${C.border};
+                    display: flex;
+                    align-items: center;
+                }
+                .foundational-page .info-input {
+                    background: ${C.rowOdd};
+                    padding: 9px 14px;
+                    font-size: 12.5px;
+                    color: ${C.text};
+                    border: none;
+                    border-bottom: 1px solid ${C.border};
+                    min-height: auto;
+                    border-radius: 0;
+                }
+                .foundational-page .attendance-table th {
+                    background: ${C.navy} !important;
+                    color: ${C.white} !important;
+                    font-weight: 700;
+                    padding: 9px 14px !important;
+                    text-align: center;
+                    border: 1px solid rgba(255,255,255,0.15);
+                    font-size: 10.5px;
+                }
+                .foundational-page .attendance-table th:last-child {
+                    background: ${C.gold} !important;
+                }
+                .foundational-page .attendance-table td {
+                    padding: 8px 3px !important;
+                    border: 1px solid ${C.border};
+                    color: ${C.text};
+                    vertical-align: middle;
+                    font-size: 11px;
+                }
+                .foundational-page .attendance-table td:first-child,
+                .foundational-page .attendance-table td:last-child {
+                    background: ${C.rowEven} !important;
+                }
+            `}</style>        </div>
     );
 }
 

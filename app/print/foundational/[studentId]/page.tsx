@@ -264,6 +264,49 @@ function FoundationalReportContent() {
                         </div>
                     ))}
                 </div>
+
+                {/* My Age + My Best Friends */}
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 16 }}>
+                    {/* My Age */}
+                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' }}>
+                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Age</div>
+                        <div style={{ background: C.rowEven, padding: '16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 110 }}>
+                            <div style={{ fontSize: 36, marginBottom: 8 }}>🎂</div>
+                            <div style={{ fontSize: 13, color: C.navy }}>
+                                I am{' '}
+                                <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 700 }}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                {' '}years old
+                            </div>
+                        </div>
+                    </div>
+                    {/* My Best Friends */}
+                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden' }}>
+                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
+                        <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
+                            {[1, 2, 3].map(n => (
+                                <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                    <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                    <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+
+                {/* My Favourite Things to Do */}
+                <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', marginTop: 16 }}>
+                    <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Favourite Things to Do</div>
+                    <div style={{ background: C.rowEven, padding: '12px 14px' }}>
+                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
+                            {[1, 2, 3, 4].map(n => (
+                                <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                                    <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                    <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
             </Page>
 
             {/* ── PAGE 2: Well-Being + Socio-Emotional + Aesthetic ── */}
@@ -339,15 +382,8 @@ function FoundationalReportContent() {
             {/* ── PAGE 5: Learner Profile + Parent Feedback + Signatures ── */}
             <Page>
                 <SectionHeading mt={0}>Learner's Profile by the Teacher</SectionHeading>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12, marginTop: 6 }}>
-                    {(['TERM1', 'TERM2'] as const).map(term => (
-                        <div key={term}>
-                            <div style={{ fontSize: 11, fontWeight: 700, color: C.navy, marginBottom: 4 }}>{term === 'TERM1' ? 'Term I' : 'Term II'}</div>
-                            <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, background: C.rowEven, minHeight: 120, padding: 12, fontSize: 12 }}>
-                                {getText(term, 'learner_profile') || ''}
-                            </div>
-                        </div>
-                    ))}
+                <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, background: C.rowEven, minHeight: 140, padding: 12, fontSize: 12, marginTop: 6 }}>
+                    {getText('TERM1', 'learner_profile') || getText('TERM2', 'learner_profile') || ''}
                 </div>
 
                 <SectionHeading>Parent's Feedback</SectionHeading>
@@ -369,12 +405,6 @@ function FoundationalReportContent() {
                         ))}
                     </tbody>
                 </table>
-
-                <SectionHeading>Learner's Portfolio</SectionHeading>
-                <p style={{ fontSize: 12, color: C.muted, fontStyle: 'italic', marginBottom: 6 }}>
-                    NOTE: Paste pictures / display selected work done by student in various experiential and inter-disciplinary tasks.
-                </p>
-                <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, background: C.rowEven, minHeight: 120, padding: 12 }} />
 
                 <SectionHeading>Signature with Date</SectionHeading>
                 <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>

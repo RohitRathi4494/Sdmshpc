@@ -357,7 +357,10 @@ export default function StudentsPage() {
                         onSave={async (updatedData: any) => {
                             try {
                                 const token = sessionStorage.getItem('hpc_token') || '';
-                                await ApiClient.put(`/admin/students/${editingStudent.id}`, updatedData, token);
+                                await ApiClient.put(`/admin/students/${editingStudent.id}`, {
+                                    ...updatedData,
+                                    academic_year_id: academicYear?.id,  // ← required for enrollment update
+                                }, token);
                                 alert('Student updated successfully');
                                 setEditingStudent(null);
                                 fetchEnrolled(); // Refresh list

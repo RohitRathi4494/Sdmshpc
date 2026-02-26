@@ -93,7 +93,7 @@ function GoldBar() {
 }
 
 // ── Domain table (used for Pages 2–4) ────────────────────────────────────────
-function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: RatingMap }) {
+function DomainTable({ domainKey, ratings, rowHeight }: { domainKey: string; ratings: RatingMap; rowHeight?: number }) {
     const domain = FOUNDATIONAL_DOMAINS.find(d => d.key === domainKey)!;
     const rows: React.ReactNode[] = [];
     let i = 0;
@@ -108,7 +108,7 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
                 const rt1 = ratings[`TERM1:${domainKey}:${sub.key}`] || '';
                 const rt2 = ratings[`TERM2:${domainKey}:${sub.key}`] || '';
                 rows.push(
-                    <tr key={sub.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid' }}>
+                    <tr key={sub.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid', height: rowHeight }}>
                         <td style={{ ...obsTdStyle, paddingLeft: 24, width: '68%' }}>{sub.label}</td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
@@ -119,7 +119,7 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
             const rt1 = ratings[`TERM1:${domainKey}:${sec.key}`] || '';
             const rt2 = ratings[`TERM2:${domainKey}:${sec.key}`] || '';
             rows.push(
-                <tr key={sec.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid' }}>
+                <tr key={sec.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid', height: rowHeight }}>
                     <td style={{ ...obsTdStyle, width: '68%' }}>{sec.label}</td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
@@ -144,10 +144,10 @@ function DomainTable({ domainKey, ratings }: { domainKey: string; ratings: Ratin
 // ── PAGE WRAPPER ──────────────────────────────────────────────────────────────
 function Page({ children, showHeader = false }: { children: React.ReactNode; showHeader?: boolean }) {
     return (
-        <div style={{
+        <div className="print-page" style={{
             width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
             borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-            pageBreakAfter: 'always', boxSizing: 'border-box', position: 'relative'
+            boxSizing: 'border-box', position: 'relative'
         }}>
             {showHeader ? <SchoolHeader /> : <GoldBar />}
             <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
@@ -346,19 +346,19 @@ function FoundationalReportContent() {
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To develop gross and fine motor skills, coordination, independence, healthy habits, and positive participation in play.
                 </p>
-                <DomainTable domainKey="well_being" ratings={ratings} />
+                <DomainTable domainKey="well_being" ratings={ratings} rowHeight={44} />
 
                 <SectionHeading>Socio-Emotional Development</SectionHeading>
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To nurture emotional awareness, responsibility, cooperation, and positive social behaviour.
                 </p>
-                <DomainTable domainKey="socio_emotional" ratings={ratings} />
+                <DomainTable domainKey="socio_emotional" ratings={ratings} rowHeight={44} />
 
                 <SectionHeading>Aesthetic and Cultural Development</SectionHeading>
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To encourage creativity, rhythm awareness, and artistic expression through art, music, and movement.
                 </p>
-                <DomainTable domainKey="aesthetic" ratings={ratings} />
+                <DomainTable domainKey="aesthetic" ratings={ratings} rowHeight={44} />
             </Page>
 
             {/* ── PAGE 3: Language & Literacy ── */}
@@ -507,7 +507,16 @@ function FoundationalReportContent() {
                         padding: 0 !important; 
                         background: white !important;
                     }
-                    .page-break { page-break-after: always; break-after: page; }
+                    .print-page { 
+                        page-break-after: always; 
+                        break-after: page; 
+                        margin-bottom: 0 !important;
+                        box-shadow: none !important;
+                    }
+                    .print-page:last-of-type { 
+                        page-break-after: auto; 
+                        break-after: auto; 
+                    }
                     * { box-sizing: border-box; }
                 }
 

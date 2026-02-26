@@ -23,15 +23,17 @@ export async function GET(
         // Student details
         const studentRes = await db.query(`
             SELECT
-                s.id, s.student_name, s.admission_no, s.roll_no,
-                s.date_of_birth, s.address, s.phone, s.mother_name, s.father_name,
+                s.id, s.student_name, s.admission_no,
+                s.dob AS date_of_birth, s.address, s.phone_no AS phone,
+                s.mother_name, s.father_name,
+                se.roll_no,
                 c.class_name, sec.section_name
             FROM students s
-            LEFT JOIN class_sections cs ON cs.id = s.class_section_id
-            LEFT JOIN classes c ON c.id = cs.class_id
-            LEFT JOIN sections sec ON sec.id = cs.section_id
+            LEFT JOIN student_enrollments se ON se.student_id = s.id AND se.academic_year_id = $2
+            LEFT JOIN classes c ON c.id = se.class_id
+            LEFT JOIN sections sec ON sec.id = se.section_id
             WHERE s.id = $1
-        `, [studentId]);
+        `, [studentId, academic_year_id]);
         const student = studentRes.rows[0];
         if (!student) return NextResponse.json({ success: false, message: 'Student not found' }, { status: 404 });
 

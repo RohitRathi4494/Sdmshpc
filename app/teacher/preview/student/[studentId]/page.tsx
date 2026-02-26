@@ -7,7 +7,7 @@ import { ApiClient } from '@/app/lib/api-client';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
-import { FoundationalReportContent } from '@/app/print/foundational/[studentId]/page';
+import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 
 export default function ReportPreviewPage() {
     const params = useParams();

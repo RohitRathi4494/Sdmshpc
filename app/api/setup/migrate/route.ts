@@ -213,9 +213,9 @@ export async function GET() {
                     for (const secName of secNames) {
                         await db.query(`
                             INSERT INTO sections (class_id, section_name)
-                            SELECT $1, $2
+                            SELECT $1::int, $2::text
                             WHERE NOT EXISTS (
-                                SELECT 1 FROM sections WHERE class_id = $1 AND LOWER(section_name) = LOWER($2)
+                                SELECT 1 FROM sections WHERE class_id = $1::int AND LOWER(section_name) = LOWER($2::text)
                             )
                         `, [cls.id, secName]);
                     }
@@ -341,9 +341,9 @@ export async function GET() {
             for (const secName of sectionNames) {
                 await db.query(`
                     INSERT INTO sections (class_id, section_name)
-                    SELECT $1, $2
+                    SELECT $1::int, $2::text
                     WHERE NOT EXISTS (
-                        SELECT 1 FROM sections WHERE class_id = $1 AND LOWER(section_name) = LOWER($2)
+                        SELECT 1 FROM sections WHERE class_id = $1::int AND LOWER(section_name) = LOWER($2::text)
                     )
                 `, [cls.id, secName]);
             }

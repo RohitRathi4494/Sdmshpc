@@ -209,13 +209,17 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                             <table className="foundational-table">
                                 <thead>
                                     <tr>
-                                        <th rowSpan={2} style={{ width: '20%' }}>Subjects</th>
+                                        <th rowSpan={2} style={{ width: '18%' }}>Subjects</th>
                                         <th colSpan={2}>Periodic Assessment</th>
                                         <th colSpan={2}>Subject Enrichment Activities</th>
                                         <th colSpan={2}>Internal Assessment</th>
-                                        <th colSpan={2} className="gold-bg">Terminal Assessment</th>
+                                        <th colSpan={2}>Terminal Assessment</th>
+                                        <th colSpan={2} className="gold-bg">Total</th>
+                                        <th rowSpan={2} className="gold-bg">Final Result<br />(Avg)</th>
                                     </tr>
                                     <tr>
+                                        <th>Term I</th>
+                                        <th>Term II</th>
                                         <th>Term I</th>
                                         <th>Term II</th>
                                         <th>Term I</th>
@@ -229,6 +233,33 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 <tbody>
                                     {reportData.subjects?.map((sub: any) => {
                                         const subject = sub.subject_name;
+
+                                        const getVal = (comp: string, term: string) => {
+                                            const s = getScholasticScore(subject, comp, term);
+                                            if (!s || !s.marks) return 0;
+                                            const num = parseFloat(s.marks);
+                                            return isNaN(num) ? 0 : num;
+                                        };
+
+                                        const hasMarks = (term: string) => {
+                                            return getScholasticScore(subject, 'Periodic Assessment', term) ||
+                                                getScholasticScore(subject, 'Terminal Assessment', term);
+                                        };
+
+                                        const total1 = getVal('Periodic Assessment', 'Term I') +
+                                            getVal('Subject Enrichment Activities', 'Term I') +
+                                            getVal('Internal Assessment', 'Term I') +
+                                            getVal('Terminal Assessment', 'Term I');
+
+                                        const total2 = getVal('Periodic Assessment', 'Term II') +
+                                            getVal('Subject Enrichment Activities', 'Term II') +
+                                            getVal('Internal Assessment', 'Term II') +
+                                            getVal('Terminal Assessment', 'Term II');
+
+                                        const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
+                                        const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
+                                        const displayAvg = (hasMarks('Term I') || hasMarks('Term II')) ? parseFloat(((total1 + total2) / 2).toFixed(2)) : '';
+
                                         return (
                                             <tr key={subject}>
                                                 <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
@@ -240,6 +271,9 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                                 {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
                                                 {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
                                                 {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
+                                                <td style={{ fontWeight: 700 }}>{displayTotal1}</td>
+                                                <td style={{ fontWeight: 700 }}>{displayTotal2}</td>
+                                                <td style={{ fontWeight: 800, color: C.navy }}>{displayAvg}</td>
                                             </tr>
                                         );
                                     })}

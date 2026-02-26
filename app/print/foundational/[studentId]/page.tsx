@@ -70,9 +70,9 @@ function SchoolHeader() {
                 <div style={{
                     width: 56, height: 56, borderRadius: '50%', border: `2px solid ${C.goldLight}`,
                     background: C.white, display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    fontSize: 8, fontWeight: 800, color: C.navy, textAlign: 'center', lineHeight: 1.2, padding: 6, flexShrink: 0,
+                    flexShrink: 0, overflow: 'hidden'
                 }}>
-                    SD MEM SR SEC GURGAON
+                    <img src="/school_logo.png" alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                     <div style={{ fontSize: 19, fontWeight: 800, color: C.white, letterSpacing: 0.4 }}>

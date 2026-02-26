@@ -292,21 +292,6 @@ function FoundationalReportContent() {
                         </div>
                     </div>
                 </div>
-
-                {/* My Favourite Things to Do */}
-                <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', marginTop: 16 }}>
-                    <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Favourite Things to Do</div>
-                    <div style={{ background: C.rowEven, padding: '12px 14px' }}>
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px 24px' }}>
-                            {[1, 2, 3, 4].map(n => (
-                                <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                    <span style={{ color: C.gold, fontSize: 16 }}>●</span>
-                                    <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
             </Page>
 
             {/* ── PAGE 2: Well-Being + Socio-Emotional + Aesthetic ── */}
@@ -463,9 +448,12 @@ function FoundationalReportContent() {
 
             <style>{`
                 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+                html, body { margin: 0; padding: 0; }
                 @media print {
-                    @page { size: A4; margin: 0; }
-                    body  { margin: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    @page { size: A4 portrait; margin: 0; }
+                    html, body { margin: 0; padding: 0; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+                    .page-break { page-break-after: always; break-after: page; }
+                    * { box-sizing: border-box; }
                 }
             `}</style>
         </div>

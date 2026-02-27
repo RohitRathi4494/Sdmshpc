@@ -37,18 +37,19 @@ export async function GET(
         const student = studentRes.rows[0];
         if (!student) return NextResponse.json({ success: false, message: 'Student not found' }, { status: 404 });
 
-        // Attendance (month-wise)
         const attendanceRes = await db.query(`
             SELECT
-                TO_CHAR(DATE_TRUNC('month', date), 'Mon') AS month,
-                TO_CHAR(DATE_TRUNC('month', date), 'YYYY-MM') AS month_key,
-                COUNT(*) FILTER (WHERE status = 'PRESENT') AS present,
-                COUNT(*) AS total
-            FROM attendance
-            WHERE student_id = $1
-            GROUP BY month_key, month
-            ORDER BY month_key
-        `, [studentId]).catch(() => ({ rows: [] }));
+                CASE month_id 
+                    WHEN 1 THEN 'Apr' WHEN 2 THEN 'May' WHEN 3 THEN 'Jun'
+                    WHEN 4 THEN 'Jul' WHEN 5 THEN 'Aug' WHEN 6 THEN 'Sep'
+                    WHEN 7 THEN 'Oct' WHEN 8 THEN 'Nov' WHEN 9 THEN 'Dec'
+                    WHEN 10 THEN 'Jan' WHEN 11 THEN 'Feb' WHEN 12 THEN 'Mar'
+                END AS month,
+                working_days AS total,
+                days_present AS present
+            FROM attendance_records
+            WHERE student_id = $1 AND academic_year_id = $2
+        `, [studentId, academic_year_id]).catch(() => ({ rows: [] }));
 
         // Skill ratings
         const ratingsRes = await db.query(`

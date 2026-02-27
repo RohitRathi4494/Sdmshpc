@@ -50,6 +50,11 @@ export function FoundationalAttendanceGrid({ studentId, academicYearId }: { stud
     const handleChange = async (monthId: number, field: 'working_days' | 'days_present', value: number) => {
         const current = attendance[monthId] || { month_id: monthId, working_days: 0, days_present: 0 };
         const updated = { ...current, [field]: value };
+
+        if (updated.days_present > updated.working_days) {
+            updated.days_present = updated.working_days;
+        }
+
         setAttendance(prev => ({ ...prev, [monthId]: updated }));
 
         try {

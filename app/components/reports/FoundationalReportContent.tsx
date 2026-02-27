@@ -203,6 +203,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
     rawText.forEach((t: any) => { texts[`${t.term}:${t.field_key}`] = t.field_value; });
 
     const getText = (term: string, key: string) => texts[`${term}:${key}`] || '';
+    const getAnyText = (key: string) => texts[`TERM2:${key}`] || texts[`TERM1:${key}`] || '';
 
     const MONTHS = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
     const attMap: Record<string, { present: number; total: number }> = {};
@@ -318,7 +319,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             <tr>
                                 <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
                                 <td colSpan={13} className="input-cell" style={{ textAlign: 'left', paddingLeft: '8px' }}>
-                                    {getText('TERM2', 'gi_attendance_reason')}
+                                    {getAnyText('gi_attendance_reason')}
                                 </td>
                             </tr>
                         </tbody>
@@ -357,9 +358,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
-                            {getText('TERM2', 'gi_best_friend') ? (
+                            {getAnyText('gi_best_friend') ? (
                                 <div style={{ fontSize: 13, color: C.navy, lineHeight: 1.6, padding: '4px 8px' }}>
-                                    {getText('TERM2', 'gi_best_friend').split('\n').map((line, i) => (
+                                    {getAnyText('gi_best_friend').split('\n').map((line, i) => (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                                             <span style={{ color: C.gold, fontSize: 16 }}>●</span>
                                             <span style={{ fontWeight: 600 }}>{line}</span>

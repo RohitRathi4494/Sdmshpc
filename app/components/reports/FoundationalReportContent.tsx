@@ -262,6 +262,24 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             <div className="info-label">Father/Guardian Name:</div>
                             <div className="info-input">{student.father_name || ''}</div>
                         </div>
+                        <div className="info-row">
+                            <div className="info-label">Blood Group:</div>
+                            <div className="info-input">{getText('TERM2', 'gi_blood_group')}</div>
+                        </div>
+                        <div className="info-row-split">
+                            <div className="info-row-half">
+                                <div className="info-label">Height:</div>
+                                <div className="info-input">{getText('TERM2', 'gi_height')} {getText('TERM2', 'gi_height') ? 'cm' : ''}</div>
+                            </div>
+                            <div className="info-row-compact">
+                                <div className="info-label" style={{ marginLeft: 20 }}>Weight:</div>
+                                <div className="info-input">{getText('TERM2', 'gi_weight')} {getText('TERM2', 'gi_weight') ? 'kg' : ''}</div>
+                            </div>
+                        </div>
+                        <div className="info-row">
+                            <div className="info-label">Total Attendance:</div>
+                            <div className="info-input">{getText('TERM2', 'gi_attendance')}</div>
+                        </div>
                     </div>
                 </div>
 
@@ -339,12 +357,18 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
-                            {[1, 2, 3].map(n => (
-                                <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                    <span style={{ color: C.gold, fontSize: 16 }}>●</span>
-                                    <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                            {getText('TERM2', 'gi_best_friend') ? (
+                                <div style={{ fontSize: 13, color: C.navy, lineHeight: 1.6, padding: '4px 8px' }}>
+                                    {getText('TERM2', 'gi_best_friend')}
                                 </div>
-                            ))}
+                            ) : (
+                                [1, 2, 3].map(n => (
+                                    <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                        <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                        <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>

@@ -159,6 +159,15 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
     },
 ];
 
+// General Info prompts (text fields for Attendance, Best Friend, Health, etc)
+export const GENERAL_INFO_FIELDS = [
+    { key: 'gi_attendance', label: 'Attendance (Days Present / Total Days)' },
+    { key: 'gi_height', label: 'Height (cm)' },
+    { key: 'gi_weight', label: 'Weight (kg)' },
+    { key: 'gi_blood_group', label: 'Blood Group' },
+    { key: 'gi_best_friend', label: 'My Best Friend' }
+];
+
 // Self-Assessment prompts (text fields)
 export const SELF_ASSESS_FIELDS = [
     { key: 'sa_01', label: '1. Activities that I enjoy the most' },

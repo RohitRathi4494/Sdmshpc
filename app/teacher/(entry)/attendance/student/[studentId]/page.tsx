@@ -9,6 +9,7 @@ interface AttendanceRecord {
     month_name: string;
     working_days: number;
     days_present: number;
+    reason_for_low_attendance?: string;
 }
 
 const MONTHS = [
@@ -54,14 +55,14 @@ export default function AttendanceEntryPage() {
 
     if (loading) return <div>Loading...</div>;
 
-    const handleChange = async (monthId: number, field: 'working_days' | 'days_present', value: number) => {
+    const handleChange = async (monthId: number, field: 'working_days' | 'days_present' | 'reason_for_low_attendance', value: number | string) => {
         const current = attendance[monthId] || { month_id: monthId, working_days: 0, days_present: 0 };
 
-        // Input Validation: Block invalid entries with an alert
-        if (field === 'days_present' && value > current.working_days) {
+        // Input Validation: Block invalid entries with an alert (only for numeric fields)
+        if (field === 'days_present' && typeof value === 'number' && value > current.working_days) {
             window.alert('Present days cannot be more than working days.');
             return; // Reject the change
-        } else if (field === 'working_days' && value < current.days_present) {
+        } else if (field === 'working_days' && typeof value === 'number' && value < current.days_present) {
             window.alert('Working days cannot be less than the already recorded present days.');
             return; // Reject the change
         }
@@ -76,6 +77,7 @@ export default function AttendanceEntryPage() {
                 month_id: monthId,
                 working_days: updated.working_days,
                 days_present: updated.days_present,
+                reason_for_low_attendance: updated.reason_for_low_attendance || null,
                 academic_year_id: 1
             }, token);
         } catch { }
@@ -93,6 +95,7 @@ export default function AttendanceEntryPage() {
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Working Days</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Present Days</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">% Attendance</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason for Shortage</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -121,6 +124,15 @@ export default function AttendanceEntryPage() {
                                     </td>
                                     <td className="px-6 py-4 text-center font-bold text-gray-600">
                                         {pct}%
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        <input
+                                            type="text"
+                                            className="w-full border rounded p-1 text-sm"
+                                            placeholder="Enter reason..."
+                                            value={rec.reason_for_low_attendance || ''}
+                                            onChange={(e) => handleChange(month.id, 'reason_for_low_attendance', e.target.value)}
+                                        />
                                     </td>
                                 </tr>
                             );

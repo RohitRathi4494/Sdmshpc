@@ -133,23 +133,12 @@ export default function CoScholasticEntryPage() {
 
     return (
         <div className="max-w-5xl mx-auto pb-12">
-            <button
-                onClick={() => router.back()}
-                className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back to List
-            </button>
-
-            <div className="flex justify-between items-center mb-6">
-                <h2 className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600">
-                    {reportData.student.student_name}
-                </h2>
-                <div className="text-sm text-gray-500">
-                    Admission No: {reportData.student.admission_no}
-                    {saving && <span className="ml-2 text-blue-600 animate-pulse font-medium">Saving...</span>}
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-800">Co-Scholastic Grades Entry</h2>
+                <div className="flex items-center gap-2">
+                    {saving && <span className="text-amber-600 animate-pulse text-sm font-medium">● Saving...</span>}
+                    {error && <span className="text-red-600 text-xs bg-red-50 px-2 py-1 rounded">⚠ {error}</span>}
+                    {!saving && !error && <span className="text-green-600 text-xs bg-green-50 px-2 py-1 rounded">✓ Auto-saved</span>}
                 </div>
             </div>
 

@@ -179,29 +179,15 @@ export default function ScholasticEntryPage() {
 
     return (
         <div className="max-w-full mx-auto">
-            {/* ... Back button ... */}
-            <button
-                onClick={() => router.back()}
-                className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back
-            </button>
-            <div className="flex justify-between items-center mb-6">
-                <div>
-                    <h2 className="text-2xl font-bold text-gray-800">{reportData.student.student_name}</h2>
-                    <p className="text-gray-500">Class: {reportData.student.class_name} - {reportData.student.section_name} | Adm: {reportData.student.admission_no}</p>
-                </div>
-                <div className="flex flex-col items-end gap-1">
-                    <div className={`px-4 py-2 rounded text-sm font-bold ${saving ? 'bg-yellow-100 text-yellow-700' : (saveError ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700')}`}>
-                        {saving ? 'Saving...' : (saveError ? 'Save Failed!' : 'All Changes Saved')}
-                    </div>
-                    {saveError && <span className="text-xs text-red-600">{saveError}</span>}
+
+            <div className="flex items-center justify-between mb-4">
+                <h2 className="text-lg font-bold text-gray-800">Scholastic Marks Entry</h2>
+                <div className="flex items-center gap-2">
+                    {saving && <span className="text-amber-600 animate-pulse text-sm font-medium">● Saving...</span>}
+                    {saveError && <span className="text-red-600 text-xs bg-red-50 px-2 py-1 rounded">⚠ {saveError}</span>}
+                    {!saving && !saveError && <span className="text-green-600 text-xs bg-green-50 px-2 py-1 rounded">✓ Auto-saved</span>}
                 </div>
             </div>
-
             <div className="overflow-x-auto shadow rounded-lg border bg-white mb-10">
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead className="bg-gray-50">

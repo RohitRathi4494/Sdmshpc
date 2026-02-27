@@ -76,16 +76,7 @@ export default function AttendanceEntryPage() {
 
     return (
         <div className="max-w-4xl mx-auto">
-            <button
-                onClick={() => router.back()}
-                className="mb-4 flex items-center text-gray-600 hover:text-gray-900 transition-colors"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back
-            </button>
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">{studentName} - Attendance</h2>
+            <h2 className="text-lg font-bold mb-4 text-gray-800">Attendance Data Entry</h2>
 
             <div className="bg-white shadow rounded-lg overflow-hidden">
                 <table className="min-w-full divide-y divide-gray-200">

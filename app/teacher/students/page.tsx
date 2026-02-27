@@ -237,31 +237,10 @@ function StudentSelectionContent() {
                                                 <>
                                                     <button
                                                         onClick={() => router.push(`/teacher/scholastic/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 transition"
-                                                        title="Scholastic Assessment"
+                                                        className="px-3 py-1 bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
+                                                        title="HPC Entry"
                                                     >
-                                                        Scholastic
-                                                    </button>
-                                                    <button
-                                                        onClick={() => router.push(`/teacher/co-scholastic/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-green-100 text-green-700 rounded hover:bg-green-200 transition"
-                                                        title="Co-Scholastic Assessment"
-                                                    >
-                                                        Co-Scholastic
-                                                    </button>
-                                                    <button
-                                                        onClick={() => router.push(`/teacher/attendance/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-purple-100 text-purple-700 rounded hover:bg-purple-200 transition"
-                                                        title="Attendance"
-                                                    >
-                                                        Attendance
-                                                    </button>
-                                                    <button
-                                                        onClick={() => router.push(`/teacher/remarks/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-orange-100 text-orange-700 rounded hover:bg-orange-200 transition"
-                                                        title="Remarks"
-                                                    >
-                                                        Remarks
+                                                        🌟 HPC Entry
                                                     </button>
                                                     <button
                                                         onClick={() => router.push(`/teacher/preview/student/${student.id}`)}

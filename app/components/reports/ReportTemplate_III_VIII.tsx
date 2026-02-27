@@ -215,7 +215,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <th colSpan={2}>Internal Assessment</th>
                                         <th colSpan={2}>Terminal Assessment</th>
                                         <th colSpan={2} className="gold-bg">Total</th>
-                                        <th rowSpan={2}>Final Result<br />(Avg)</th>
+                                        <th rowSpan={2} className="gold-bg">Final Result<br />(Avg)</th>
                                     </tr>
                                     <tr>
                                         <th>Term I</th>
@@ -804,6 +804,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         .scholastic-table th, .scholastic-table td {
             padding-left: 2px !important;
             padding-right: 2px !important;
+            padding-top: 10px !important;
+            padding-bottom: 10px !important;
         }
         `}</style>
         </div>

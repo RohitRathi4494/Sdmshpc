@@ -183,7 +183,9 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                     </tr>
                                     <tr>
                                         <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
-                                        <td colSpan={13} className="input-cell"></td>
+                                        <td colSpan={13} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
+                                            {reportData.attendance?.[0]?.reason_for_low_attendance || ''}
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

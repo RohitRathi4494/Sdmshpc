@@ -26,6 +26,7 @@ export default function AttendanceEntryPage() {
     const [studentName, setStudentName] = useState('');
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [globalReason, setGlobalReason] = useState('');
 
     useEffect(() => {
         const loadData = async () => {
@@ -40,6 +41,7 @@ export default function AttendanceEntryPage() {
                     attMap[a.month_id] = a;
                 });
                 setAttendance(attMap);
+                setGlobalReason(report.attendance?.[0]?.reason_for_low_attendance || '');
             } catch (error) {
                 console.error(error);
             } finally {
@@ -55,14 +57,14 @@ export default function AttendanceEntryPage() {
 
     if (loading) return <div>Loading...</div>;
 
-    const handleChange = async (monthId: number, field: 'working_days' | 'days_present' | 'reason_for_low_attendance', value: number | string) => {
+    const handleChange = async (monthId: number, field: 'working_days' | 'days_present', value: number) => {
         const current = attendance[monthId] || { month_id: monthId, working_days: 0, days_present: 0 };
 
-        // Input Validation: Block invalid entries with an alert (only for numeric fields)
-        if (field === 'days_present' && typeof value === 'number' && value > current.working_days) {
+        // Input Validation: Block invalid entries with an alert
+        if (field === 'days_present' && value > current.working_days) {
             window.alert('Present days cannot be more than working days.');
             return; // Reject the change
-        } else if (field === 'working_days' && typeof value === 'number' && value < current.days_present) {
+        } else if (field === 'working_days' && value < current.days_present) {
             window.alert('Working days cannot be less than the already recorded present days.');
             return; // Reject the change
         }
@@ -77,7 +79,17 @@ export default function AttendanceEntryPage() {
                 month_id: monthId,
                 working_days: updated.working_days,
                 days_present: updated.days_present,
-                reason_for_low_attendance: updated.reason_for_low_attendance || null,
+                academic_year_id: 1
+            }, token);
+        } catch { }
+    };
+
+    const handleReasonSave = async () => {
+        try {
+            const token = sessionStorage.getItem('hpc_token');
+            await (ApiClient as any).post('/teacher/attendance/reason', {
+                student_id: studentId,
+                reason_for_low_attendance: globalReason,
                 academic_year_id: 1
             }, token);
         } catch { }
@@ -95,7 +107,6 @@ export default function AttendanceEntryPage() {
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Working Days</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Present Days</th>
                             <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">% Attendance</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Reason for Shortage</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
@@ -125,20 +136,23 @@ export default function AttendanceEntryPage() {
                                     <td className="px-6 py-4 text-center font-bold text-gray-600">
                                         {pct}%
                                     </td>
-                                    <td className="px-6 py-4">
-                                        <input
-                                            type="text"
-                                            className="w-full border rounded p-1 text-sm"
-                                            placeholder="Enter reason..."
-                                            value={rec.reason_for_low_attendance || ''}
-                                            onChange={(e) => handleChange(month.id, 'reason_for_low_attendance', e.target.value)}
-                                        />
-                                    </td>
                                 </tr>
                             );
                         })}
                     </tbody>
                 </table>
+            </div>
+
+            <div className="mt-6 bg-white shadow rounded-lg p-6">
+                <h3 className="text-lg font-bold text-gray-800 mb-2">Reason for Low Attendance</h3>
+                <p className="text-sm text-gray-500 mb-4">If the student's overall attendance is low, please provide a brief reason below. Saving occurs when you click away.</p>
+                <textarea
+                    className="w-full border rounded p-3 h-24 focus:ring-2 focus:ring-blue-500 outline-none"
+                    placeholder="Enter reason for shortage..."
+                    value={globalReason}
+                    onChange={(e) => setGlobalReason(e.target.value)}
+                    onBlur={handleReasonSave}
+                />
             </div>
         </div>
     );

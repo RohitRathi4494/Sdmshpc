@@ -543,27 +543,18 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                             <table className="foundational-table" style={{ tableLayout: 'fixed' }}>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '15%' }}>Term</th>
                                         <th style={{ width: '25%' }}>Parent / Guardian</th>
-                                        <th style={{ width: '20%' }}>Class Teacher</th>
-                                        <th style={{ width: '20%' }}>Block Incharge</th>
-                                        <th style={{ width: '20%' }}>Principal</th>
+                                        <th style={{ width: '25%' }}>Class Teacher</th>
+                                        <th style={{ width: '25%' }}>Block Incharge</th>
+                                        <th style={{ width: '25%' }}>Principal</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={{ fontWeight: 700, padding: '20px 6px !important' }}>Term I</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 700, padding: '20px 6px !important' }}>Term II</td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td style={{ padding: '30px 6px !important' }}></td>
+                                        <td style={{ padding: '30px 6px !important' }}></td>
+                                        <td style={{ padding: '30px 6px !important' }}></td>
+                                        <td style={{ padding: '30px 6px !important' }}></td>
                                     </tr>
                                 </tbody>
                             </table>

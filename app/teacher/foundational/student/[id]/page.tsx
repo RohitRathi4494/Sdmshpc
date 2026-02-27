@@ -205,6 +205,28 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                 </div>
             </div>
 
+            {/* All About Me (Best Friends & Photos) */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">
+                <div className="bg-[#1B3D6F] text-white px-5 py-3">
+                    <div className="font-bold text-sm">All About Me</div>
+                    <div className="text-xs opacity-70 mt-0.5">Details printed on the front page </div>
+                </div>
+                <div className="p-5">
+                    <div className="mb-4">
+                        <label className="block text-sm text-gray-700 mb-1 font-semibold">My Best Friends</label>
+                        <textarea value={getText('gi_best_friend')}
+                            onChange={e => handleText('gi_best_friend', e.target.value)}
+                            rows={3}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 outline-none resize-none"
+                            placeholder="Enter friends' names, one per line..." />
+                        <p className="text-xs text-gray-500 mt-1">Each line will become a bullet point.</p>
+                    </div>
+                    <div className="bg-amber-50 border border-amber-200 rounded p-3 text-sm text-amber-800">
+                        <span className="font-semibold">Note on Photos & Age:</span> The student's age is automatically calculated from their Date of Birth. Currently, the &quot;My Self&quot; and &quot;My Family Photo&quot; frames are printed as empty borders for students to physically paste photos into.
+                    </div>
+                </div>
+            </div>
+
             {/* Domains */}
             {FOUNDATIONAL_DOMAINS.map(domain => (
                 <div key={domain.key} className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">

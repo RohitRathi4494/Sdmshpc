@@ -215,6 +215,20 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
         </>
     );
 
+    let calculatedAge = '';
+    if (student.date_of_birth) {
+        const dob = new Date(student.date_of_birth);
+        if (!isNaN(dob.getTime())) {
+            const today = new Date();
+            let age = today.getFullYear() - dob.getFullYear();
+            const m = today.getMonth() - dob.getMonth();
+            if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
+                age--;
+            }
+            calculatedAge = age.toString();
+        }
+    }
+
     return (
         <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
 
@@ -330,10 +344,12 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Age</div>
                         <div style={{ background: C.rowEven, padding: '16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 90 }}>
                             <div style={{ fontSize: 32, marginBottom: 4 }}>🎂</div>
-                            <div style={{ fontSize: 13, color: C.navy }}>
-                                I am{' '}
-                                <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 700 }}>&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                                {' '}years old
+                            <div style={{ fontSize: 13, color: C.navy, display: 'flex', alignItems: 'center', gap: 6 }}>
+                                I am
+                                <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 800, fontSize: 16 }}>
+                                    {calculatedAge || '\u00A0\u00A0\u00A0\u00A0'}
+                                </span>
+                                years old
                             </div>
                         </div>
                     </div>
@@ -341,12 +357,23 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
-                            {[1, 2, 3].map(n => (
-                                <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                    <span style={{ color: C.gold, fontSize: 16 }}>●</span>
-                                    <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                            {getText('TERM2', 'gi_best_friend') ? (
+                                <div style={{ fontSize: 13, color: C.navy, lineHeight: 1.6, padding: '4px 8px' }}>
+                                    {getText('TERM2', 'gi_best_friend').split('\n').map((line, i) => (
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                                            <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                            <span style={{ fontWeight: 600 }}>{line}</span>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            ) : (
+                                [1, 2, 3].map(n => (
+                                    <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
+                                        <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                        <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                                    </div>
+                                ))
+                            )}
                         </div>
                     </div>
                 </div>

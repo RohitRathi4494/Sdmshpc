@@ -6,6 +6,7 @@ import {
     FOUNDATIONAL_DOMAINS, SELF_ASSESS_FIELDS, PARENT_FEEDBACK_FIELDS,
     RATINGS, isSubSection, type Rating
 } from '@/app/lib/foundational-skills';
+import { FoundationalAttendanceGrid } from './FoundationalAttendanceGrid';
 
 const TERMS = [
     { key: 'TERM1', label: 'Term I' },
@@ -188,8 +189,10 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                         <span className="text-gray-600">{r.meaning}</span>
                     </span>
                 ))}
-                <span className="text-gray-400 text-xs self-center">· Click the same rating again to clear it</span>
             </div>
+
+            {/* Monthly Attendance */}
+            <FoundationalAttendanceGrid studentId={studentId} academicYearId={academicYearId} />
 
             {/* Domains */}
             {FOUNDATIONAL_DOMAINS.map(domain => (

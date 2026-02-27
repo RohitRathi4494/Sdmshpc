@@ -191,8 +191,19 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                 ))}
             </div>
 
-            {/* Monthly Attendance */}
-            <FoundationalAttendanceGrid studentId={studentId} academicYearId={academicYearId} />
+            {/* Monthly Attendance & Reason */}
+            <div className="mb-5">
+                <FoundationalAttendanceGrid studentId={studentId} academicYearId={academicYearId} />
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-4">
+                    <div className="p-4">
+                        <label className="block text-sm text-gray-700 mb-1 font-semibold">If attendance is low then reason</label>
+                        <input type="text" value={getText('gi_attendance_reason')}
+                            onChange={e => handleText('gi_attendance_reason', e.target.value)}
+                            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 outline-none"
+                            placeholder="Enter reason..." />
+                    </div>
+                </div>
+            </div>
 
             {/* Domains */}
             {FOUNDATIONAL_DOMAINS.map(domain => (

@@ -303,7 +303,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             </tr>
                             <tr>
                                 <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
-                                <td colSpan={13} className="input-cell"></td>
+                                <td colSpan={13} className="input-cell" style={{ textAlign: 'left', paddingLeft: '8px' }}>
+                                    {getText('TERM2', 'gi_attendance_reason')}
+                                </td>
                             </tr>
                         </tbody>
                     </table>

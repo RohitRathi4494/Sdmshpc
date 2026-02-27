@@ -169,20 +169,32 @@ export default function CoScholasticEntryPage() {
                                             {[1, 2].map(termId => (
                                                 <td key={termId} className="py-4 px-4 text-center">
                                                     <div className="flex justify-center space-x-2">
-                                                        {getScaleForDomain(domain.name).map(g => (
-                                                            <button
-                                                                key={g}
-                                                                onClick={() => handleGradeChange(skill.id, termId, g)}
-                                                                className={`
-                                                                    w-9 h-9 rounded-full text-sm font-bold transition-all duration-200 flex items-center justify-center border
-                                                                    ${scores[`${skill.id}-${termId}`] === g
-                                                                        ? 'bg-blue-600 text-white border-blue-600 shadow-md transform scale-105'
-                                                                        : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300 hover:bg-gray-50'}
-                                                                `}
-                                                            >
-                                                                {g}
-                                                            </button>
-                                                        ))}
+                                                        {getScaleForDomain(domain.name).map(g => {
+                                                            const isSelected = scores[`${skill.id}-${termId}`] === g;
+                                                            let colorClasses = '';
+                                                            if (g === 'A') {
+                                                                colorClasses = isSelected ? 'bg-[#1a7a3b] text-white shadow-sm' : 'bg-[#eafaf1] text-[#1a7a3b]';
+                                                            } else if (g === 'B') {
+                                                                colorClasses = isSelected ? 'bg-[#2563eb] text-white shadow-sm' : 'bg-[#eff6ff] text-[#2563eb]';
+                                                            } else if (g === 'C') {
+                                                                colorClasses = isSelected ? 'bg-[#d97706] text-white shadow-sm' : 'bg-[#fffbeb] text-[#d97706]';
+                                                            } else {
+                                                                colorClasses = isSelected ? 'bg-gray-600 text-white shadow-sm' : 'bg-gray-50 text-gray-500';
+                                                            }
+                                                            return (
+                                                                <button
+                                                                    key={g}
+                                                                    onClick={() => handleGradeChange(skill.id, termId, g)}
+                                                                    className={`
+                                                                        w-10 h-10 rounded-[10px] text-base font-extrabold transition-all duration-200 flex items-center justify-center
+                                                                        ${colorClasses}
+                                                                        ${isSelected ? 'transform scale-105' : 'hover:scale-105 opacity-80 hover:opacity-100'}
+                                                                    `}
+                                                                >
+                                                                    {g}
+                                                                </button>
+                                                            );
+                                                        })}
                                                     </div>
                                                 </td>
                                             ))}

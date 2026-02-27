@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import {
-    FOUNDATIONAL_DOMAINS, SELF_ASSESS_FIELDS, PARENT_FEEDBACK_FIELDS, GENERAL_INFO_FIELDS,
+    FOUNDATIONAL_DOMAINS, SELF_ASSESS_FIELDS, PARENT_FEEDBACK_FIELDS,
     RATINGS, isSubSection, type Rating
 } from '@/app/lib/foundational-skills';
 
@@ -223,25 +223,6 @@ function HPCEntryContent({ studentId }: { studentId: string }) {
                     </div>
                 </div>
             ))}
-
-            {/* General Info / Health Data */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">
-                <div className="bg-[#1B3D6F] text-white px-5 py-3">
-                    <div className="font-bold text-sm">General Information & Health</div>
-                    <div className="text-xs opacity-70 mt-0.5">Details typically recorded by the class teacher once per term</div>
-                </div>
-                <div className="p-5 grid grid-cols-2 gap-4">
-                    {GENERAL_INFO_FIELDS.map(f => (
-                        <div key={f.key}>
-                            <label className="block text-sm text-gray-700 mb-1 font-semibold">{f.label}</label>
-                            <input type="text" value={getText(f.key)}
-                                onChange={e => handleText(f.key, e.target.value)}
-                                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 outline-none"
-                                placeholder={`Enter ${f.label.toLowerCase()}…`} />
-                        </div>
-                    ))}
-                </div>
-            </div>
 
             {/* Self-Assessment */}
             <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-5 overflow-hidden">

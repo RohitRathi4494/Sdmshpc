@@ -240,29 +240,29 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
                                         const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
-                                            
+
                                             const getVal = (comp: string, term: string) => {
                                                 const s = getScholasticScore(subject, comp, term);
                                                 if (!s || !s.marks) return 0;
                                                 const num = parseFloat(s.marks);
                                                 return isNaN(num) ? 0 : num;
                                             };
-                                            
+
                                             const hasMarks = (term: string) => {
-                                                return getScholasticScore(subject, 'Periodic Assessment', term) || 
-                                                       getScholasticScore(subject, 'Terminal Assessment', term);
+                                                return getScholasticScore(subject, 'Periodic Assessment', term) ||
+                                                    getScholasticScore(subject, 'Terminal Assessment', term);
                                             };
 
-                                            const total1 = getVal('Periodic Assessment', 'Term I') + 
-                                                           getVal('Subject Enrichment Activities', 'Term I') + 
-                                                           getVal('Internal Assessment', 'Term I') + 
-                                                           getVal('Terminal Assessment', 'Term I');
-                                                           
-                                            const total2 = getVal('Periodic Assessment', 'Term II') + 
-                                                           getVal('Subject Enrichment Activities', 'Term II') + 
-                                                           getVal('Internal Assessment', 'Term II') + 
-                                                           getVal('Terminal Assessment', 'Term II');
-                                            
+                                            const total1 = getVal('Periodic Assessment', 'Term I') +
+                                                getVal('Subject Enrichment Activities', 'Term I') +
+                                                getVal('Internal Assessment', 'Term I') +
+                                                getVal('Terminal Assessment', 'Term I');
+
+                                            const total2 = getVal('Periodic Assessment', 'Term II') +
+                                                getVal('Subject Enrichment Activities', 'Term II') +
+                                                getVal('Internal Assessment', 'Term II') +
+                                                getVal('Terminal Assessment', 'Term II');
+
                                             if (hasMarks('Term I')) {
                                                 grandTotal1 += total1;
                                                 subjectCount1++;
@@ -271,7 +271,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                                 grandTotal2 += total2;
                                                 subjectCount2++;
                                             }
-                                            
+
                                             const avg = (total1 + total2) / 2;
                                             if (hasMarks('Term I') || hasMarks('Term II')) {
                                                 grandTotalAvg += avg;
@@ -298,7 +298,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                                 </tr>
                                             );
                                         });
-                                        
+
                                         const max1 = subjectCount1 * 100;
                                         const max2 = subjectCount2 * 100;
                                         const maxAvg = Math.max(subjectCount1, subjectCount2) * 100;
@@ -665,9 +665,9 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-label {
             background: ${C.rowEven} !important;
-            padding: 6px 4px !important;
+            padding: 12px 6px !important;
             font-weight: 700 !important;
-            font-size: 12.5px !important;
+            font-size: 14px !important;
             color: ${C.navy} !important;
             border-bottom: 1px solid ${C.border} !important;
             border-right: 1px solid ${C.border} !important;
@@ -676,8 +676,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-input {
             background: ${C.rowOdd} !important;
-            padding: 6px 4px !important;
-            font-size: 12.5px !important;
+            padding: 12px 6px !important;
+            font-size: 14px !important;
             color: ${C.text} !important;
             border: none !important;
             border-bottom: 1px solid ${C.border} !important;
@@ -688,20 +688,20 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.navy} !important;
             color: ${C.white} !important;
             font-weight: 700 !important;
-            padding: 6px 4px !important;
+            padding: 8px 6px !important;
             text-align: center !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
-            font-size: 10.5px !important;
+            font-size: 12px !important;
         }
         .foundational-attendance th:last-child {
             background: ${C.gold} !important;
         }
         .foundational-attendance td {
-            padding: 8px 3px !important;
+            padding: 12px 6px !important;
             border: 1px solid ${C.border} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
-            font-size: 11px !important;
+            font-size: 13px !important;
         }
         .foundational-attendance td:first-child,
         .foundational-attendance td:last-child {

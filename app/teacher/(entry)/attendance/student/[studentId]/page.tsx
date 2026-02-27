@@ -57,20 +57,16 @@ export default function AttendanceEntryPage() {
     const handleChange = async (monthId: number, field: 'working_days' | 'days_present', value: number) => {
         const current = attendance[monthId] || { month_id: monthId, working_days: 0, days_present: 0 };
 
-        // Input Validation: Clamp values logically
-        let validatedValue = value;
-        if (field === 'days_present') {
-            if (validatedValue > current.working_days) {
-                validatedValue = current.working_days; // Cap present days at working days
-            }
-        } else if (field === 'working_days') {
-            if (validatedValue < current.days_present) {
-                // If they reduce working days below current present days, auto-reduce present days too
-                current.days_present = validatedValue;
-            }
+        // Input Validation: Block invalid entries with an alert
+        if (field === 'days_present' && value > current.working_days) {
+            window.alert('Present days cannot be more than working days.');
+            return; // Reject the change
+        } else if (field === 'working_days' && value < current.days_present) {
+            window.alert('Working days cannot be less than the already recorded present days.');
+            return; // Reject the change
         }
 
-        const updated = { ...current, [field]: validatedValue };
+        const updated = { ...current, [field]: value };
         setAttendance(prev => ({ ...prev, [monthId]: updated }));
 
         try {

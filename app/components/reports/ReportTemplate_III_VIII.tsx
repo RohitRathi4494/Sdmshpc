@@ -537,13 +537,37 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
                     {/* SIGNATURE SECTION */}
-                    <div className="signature-section">
-                        {['Class Teacher', 'Parents', 'Block Incharge', 'Vice Principal', 'Principal'].map(role => (
-                            <div className="signature-box" key={role}>
-                                <div className="signature-line"></div>
-                                <div className="signature-label">{role}</div>
-                            </div>
-                        ))}
+                    <div className="section" style={{ marginTop: 16 }}>
+                        <SectionHeading>Signature With Date</SectionHeading>
+                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
+                            <table className="foundational-table" style={{ tableLayout: 'fixed' }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '15%' }}>Term</th>
+                                        <th style={{ width: '25%' }}>Parent / Guardian</th>
+                                        <th style={{ width: '20%' }}>Class Teacher</th>
+                                        <th style={{ width: '20%' }}>Block Incharge</th>
+                                        <th style={{ width: '20%' }}>Principal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 700, padding: '20px 6px !important' }}>Term I</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 700, padding: '20px 6px !important' }}>Term II</td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
 

@@ -28,8 +28,10 @@ function Badge({ rating }: { rating: string }) {
     const r = RATINGS.find(x => x.value === rating);
     return (
         <span style={{
-            background: ratingColor(rating), color: '#fff',
-            borderRadius: 4, padding: '2px 8px', fontWeight: 700, fontSize: 11,
+            color: ratingColor(rating),
+            fontWeight: 800,
+            fontSize: 16,
+            letterSpacing: 2
         }}>
             {r?.stars ?? rating}
         </span>
@@ -66,19 +68,19 @@ function SectionHeading({ children, mt }: { children: string; mt?: number }) {
 function SchoolHeader() {
     return (
         <>
-            <div style={{ background: C.navy, display: 'flex', alignItems: 'center', gap: 16, padding: '14px 24px' }}>
+            <div style={{ background: C.navy, display: 'flex', alignItems: 'center', gap: 16, padding: '10px 24px' }}>
                 <div style={{
-                    width: 56, height: 56, borderRadius: '50%', border: `2px solid ${C.goldLight}`,
+                    width: 50, height: 50, borderRadius: '50%', border: `2px solid ${C.goldLight}`,
                     background: C.white, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0, overflow: 'hidden'
                 }}>
                     <img src="/school_logo.png" alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
-                    <div style={{ fontSize: 19, fontWeight: 800, color: C.white, letterSpacing: 0.4 }}>
+                    <div style={{ fontSize: 18, fontWeight: 800, color: C.white, letterSpacing: 0.4 }}>
                         S D MEMORIAL SR. SEC. SCHOOL, GURUGRAM
                     </div>
-                    <div style={{ fontSize: 12, fontWeight: 600, color: C.goldLight, letterSpacing: 2, textTransform: 'uppercase', marginTop: 2 }}>
+                    <div style={{ fontSize: 11, fontWeight: 600, color: C.goldLight, letterSpacing: 2, textTransform: 'uppercase', marginTop: 2 }}>
                         Holistic Progress Card — Foundational Stage
                     </div>
                 </div>
@@ -281,7 +283,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </div>
 
                 {/* ATTENDANCE RECORD */}
-                <div className="section" style={{ marginTop: 16 }}>
+                <div className="section" style={{ marginTop: 10 }}>
                     <h2 className="section-title">Attendance Record</h2>
                     <table className="attendance-table">
                         <thead>
@@ -326,12 +328,17 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     </table>
                 </div>
 
-                <SectionHeading mt={20}>All About Me</SectionHeading>
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 10 }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: `10px 0 6px` }}>
+                    <div style={{ width: 5, height: 22, background: C.gold, borderRadius: 3, flexShrink: 0 }} />
+                    <h3 style={{ fontSize: 13, fontWeight: 800, color: C.navy, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                        All About Me
+                    </h3>
+                </div>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 4 }}>
                     {['My Self', 'My Family Photo'].map(title => (
                         <div key={title} style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
-                            <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>{title}</div>
-                            <div style={{ background: C.rowEven, padding: 12, height: 110, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontStyle: 'italic', fontSize: 12, border: '1.5px dashed #c9d8ee', margin: 10, borderRadius: 6 }}>
+                            <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>{title}</div>
+                            <div style={{ background: C.rowEven, padding: 8, height: 90, display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#aaa', fontStyle: 'italic', fontSize: 11, border: '1.5px dashed #c9d8ee', margin: 8, borderRadius: 6 }}>
                                 Paste Photo Here
                             </div>
                         </div>
@@ -339,15 +346,15 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </div>
 
                 {/* My Age + My Best Friends */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16, marginTop: 12 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 10 }}>
                     {/* My Age */}
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
-                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Age</div>
-                        <div style={{ background: C.rowEven, padding: '16px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 90 }}>
-                            <div style={{ fontSize: 32, marginBottom: 4 }}>🎂</div>
-                            <div style={{ fontSize: 13, color: C.navy, display: 'flex', alignItems: 'center', gap: 6 }}>
+                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>My Age</div>
+                        <div style={{ background: C.rowEven, padding: '12px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 70 }}>
+                            <div style={{ fontSize: 26, marginBottom: 2 }}>🎂</div>
+                            <div style={{ fontSize: 12, color: C.navy, display: 'flex', alignItems: 'center', gap: 6 }}>
                                 I am
-                                <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 800, fontSize: 16 }}>
+                                <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 800, fontSize: 15 }}>
                                     {calculatedAge || '\u00A0\u00A0\u00A0\u00A0'}
                                 </span>
                                 years old
@@ -356,22 +363,22 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     </div>
                     {/* My Best Friends */}
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
-                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12.5, padding: '8px 14px' }}>My Best Friends</div>
-                        <div style={{ background: C.rowEven, padding: '12px 14px', minHeight: 110 }}>
+                        <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>My Best Friends</div>
+                        <div style={{ background: C.rowEven, padding: '10px 14px', minHeight: 70 }}>
                             {getAnyText('gi_best_friend') ? (
-                                <div style={{ fontSize: 13, color: C.navy, lineHeight: 1.6, padding: '4px 8px' }}>
+                                <div style={{ fontSize: 12, color: C.navy, lineHeight: 1.5, padding: '2px 8px' }}>
                                     {getAnyText('gi_best_friend').split('\n').map((line, i) => (
-                                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                            <span style={{ color: C.gold, fontSize: 16 }}>●</span>
+                                        <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+                                            <span style={{ color: C.gold, fontSize: 14 }}>●</span>
                                             <span style={{ fontWeight: 600 }}>{line}</span>
                                         </div>
                                     ))}
                                 </div>
                             ) : (
                                 [1, 2, 3].map(n => (
-                                    <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
-                                        <span style={{ color: C.gold, fontSize: 16 }}>●</span>
-                                        <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 20 }} />
+                                    <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
+                                        <span style={{ color: C.gold, fontSize: 14 }}>●</span>
+                                        <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 16 }} />
                                     </div>
                                 ))
                             )}
@@ -580,9 +587,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 }
                 .foundational-page .info-label {
                     background: ${C.rowEven};
-                    padding: 9px 14px;
+                    padding: 6px 12px;
                     font-weight: 700;
-                    font-size: 12.5px;
+                    font-size: 11.5px;
                     color: ${C.navy} !important;
                     border-bottom: 1px solid ${C.border};
                     border-right: 1px solid ${C.border};
@@ -591,8 +598,8 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 }
                 .foundational-page .info-input {
                     background: ${C.rowOdd};
-                    padding: 9px 14px;
-                    font-size: 12.5px;
+                    padding: 6px 12px;
+                    font-size: 11.5px;
                     color: ${C.text};
                     border: none;
                     border-bottom: 1px solid ${C.border};

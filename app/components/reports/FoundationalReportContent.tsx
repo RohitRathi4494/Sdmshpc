@@ -451,18 +451,15 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
                     <thead>
                         <tr>
-                            {['Term', 'Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h, i) => (
-                                <th key={h} style={{ ...obsThStyle, width: i === 0 ? '12%' : undefined }}>{h}</th>
+                            {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (
+                                <th key={h} style={{ ...obsThStyle, width: '25%' }}>{h}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
-                        {['Term I', 'Term II'].map((t, ri) => (
-                            <tr key={t} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
-                                <td style={{ ...obsTdStyle, fontWeight: 700, color: C.navy }}>{t}</td>
-                                {[0, 1, 2, 3].map(i => <td key={i} style={{ ...obsTdStyle, height: 52 }} />)}
-                            </tr>
-                        ))}
+                        <tr style={{ background: C.rowEven }}>
+                            {[0, 1, 2, 3].map(i => <td key={i} style={{ ...obsTdStyle, height: 70 }} />)}
+                        </tr>
                     </tbody>
                 </table>
                 <div style={{ marginTop: 28 }} />

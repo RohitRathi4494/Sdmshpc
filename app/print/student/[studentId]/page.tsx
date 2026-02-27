@@ -5,6 +5,7 @@ import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
+import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 
 interface PrintPageProps {
     params: {
@@ -59,9 +60,8 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                     <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
                 </head>
                 <body className="print-mode bg-white">
-                    <div style={{ padding: '40px', textAlign: 'center' }}>
-                        <h1>Template Coming Soon</h1>
-                        <p>Foundational stage print templates are under development.</p>
+                    <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                        <FoundationalReportContent autoPrint={false} />
                     </div>
                 </body>
             </html>

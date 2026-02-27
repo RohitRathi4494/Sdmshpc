@@ -35,15 +35,7 @@ export default function ReportPreviewPage() {
         setGenerating(true);
         try {
             const template = getTemplateForClass(reportData?.student?.class_name);
-            if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
-                // Foundational uses purely native browser CSS printing 
-                const oldTitle = document.title;
-                const filename = `${reportData.student.student_name}_${reportData.student.class_name}_${reportData.student.section_name}`.replace(/[^a-zA-Z0-9._-]/g, '_');
-                document.title = filename;
-                window.print();
-                document.title = oldTitle;
-                return;
-            }
+            // Foundational stages now also use the server-side PDF generator instead of window.print()
 
             const token = sessionStorage.getItem('hpc_token') || undefined;
             const response = await fetch(`/api/reports/student/${studentId}/pdf`, {

@@ -341,7 +341,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <th style={{ width: '25%' }}>Term II</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Physical Education */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Physical Education</td>
@@ -353,7 +353,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
+                                </tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Visual Art */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Visual Art</td>
@@ -365,7 +366,6 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
                                 </tbody>
                             </table>
                         </div>
@@ -387,7 +387,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     <div className="section" style={{ marginTop: 0 }}>
                         <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden', borderTop: 'none' }}>
                             <table className="foundational-table">
-                                <tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     <tr style={{ visibility: 'collapse' }}>
                                         <th style={{ width: '50%' }}></th>
                                         <th style={{ width: '25%' }}></th>
@@ -404,7 +404,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
+                                </tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Performing Art - Music */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Music</td>
@@ -436,7 +437,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <th style={{ width: '25%' }}>Term II</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Social Skills */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Social Skills</td>
@@ -448,7 +449,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
+                                </tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Emotional Skills */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Emotional Skills</td>
@@ -460,7 +462,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
+                                </tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Work Habit */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Work Habit</td>
@@ -472,7 +475,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-
+                                </tbody>
+                                <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Health & Wellness */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Health & Wellness</td>

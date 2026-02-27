@@ -93,7 +93,7 @@ function GoldBar() {
 }
 
 // ── Domain table (used for Pages 2–4) ────────────────────────────────────────
-function DomainTable({ domainKey, ratings, rowHeight }: { domainKey: string; ratings: RatingMap; rowHeight?: number }) {
+function DomainTable({ domainKey, ratings, rowHeight, tableHeader }: { domainKey: string; ratings: RatingMap; rowHeight?: number; tableHeader?: string }) {
     const domain = FOUNDATIONAL_DOMAINS.find(d => d.key === domainKey)!;
     const rows: React.ReactNode[] = [];
     let i = 0;
@@ -131,7 +131,7 @@ function DomainTable({ domainKey, ratings, rowHeight }: { domainKey: string; rat
         <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5, marginBottom: 6, pageBreakInside: 'avoid' }}>
             <thead>
                 <tr>
-                    <th style={{ ...obsThStyle, textAlign: 'left', width: '68%' }}>Skills</th>
+                    <th style={{ ...obsThStyle, textAlign: 'left', width: '68%' }}>{tableHeader || 'Skills'}</th>
                     <th style={obsThStyle}>Term I</th>
                     <th style={obsThStyle}>Term II</th>
                 </tr>
@@ -407,9 +407,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 <p style={{ fontSize: 12, color: C.muted, margin: '0 0 10px 15px', lineHeight: 1.5 }}>
                     <strong style={{ color: C.navy }}>Curricular Goals:</strong> To develop listening, speaking, reading, and writing skills for effective communication.
                 </p>
-                <DomainTable domainKey="language_english" ratings={ratings} />
+                <DomainTable domainKey="language_english" ratings={ratings} tableHeader="English" />
                 <div style={{ marginTop: 18 }} />
-                <DomainTable domainKey="language_hindi" ratings={ratings} />
+                <DomainTable domainKey="language_hindi" ratings={ratings} tableHeader="Hindi" />
             </Page>
 
             {/* ── PAGE 4: Cognitive + Learning Habits + Self-Assessment ── */}

@@ -22,24 +22,53 @@ const ratingColor = (r: string) =>
 type RatingMap = Record<string, string>;  // "term:domain:skillKey" → "A"|"B"|"C"
 type TextMap = Record<string, string>;  // "term:fieldKey" → value
 
+// ── Inline SVGs to guarantee PDF rendering regardless of font cache ─────────────
+const StarSVG = ({ color }: { color: string }) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill={color} xmlns="http://www.w3.org/2000/svg" style={{ margin: '0 1px', display: 'inline-block', verticalAlign: 'middle' }}>
+        <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+    </svg>
+);
+
+const CakeSVG = () => (
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke={C.gold} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ marginBottom: 4 }}>
+        <path d="M20 21v-8a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8"></path>
+        <path d="M4 16s.5-1 2-1 2.5 2 4 2 2.5-2 4-2 2.5 2 4 2 2 1 2 1"></path>
+        <path d="M2 21h20"></path>
+        <path d="M7 8v2"></path>
+        <path d="M12 8v2"></path>
+        <path d="M17 8v2"></path>
+        <path d="M7 4h.01"></path>
+        <path d="M12 4h.01"></path>
+        <path d="M17 4h.01"></path>
+    </svg>
+);
+
+const DotSVG = () => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill={C.gold} xmlns="http://www.w3.org/2000/svg" style={{ display: 'inline-block', verticalAlign: 'middle' }}>
+        <circle cx="12" cy="12" r="6" />
+    </svg>
+);
+
 // ── Helper: render a star rating badge ───────────────────────────────────────
 function Badge({ rating }: { rating: string }) {
     if (!rating) return <span style={{ color: '#bbb' }}>—</span>;
     const r = RATINGS.find(x => x.value === rating);
+    const starCount = r?.stars?.length || 0;
+    const color = ratingColor(rating);
+
+    if (starCount > 0) {
+        return (
+            <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center' }}>
+                {Array.from({ length: starCount }).map((_, i) => <StarSVG key={i} color={color} />)}
+            </span>
+        );
+    }
     return (
-        <span style={{
-            fontFamily: SYMBOL_FONT,
-            color: ratingColor(rating),
-            fontWeight: 800,
-            fontSize: 16,
-            letterSpacing: 2
-        }}>
+        <span style={{ color: color, fontWeight: 800, fontSize: 16 }}>
             {r?.stars ?? rating}
         </span>
     );
 }
-
-const SYMBOL_FONT = '"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
 
 // ── Shared table styles ───────────────────────────────────────────────────────
 const FONT_STACK = "'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif";
@@ -349,7 +378,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>My Age</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 70 }}>
-                            <div style={{ fontSize: 26, marginBottom: 2, fontFamily: SYMBOL_FONT }}>🎂</div>
+                            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 2 }}><CakeSVG /></div>
                             <div style={{ fontSize: 12, color: C.navy, display: 'flex', alignItems: 'center', gap: 6 }}>
                                 I am
                                 <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 800, fontSize: 15 }}>
@@ -367,7 +396,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                                 <div style={{ fontSize: 12, color: C.navy, lineHeight: 1.5, padding: '2px 8px' }}>
                                     {getAnyText('gi_best_friend').split('\n').map((line, i) => (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                            <span style={{ color: C.gold, fontSize: 14, fontFamily: SYMBOL_FONT }}>●</span>
+                                            <DotSVG />
                                             <span style={{ fontWeight: 600 }}>{line}</span>
                                         </div>
                                     ))}
@@ -375,7 +404,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             ) : (
                                 [1, 2, 3].map(n => (
                                     <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                        <span style={{ color: C.gold, fontSize: 14, fontFamily: SYMBOL_FONT }}>●</span>
+                                        <DotSVG />
                                         <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 16 }} />
                                     </div>
                                 ))
@@ -534,7 +563,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ fontFamily: SYMBOL_FONT, color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        {r.badge.split('').map((_, i) => <StarSVG key={i} color={r.color} />)}
+                                    </div>
                                 </td>
                                 <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
                                 <td style={obsTdStyle}>{r.desc}</td>

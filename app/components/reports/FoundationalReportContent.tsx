@@ -39,16 +39,18 @@ function Badge({ rating }: { rating: string }) {
 }
 
 // ── Shared table styles ───────────────────────────────────────────────────────
+const FONT_STACK = "'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif";
+
 const obsThStyle: React.CSSProperties = {
-    background: C.navy, color: C.white, fontWeight: 700,
+    background: C.navy, color: C.white, fontWeight: 700, fontFamily: FONT_STACK,
     padding: '9px 14px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)',
 };
 const obsTdStyle: React.CSSProperties = {
-    padding: '8px 14px', border: `1px solid ${C.border}`,
+    padding: '8px 14px', border: `1px solid ${C.border}`, fontFamily: FONT_STACK,
     color: C.text, verticalAlign: 'middle', fontSize: 12,
 };
 const subheadTd: React.CSSProperties = {
-    background: C.subheadBg, color: C.navy, fontWeight: 700,
+    background: C.subheadBg, color: C.navy, fontWeight: 700, fontFamily: FONT_STACK,
     fontSize: 12, padding: '7px 14px', border: `1px solid ${C.border}`,
 };
 
@@ -237,7 +239,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
     }
 
     return (
-        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page" style={{ fontFamily: FONT_STACK, background: '#dde8f5', padding: '24px 12px' }}>
 
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>
@@ -578,12 +580,15 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
 
                 /* Foundational specifics overrides */
                 .foundational-page {
-                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif !important;
                 }
                 .foundational-page .section-title {
-                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif !important;
                     text-transform: uppercase;
                     border-bottom: none !important;
+                }
+                .foundational-page * {
+                    font-family: inherit;
                 }
                 .foundational-page .info-grid {
                     border: 1px solid ${C.border};

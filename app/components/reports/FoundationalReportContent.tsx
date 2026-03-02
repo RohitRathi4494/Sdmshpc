@@ -39,7 +39,7 @@ function Badge({ rating }: { rating: string }) {
 }
 
 // ── Shared table styles ───────────────────────────────────────────────────────
-const FONT_STACK = "'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif";
+const FONT_STACK = "'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif";
 
 const obsThStyle: React.CSSProperties = {
     background: C.navy, color: C.white, fontWeight: 700, fontFamily: FONT_STACK,
@@ -547,6 +547,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </div>
             </Page>
 
+            <link rel="preconnect" href="https://fonts.googleapis.com" />
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" />
             <style>{`
                 ${PRINT_STYLES}
                 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
@@ -580,10 +583,10 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
 
                 /* Foundational specifics overrides */
                 .foundational-page {
-                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif !important;
+                    font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif !important;
                 }
                 .foundational-page .section-title {
-                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', 'Arial Unicode MS', Arial, sans-serif !important;
+                    font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif !important;
                     text-transform: uppercase;
                     border-bottom: none !important;
                 }

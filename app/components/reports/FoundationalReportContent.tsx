@@ -152,7 +152,7 @@ function Page({ children, showHeader = false }: { children: React.ReactNode; sho
             boxSizing: 'border-box', position: 'relative'
         }}>
             {showHeader ? <SchoolHeader /> : <GoldBar />}
-            <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
+            <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
                 {children}
             </div>
         </div>
@@ -233,7 +233,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
     }
 
     return (
-        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
 
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>
@@ -566,10 +566,10 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
 
                 /* Foundational specifics overrides */
                 .foundational-page {
-                    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
                 }
                 .foundational-page .section-title {
-                    font-family: 'Nunito', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
                     text-transform: uppercase;
                     border-bottom: none !important;
                 }

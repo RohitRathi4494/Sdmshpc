@@ -96,7 +96,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
     return (
         <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#dde8f5', padding: '24px 12px' }}>
             <div className="print-page" style={{
-                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
@@ -202,7 +202,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
             {/* ---> PAGE BREAK <--- */}
             <div className="print-page page-break" style={{
-                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
@@ -382,7 +382,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
             {/* ---> PAGE BREAK <--- */}
             <div className="print-page page-break" style={{
-                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
@@ -785,6 +785,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 box-shadow: none !important; 
                 border-radius: 0 !important;
                 width: 100% !important; 
+                max-width: 100% !important;
                 min-height: auto !important;
                 display: block !important;
                 overflow: visible !important;

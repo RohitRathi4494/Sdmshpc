@@ -257,7 +257,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                                 <tr>
                                     <td className="g-label">Roll No.:</td>
                                     <td className="g-input">{student.roll_no}</td>
-                                    <td className="g-label" style={{ width: 90 }}>Adm No.:</td>
+                                    <td className="g-label" style={{ width: 90, background: C.paleBg, textAlign: 'center' }}>Adm No.:</td>
                                     <td className="g-input" style={{ width: '30%' }}>{student.admission_no}</td>
                                 </tr>
                                 <tr>
@@ -595,20 +595,22 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     font-family: inherit;
                 }
                 .foundational-page .g-label {
-                    background: ${C.rowEven};
+                    background: ${C.paleBg};
                     font-weight: 700;
                     color: ${C.navy};
-                    padding: 6px 12px;
+                    padding: 12px 16px;
                     border-bottom: 1px solid ${C.border};
                     border-right: 1px solid ${C.border};
                     vertical-align: middle;
+                    font-size: 11.5px;
                 }
                 .foundational-page .g-input {
-                    background: ${C.rowOdd};
+                    background: ${C.white};
                     color: ${C.text};
-                    padding: 6px 12px;
+                    padding: 12px 16px;
                     border-bottom: 1px solid ${C.border};
                     vertical-align: middle;
+                    font-size: 11.5px;
                 }
                 .foundational-page tr:last-child .g-label,
                 .foundational-page tr:last-child .g-input {

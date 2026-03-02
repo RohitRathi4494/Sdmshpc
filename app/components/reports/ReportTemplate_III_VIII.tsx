@@ -577,87 +577,45 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <GoldBar />
                 <div style={{ padding: '22px 28px 28px' }}>
-                    {/* GRADING FRAMEWORK */}
-                    <div className="grading-section">
-                        <h3>Assessment & Grading Framework</h3>
-                        <div className="grading-grid">
-                            <div className="grading-cell grading-header">Grade</div>
-                            <div className="grading-cell grading-header">Marks Range in %</div>
-                            <div className="grading-cell grading-header">Achievement Level</div>
+                    {/* EVALUATION LEVELS */}
+                    <div className="section compact-section">
+                        <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
+                        <table className="compact-table">
+                            <tbody>
+                                <tr>
+                                    <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                    <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ fontWeight: 700 }}>B</td>
+                                    <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ fontWeight: 700 }}>C</td>
+                                    <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
 
-                            <div className="grading-cell grade-label">A1</div>
-                            <div className="grading-cell grade-range">91-100</div>
-                            <div className="grading-cell">Consistently produces high-quality, innovative work; demonstrates comprehensive conceptual understanding, critical and creative thinking, and independent application of knowledge in complex situations.</div>
-
-                            <div className="grading-cell grade-label">A2</div>
-                            <div className="grading-cell grade-range">81 – 90</div>
-                            <div className="grading-cell">Produces high-quality work; shows extensive understanding of concepts and applies learning independently in familiar and unfamiliar situations.</div>
-
-                            <div className="grading-cell grade-label">B1</div>
-                            <div className="grading-cell grade-range">71 – 80</div>
-                            <div className="grading-cell">Produces generally high-quality work; demonstrates secure understanding and applies knowledge with occasional support.</div>
-
-                            <div className="grading-cell grade-label">B2</div>
-                            <div className="grading-cell grade-range">61 – 70</div>
-                            <div className="grading-cell">Produces good quality work; shows basic understanding and requires support in unfamiliar situations.</div>
-
-                            <div className="grading-cell grade-label">C1</div>
-                            <div className="grading-cell grade-range">51 – 60</div>
-                            <div className="grading-cell">Produces acceptable work; shows basic understanding with gaps and requires regular support.</div>
-
-                            <div className="grading-cell grade-label">C2</div>
-                            <div className="grading-cell grade-range">41 – 50</div>
-                            <div className="grading-cell">Produces limited quality work; demonstrates significant conceptual gaps and minimal application skills.</div>
-
-                            <div className="grading-cell grade-label">D</div>
-                            <div className="grading-cell grade-range">33 – 40</div>
-                            <div className="grading-cell">Produces very limited work; shows inadequate understanding of concepts.</div>
-
-                            <div className="grading-cell grade-label">E</div>
-                            <div className="grading-cell grade-range">33 & below</div>
-                            <div className="grading-cell">Not yet assessed / Needs improvement</div>
-                        </div>
-
-                        {/* EVALUATION LEVELS */}
-                        <div className="section compact-section">
-                            <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
-                            <table className="compact-table">
-                                <tbody>
-                                    <tr>
-                                        <td style={{ fontWeight: 700, width: '50px' }}>A</td>
-                                        <td style={{ textAlign: 'left' }}>Demonstrates clear understanding of the skill and applies it independently with confidence.</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 700 }}>B</td>
-                                        <td style={{ textAlign: 'left' }}>Demonstrates understanding of the skill but requires time and guidance for consistent performance.</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 700 }}>C</td>
-                                        <td style={{ textAlign: 'left' }}>Requires support to understand and apply the skill effectively.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-
-                        <div className="section compact-section">
-                            <h2 className="section-title">Evaluation Levels: Physical Education</h2>
-                            <table className="compact-table">
-                                <tbody>
-                                    <tr>
-                                        <td style={{ fontWeight: 700, width: '50px' }}>A</td>
-                                        <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 700 }}>B</td>
-                                        <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 700 }}>C</td>
-                                        <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+                    <div className="section compact-section">
+                        <h2 className="section-title">Evaluation Levels: Physical Education</h2>
+                        <table className="compact-table">
+                            <tbody>
+                                <tr>
+                                    <td style={{ fontWeight: 700, width: '50px' }}>A</td>
+                                    <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ fontWeight: 700 }}>B</td>
+                                    <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ fontWeight: 700 }}>C</td>
+                                    <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -828,6 +786,6 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             padding-bottom: 10px !important;
         }
         `}</style>
-        </div>
+        </div >
     );
 }

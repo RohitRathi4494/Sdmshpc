@@ -338,27 +338,8 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         All About Me
                     </h3>
                 </div>
-                <div style={{ marginTop: 4 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
-                        <thead>
-                            <tr>
-                                <th style={{ ...obsThStyle, textAlign: 'left' }}>My favourite things to do</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {FAVOURITE_THINGS_FIELDS.map((f, ri) => (
-                                <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven, height: 35 }}>
-                                    <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 12 }}>
-                                        {f.label} <span style={{ marginLeft: 8 }}>{getAnyText(f.key) || <span style={{ color: '#ccc' }}>________________________________</span>}</span>
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-
                 {/* My Age + My Best Friends */}
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, marginTop: 10 }}>
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 14, margin: '8px 0' }}>
                     {/* My Age */}
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>My Age</div>
@@ -396,6 +377,25 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             )}
                         </div>
                     </div>
+                </div>
+
+                <div style={{ marginTop: 4 }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
+                        <thead>
+                            <tr>
+                                <th style={{ ...obsThStyle, textAlign: 'left' }}>My favourite things to do</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {FAVOURITE_THINGS_FIELDS.map((f, ri) => (
+                                <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven, height: 35 }}>
+                                    <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 12 }}>
+                                        {f.label} <span style={{ marginLeft: 8 }}>{getAnyText(f.key) || <span style={{ color: '#ccc' }}>________________________________</span>}</span>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
             </Page>
 

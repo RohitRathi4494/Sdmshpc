@@ -111,7 +111,7 @@ function DomainTable({ domainKey, ratings, rowHeight, tableHeader }: { domainKey
                 const rt2 = ratings[`TERM2:${domainKey}:${sub.key}`] || '';
                 rows.push(
                     <tr key={sub.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid', height: rowHeight }}>
-                        <td style={{ ...obsTdStyle, paddingLeft: 24, width: '68%' }}>{sub.label}</td>
+                        <td style={{ ...obsTdStyle, paddingLeft: 24, width: '68%', textAlign: 'left' }}>{sub.label}</td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                         <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
                     </tr>
@@ -122,7 +122,7 @@ function DomainTable({ domainKey, ratings, rowHeight, tableHeader }: { domainKey
             const rt2 = ratings[`TERM2:${domainKey}:${sec.key}`] || '';
             rows.push(
                 <tr key={sec.key} style={{ background: i++ % 2 === 0 ? C.rowOdd : C.rowEven, pageBreakInside: 'avoid', height: rowHeight }}>
-                    <td style={{ ...obsTdStyle, width: '68%' }}>{sec.label}</td>
+                    <td style={{ ...obsTdStyle, width: '68%', textAlign: 'left', paddingLeft: 24 }}>{sec.label}</td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt1} /></td>
                     <td style={{ ...obsTdStyle, textAlign: 'center' }}><Badge rating={rt2} /></td>
                 </tr>
@@ -476,9 +476,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <tbody>
                         {PARENT_FEEDBACK_FIELDS.map((f, ri) => (
                             <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven, height: 52 }}>
-                                <td style={obsTdStyle}>{f.label}</td>
-                                <td style={{ ...obsTdStyle, fontSize: 11 }}>{getText('TERM1', f.key)}</td>
-                                <td style={{ ...obsTdStyle, fontSize: 11 }}>{getText('TERM2', f.key)}</td>
+                                <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 24 }}>{f.label}</td>
+                                <td style={{ ...obsTdStyle, fontSize: 11, textAlign: 'center' }}>{getText('TERM1', f.key)}</td>
+                                <td style={{ ...obsTdStyle, fontSize: 11, textAlign: 'center' }}>{getText('TERM2', f.key)}</td>
                             </tr>
                         ))}
                     </tbody>

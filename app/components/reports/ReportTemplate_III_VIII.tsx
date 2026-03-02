@@ -101,7 +101,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <SchoolHeader />
-                <div style={{ padding: '22px 28px 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
 
                     {/* GENERAL INFORMATION */}
                     <div className="section" style={{ marginTop: 16 }}>
@@ -205,7 +205,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <GoldBar />
-                <div style={{ padding: '22px 28px 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
                     {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
@@ -385,7 +385,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <GoldBar />
-                <div style={{ padding: '22px 28px 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
 
                     {/* CO-SCHOLASTIC DOMAINS (Continued) */}
                     <div className="section" style={{ marginTop: 0 }}>

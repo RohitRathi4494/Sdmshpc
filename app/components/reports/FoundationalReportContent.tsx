@@ -28,7 +28,7 @@ function Badge({ rating }: { rating: string }) {
     const r = RATINGS.find(x => x.value === rating);
     return (
         <span style={{
-            fontFamily: "'Nunito', sans-serif",
+            fontFamily: "'Segoe UI Symbol', 'Arial Unicode MS', sans-serif",
             color: ratingColor(rating),
             fontWeight: 800,
             fontSize: 16,
@@ -247,45 +247,45 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 {/* GENERAL INFORMATION */}
                 <div className="section" style={{ marginTop: 16 }}>
                     <h2 className="section-title">General Information</h2>
-                    <div className="info-grid">
-                        <div className="info-row">
-                            <div className="info-label">Student Name:</div>
-                            <div className="info-input">{student.student_name}</div>
-                        </div>
-                        <div className="info-row-split">
-                            <div className="info-row-half">
-                                <div className="info-label">Roll No.:</div>
-                                <div className="info-input">{student.roll_no}</div>
-                            </div>
-                            <div className="info-row-compact">
-                                <div className="info-label" style={{ marginLeft: 20 }}>Adm No.:</div>
-                                <div className="info-input">{student.admission_no}</div>
-                            </div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Class / Section:</div>
-                            <div className="info-input">{student.class_name || ''} {student.section_name ? '— ' + student.section_name : ''}</div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Date of Birth:</div>
-                            <div className="info-input">{student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('en-GB') : ''}</div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Address:</div>
-                            <div className="info-input" style={{ minHeight: '40px' }}>{student.address || ''}</div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Phone:</div>
-                            <div className="info-input">{student.phone || ''}</div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Mother/Guardian Name:</div>
-                            <div className="info-input">{student.mother_name || ''}</div>
-                        </div>
-                        <div className="info-row">
-                            <div className="info-label">Father/Guardian Name:</div>
-                            <div className="info-input">{student.father_name || ''}</div>
-                        </div>
+                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, overflow: 'hidden', pageBreakInside: 'avoid' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
+                            <tbody>
+                                <tr>
+                                    <td className="g-label" style={{ width: 140 }}>Student Name:</td>
+                                    <td colSpan={3} className="g-input">{student.student_name}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Roll No.:</td>
+                                    <td className="g-input">{student.roll_no}</td>
+                                    <td className="g-label" style={{ width: 90 }}>Adm No.:</td>
+                                    <td className="g-input" style={{ width: '30%' }}>{student.admission_no}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Class / Section:</td>
+                                    <td colSpan={3} className="g-input">{student.class_name || ''} {student.section_name ? '— ' + student.section_name : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Date of Birth:</td>
+                                    <td colSpan={3} className="g-input">{student.date_of_birth ? new Date(student.date_of_birth).toLocaleDateString('en-GB') : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label" style={{ height: 40 }}>Address:</td>
+                                    <td colSpan={3} className="g-input">{student.address || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Phone:</td>
+                                    <td colSpan={3} className="g-input">{student.phone || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Mother/Guardian Name:</td>
+                                    <td colSpan={3} className="g-input">{student.mother_name || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td className="g-label">Father/Guardian Name:</td>
+                                    <td colSpan={3} className="g-input">{student.father_name || ''}</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
 
@@ -532,7 +532,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ fontFamily: "'Nunito', sans-serif", color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
+                                    <span style={{ fontFamily: "'Segoe UI Symbol', 'Arial Unicode MS', sans-serif", color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
                                 </td>
                                 <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
                                 <td style={obsTdStyle}>{r.desc}</td>
@@ -594,38 +594,25 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 .foundational-page * {
                     font-family: inherit;
                 }
-                .foundational-page .info-grid {
-                    border: 1px solid ${C.border};
-                    border-radius: 6px;
-                    padding: 0;
-                    background: transparent;
-                }
-                .foundational-page .info-row,
-                .foundational-page .info-row-half,
-                .foundational-page .info-row-split {
-                    margin-bottom: 0;
-                    gap: 0;
-                }
-                .foundational-page .info-label {
+                .foundational-page .g-label {
                     background: ${C.rowEven};
-                    padding: 6px 12px;
                     font-weight: 700;
-                    font-size: 11.5px;
-                    color: ${C.navy} !important;
+                    color: ${C.navy};
+                    padding: 6px 12px;
                     border-bottom: 1px solid ${C.border};
                     border-right: 1px solid ${C.border};
-                    display: flex;
-                    align-items: center;
+                    vertical-align: middle;
                 }
-                .foundational-page .info-input {
+                .foundational-page .g-input {
                     background: ${C.rowOdd};
-                    padding: 6px 12px;
-                    font-size: 11.5px;
                     color: ${C.text};
-                    border: none;
+                    padding: 6px 12px;
                     border-bottom: 1px solid ${C.border};
-                    min-height: auto;
-                    border-radius: 0;
+                    vertical-align: middle;
+                }
+                .foundational-page tr:last-child .g-label,
+                .foundational-page tr:last-child .g-input {
+                    border-bottom: none;
                 }
                 .foundational-page .attendance-table th {
                     background: ${C.navy} !important;

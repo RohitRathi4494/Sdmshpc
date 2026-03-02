@@ -448,7 +448,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <tbody>
                         {SELF_ASSESS_FIELDS.map((f, ri) => (
                             <tr key={f.key} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven, height: 44 }}>
-                                <td style={obsTdStyle}>{f.label}</td>
+                                <td style={{ ...obsTdStyle, textAlign: 'left', paddingLeft: 24 }}>{f.label}</td>
                                 <td style={{ ...obsTdStyle, textAlign: 'center', fontSize: 11 }}>{getText('TERM1', f.key)}</td>
                                 <td style={{ ...obsTdStyle, textAlign: 'center', fontSize: 11 }}>{getText('TERM2', f.key)}</td>
                             </tr>

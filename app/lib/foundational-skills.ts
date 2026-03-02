@@ -161,9 +161,9 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
 
 // Self-Assessment prompts (text fields)
 export const SELF_ASSESS_FIELDS = [
-    { key: 'sa_01', label: '1. Activities that I enjoy the most' },
-    { key: 'sa_02', label: '2. Activities that I find difficult to do' },
-    { key: 'sa_03', label: '3. Activities that I enjoy doing with my friends' },
+    { key: 'sa_01', label: 'Activities that I enjoy the most' },
+    { key: 'sa_02', label: 'Activities that I find difficult to do' },
+    { key: 'sa_03', label: 'Activities that I enjoy doing with my friends' },
 ];
 
 // Parent feedback text fields

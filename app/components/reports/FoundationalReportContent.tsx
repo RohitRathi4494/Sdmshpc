@@ -531,20 +531,22 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </table>
 
                 <SectionHeading>Signature with Date</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
-                    <thead>
-                        <tr>
-                            {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (
-                                <th key={h} style={{ ...obsThStyle, width: '25%' }}>{h}</th>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr style={{ background: C.rowEven }}>
-                            {[0, 1, 2, 3].map(i => <td key={i} style={{ ...obsTdStyle, height: 70 }} />)}
-                        </tr>
-                    </tbody>
-                </table>
+                <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, overflow: 'hidden', pageBreakInside: 'avoid' }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
+                        <thead>
+                            <tr>
+                                {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (
+                                    <th key={h} style={{ ...obsThStyle, width: '25%', textTransform: 'uppercase', padding: '10px 14px' }}>{h}</th>
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr style={{ background: C.white }}>
+                                {[0, 1, 2, 3].map(i => <td key={i} style={{ ...obsTdStyle, height: 40 }} />)}
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div style={{ marginTop: 28 }} />
                 <SectionHeading mt={0}>Assessment & Grading Framework</SectionHeading>
                 <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12, marginTop: 8 }}>

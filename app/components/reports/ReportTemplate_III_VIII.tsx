@@ -353,7 +353,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Physical Education</td>
                                     </tr>
                                     {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
@@ -366,7 +366,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Visual Art</td>
                                     </tr>
                                     {['Creative Expression', 'Fine Motor Skills', 'Reflecting, Responding and Analyzing', 'Use of Technique'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
@@ -404,7 +404,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
                                     </tr>
                                     {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
@@ -417,7 +417,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Music</td>
                                     </tr>
                                     {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
@@ -449,7 +449,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Social Skills</td>
                                     </tr>
                                     {['Maintains cordial relationship with peers and adults', 'Demonstrates teamwork and cooperation', 'Respects school property and personal belongings'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
@@ -462,7 +462,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Emotional Skills</td>
                                     </tr>
                                     {['Shows sensitivity towards rules and norms', 'Demonstrates self-regulation of emotions and behaviour', 'Displays empathy and concern for others'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
@@ -475,7 +475,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Work Habit</td>
                                     </tr>
                                     {['Maintains regularity and punctuality', 'Demonstrates responsible citizenship', 'Shows care and concern for the environment'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
@@ -488,7 +488,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Health & Wellness</td>
                                     </tr>
                                     {['Follows good hygiene practices', 'Maintains cleanliness of self and surroundings', 'Demonstrates resilience and positive coping skills'].map(skill => (
-                                        <tr key={skill} style={{ height: 42 }}>
+                                        <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getPersonality(skill, 'Term I')?.grade || ''}</td>
                                             <td>{getPersonality(skill, 'Term II')?.grade || ''}</td>
@@ -560,7 +560,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 </thead>
                                 <tbody>
                                     <tr style={{ background: C.white }}>
-                                        {[0, 1, 2, 3].map(i => <td key={i} style={{ padding: '0 !important', height: '80px', border: `1px solid ${C.navy}` }} />)}
+                                        {[0, 1, 2, 3].map(i => <td key={i} style={{ padding: '0 !important', height: '60px', border: `1px solid ${C.navy}` }} />)}
                                     </tr>
                                 </tbody>
                             </table>

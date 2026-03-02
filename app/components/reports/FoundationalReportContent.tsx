@@ -591,22 +591,27 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 @media print {
                     @page { size: A4 portrait; margin: 0; }
                     html, body { 
-                        margin: 0; 
-                        padding: 0; 
+                        margin: 0 !important; 
+                        padding: 0 !important; 
                         -webkit-print-color-adjust: exact; 
                         print-color-adjust: exact; 
-                        width: 210mm;
-                        height: 297mm;
+                        width: 100% !important;
+                        height: 100% !important;
+                        max-width: 100% !important;
                     }
                     .foundational-page { 
                         padding: 0 !important; 
                         background: white !important;
+                        width: 100% !important;
                     }
                     .print-page { 
+                        width: 100% !important;
+                        max-width: 100% !important;
+                        margin: 0 !important;
                         page-break-after: always; 
                         break-after: page; 
-                        margin-bottom: 0 !important;
                         box-shadow: none !important;
+                        border-radius: 0 !important;
                     }
                     .print-page:last-of-type { 
                         page-break-after: auto; 

@@ -28,6 +28,7 @@ function Badge({ rating }: { rating: string }) {
     const r = RATINGS.find(x => x.value === rating);
     return (
         <span style={{
+            fontFamily: "'Nunito', sans-serif",
             color: ratingColor(rating),
             fontWeight: 800,
             fontSize: 16,
@@ -531,7 +532,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
+                                    <span style={{ fontFamily: "'Nunito', sans-serif", color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
                                 </td>
                                 <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
                                 <td style={obsTdStyle}>{r.desc}</td>

@@ -152,7 +152,7 @@ function Page({ children, showHeader = false }: { children: React.ReactNode; sho
             boxSizing: 'border-box', position: 'relative'
         }}>
             {showHeader ? <SchoolHeader /> : <GoldBar />}
-            <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
+            <div style={{ padding: '22px 28px 28px', fontFamily: "'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text }}>
                 {children}
             </div>
         </div>
@@ -184,7 +184,11 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 if (j.success) {
                     setData(j.data);
                     if (autoPrint) {
-                        setTimeout(() => window.print(), 800);
+                        if (document.fonts && document.fonts.ready) {
+                            document.fonts.ready.then(() => setTimeout(() => window.print(), 500));
+                        } else {
+                            setTimeout(() => window.print(), 1000);
+                        }
                     }
                 } else {
                     setError(j.message || 'Failed to load');
@@ -233,7 +237,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
     }
 
     return (
-        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page" style={{ fontFamily: "'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif", background: '#dde8f5', padding: '24px 12px' }}>
 
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>
@@ -535,7 +539,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
 
             <style>{`
                 ${PRINT_STYLES}
-                @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600;700;800&family=Nunito:wght@400;600;700;800&display=swap');
                 html, body { margin: 0; padding: 0; }
                 @media print {
                     @page { size: A4 portrait; margin: 0; }
@@ -566,10 +570,10 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
 
                 /* Foundational specifics overrides */
                 .foundational-page {
-                    font-family: 'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
                 }
                 .foundational-page .section-title {
-                    font-family: 'Nunito', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
+                    font-family: 'Nunito', 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Segoe UI', Arial, sans-serif !important;
                     text-transform: uppercase;
                     border-bottom: none !important;
                 }

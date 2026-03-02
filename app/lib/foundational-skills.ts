@@ -166,6 +166,13 @@ export const SELF_ASSESS_FIELDS = [
     { key: 'sa_03', label: 'Activities that I enjoy doing with my friends' },
 ];
 
+// Favourite Things to do text fields
+export const FAVOURITE_THINGS_FIELDS = [
+    { key: 'ft_01', label: '1.' },
+    { key: 'ft_02', label: '2.' },
+    { key: 'ft_03', label: '3.' },
+];
+
 // Parent feedback text fields
 export const PARENT_FEEDBACK_FIELDS = [
     { key: 'pf_01', label: 'My child enjoys participating in…' },

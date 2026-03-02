@@ -28,7 +28,7 @@ function Badge({ rating }: { rating: string }) {
     const r = RATINGS.find(x => x.value === rating);
     return (
         <span style={{
-            fontFamily: "'Nunito', sans-serif",
+            fontFamily: SYMBOL_FONT,
             color: ratingColor(rating),
             fontWeight: 800,
             fontSize: 16,
@@ -38,6 +38,8 @@ function Badge({ rating }: { rating: string }) {
         </span>
     );
 }
+
+const SYMBOL_FONT = '"Segoe UI Emoji", "Segoe UI Symbol", "Apple Color Emoji", "Noto Color Emoji", sans-serif';
 
 // ── Shared table styles ───────────────────────────────────────────────────────
 const FONT_STACK = "'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif";
@@ -347,7 +349,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     <div style={{ border: `1px solid ${C.border}`, borderRadius: 8, overflow: 'hidden', pageBreakInside: 'avoid' }}>
                         <div style={{ background: C.navy, color: C.white, fontWeight: 700, fontSize: 12, padding: '6px 14px' }}>My Age</div>
                         <div style={{ background: C.rowEven, padding: '12px 14px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: 70 }}>
-                            <div style={{ fontSize: 26, marginBottom: 2 }}>🎂</div>
+                            <div style={{ fontSize: 26, marginBottom: 2, fontFamily: SYMBOL_FONT }}>🎂</div>
                             <div style={{ fontSize: 12, color: C.navy, display: 'flex', alignItems: 'center', gap: 6 }}>
                                 I am
                                 <span style={{ display: 'inline-block', borderBottom: `2px solid ${C.gold}`, minWidth: 40, textAlign: 'center', fontWeight: 800, fontSize: 15 }}>
@@ -365,7 +367,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                                 <div style={{ fontSize: 12, color: C.navy, lineHeight: 1.5, padding: '2px 8px' }}>
                                     {getAnyText('gi_best_friend').split('\n').map((line, i) => (
                                         <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                                            <span style={{ color: C.gold, fontSize: 14 }}>●</span>
+                                            <span style={{ color: C.gold, fontSize: 14, fontFamily: SYMBOL_FONT }}>●</span>
                                             <span style={{ fontWeight: 600 }}>{line}</span>
                                         </div>
                                     ))}
@@ -373,7 +375,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             ) : (
                                 [1, 2, 3].map(n => (
                                     <div key={n} style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
-                                        <span style={{ color: C.gold, fontSize: 14 }}>●</span>
+                                        <span style={{ color: C.gold, fontSize: 14, fontFamily: SYMBOL_FONT }}>●</span>
                                         <div style={{ flex: 1, borderBottom: `1px solid ${C.border}`, height: 16 }} />
                                     </div>
                                 ))
@@ -532,7 +534,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ fontFamily: "'Nunito', sans-serif", color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
+                                    <span style={{ fontFamily: SYMBOL_FONT, color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
                                 </td>
                                 <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
                                 <td style={obsTdStyle}>{r.desc}</td>
@@ -590,9 +592,6 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     font-family: 'Noto Sans Devanagari', 'Nirmala UI', 'Mangal', 'Arial Unicode MS', 'Nunito', 'Segoe UI', Arial, sans-serif !important;
                     text-transform: uppercase;
                     border-bottom: none !important;
-                }
-                .foundational-page * {
-                    font-family: inherit;
                 }
                 .foundational-page .g-label {
                     background: ${C.paleBg};

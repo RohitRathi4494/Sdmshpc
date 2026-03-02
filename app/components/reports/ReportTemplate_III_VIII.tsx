@@ -54,6 +54,10 @@ function SchoolHeader() {
     );
 }
 
+function GoldBar() {
+    return <div style={{ height: 4, background: `linear-gradient(90deg, ${C.gold}, ${C.goldLight}, ${C.gold})` }} />;
+}
+
 export default function ReportTemplate_III_VIII({ reportData }: { reportData: ReportData }) {
     if (!reportData) return null;
 
@@ -202,7 +206,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
-                <SchoolHeader />
+                <GoldBar />
                 <div style={{ padding: '22px 28px 28px' }}>
                     {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
@@ -505,7 +509,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
-                <SchoolHeader />
+                <GoldBar />
                 <div style={{ padding: '22px 28px 28px' }}>
                     {/* FEEDBACK SECTIONS */}
                     <div className="section">
@@ -546,21 +550,17 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Signature With Date</SectionHeading>
                         <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
-                            <table className="foundational-table" style={{ tableLayout: 'fixed' }}>
+                            <table className="foundational-table" style={{ tableLayout: 'fixed', borderCollapse: 'collapse', width: '100%', fontSize: '11.5px' }}>
                                 <thead>
                                     <tr>
-                                        <th style={{ width: '25%' }}>Parent / Guardian</th>
-                                        <th style={{ width: '25%' }}>Class Teacher</th>
-                                        <th style={{ width: '25%' }}>Block Incharge</th>
-                                        <th style={{ width: '25%' }}>Principal</th>
+                                        {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (
+                                            <th key={h} style={{ width: '25%', textTransform: 'uppercase', padding: '10px 14px', background: C.navy, color: C.white, textAlign: 'center', fontWeight: 600, border: `1px solid ${C.navy}` }}>{h}</th>
+                                        ))}
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td style={{ padding: '30px 6px !important' }}></td>
-                                        <td style={{ padding: '30px 6px !important' }}></td>
-                                        <td style={{ padding: '30px 6px !important' }}></td>
-                                        <td style={{ padding: '30px 6px !important' }}></td>
+                                    <tr style={{ background: C.white }}>
+                                        {[0, 1, 2, 3].map(i => <td key={i} style={{ padding: '0 !important', height: '40px', border: `1px solid ${C.navy}` }} />)}
                                     </tr>
                                 </tbody>
                             </table>
@@ -577,7 +577,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
-                <SchoolHeader />
+                <GoldBar />
                 <div style={{ padding: '22px 28px 28px' }}>
                     {/* GRADING FRAMEWORK */}
                     <div className="grading-section">

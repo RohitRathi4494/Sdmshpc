@@ -511,13 +511,13 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     </thead>
                     <tbody>
                         {[
-                            { badge: 'A', bg: C.tagA, level: 'Advanced', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
-                            { badge: 'B', bg: C.tagB, level: 'Age Appropriate', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
-                            { badge: 'C', bg: C.tagC, level: 'Getting There', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
+                            { badge: '★★★', color: C.tagA, level: 'Advanced', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
+                            { badge: '★★', color: C.tagB, level: 'Age Appropriate', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
+                            { badge: '★', color: C.tagC, level: 'Getting There', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
-                                    <span style={{ background: r.bg, color: '#fff', borderRadius: 4, padding: '2px 9px', fontWeight: 700, fontSize: 12 }}>{r.badge}</span>
+                                    <span style={{ color: r.color, fontWeight: 800, fontSize: 16, letterSpacing: 2 }}>{r.badge}</span>
                                 </td>
                                 <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
                                 <td style={obsTdStyle}>{r.desc}</td>

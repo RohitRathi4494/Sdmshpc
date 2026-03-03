@@ -97,13 +97,13 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#dde8f5', padding: '24px 12px' }}>
             <div className="print-page" style={{
                 width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden', padding: '0 12mm 16px',
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <div style={{ marginTop: 24 }}>
                     <SchoolHeader />
                 </div>
-                <div style={{ padding: '22px 0 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
 
                     {/* GENERAL INFORMATION */}
                     <div className="section" style={{ marginTop: 16 }}>
@@ -203,11 +203,11 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             {/* ---> PAGE BREAK <--- */}
             <div className="print-page page-break" style={{
                 width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden', padding: '0 12mm 16px',
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <GoldBar />
-                <div style={{ padding: '22px 0 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
                     {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
@@ -383,11 +383,11 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             {/* ---> PAGE BREAK <--- */}
             <div className="print-page page-break" style={{
                 width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden', padding: '0 12mm 16px',
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <GoldBar />
-                <div style={{ padding: '22px 0 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
 
                     {/* CO-SCHOLASTIC DOMAINS (Continued) */}
                     <div className="section" style={{ marginTop: 0 }}>
@@ -574,11 +574,11 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             {/* ---> PAGE BREAK <--- */}
             <div className="print-page page-break" style={{
                 width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden', padding: '0 12mm 16px',
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <GoldBar />
-                <div style={{ padding: '22px 0 28px' }}>
+                <div style={{ padding: '22px 14px 28px' }}>
                     {/* EVALUATION LEVELS */}
                     <div className="section compact-section">
                         <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
@@ -748,7 +748,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }
             .foundational-page, .print-page { 
                 background: white !important; 
-                padding: 10mm 12mm !important; 
+                padding: 0 !important; 
                 margin: 0 !important; 
                 box-shadow: none !important; 
                 border-radius: 0 !important;

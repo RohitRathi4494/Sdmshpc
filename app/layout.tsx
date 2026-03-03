@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-    title: "School ERP - SDMS EduPulse",
+    title: "SDMS EduPulse",
     description: "Next-gen School ERP with Holistic Progress Card",
 };
 

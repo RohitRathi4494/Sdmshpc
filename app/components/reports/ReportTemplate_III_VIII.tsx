@@ -100,9 +100,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
-                <div style={{ marginTop: 24 }}>
-                    <SchoolHeader />
-                </div>
+                <SchoolHeader />
                 <div style={{ padding: '22px 14px 28px' }}>
 
                     {/* GENERAL INFORMATION */}

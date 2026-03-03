@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { ApiClient } from '@/app/lib/api-client';
 import { useRouter } from 'next/navigation';
+import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 
 export default function TeacherDashboard() {
     const [classes, setClasses] = useState<any[]>([]);
@@ -118,28 +119,37 @@ export default function TeacherDashboard() {
                                     </div>
                                 </div>
 
-                                <div className="pt-4 border-t border-gray-100">
-                                    <p className="text-gray-500 text-sm mb-2 font-medium">Cumulative Reports (Excel)</p>
-                                    {cls.sections?.map((sec: any) => (
-                                        <div key={sec.id} className="flex flex-col gap-2 mb-2 p-2 bg-gray-50 rounded">
-                                            <span className="text-xs text-gray-500 font-semibold">{sec.section_name} Section</span>
-                                            <div className="flex gap-2">
-                                                <button
-                                                    onClick={() => {
-                                                        const termParam = selectedTerm ? `&term=${encodeURIComponent(selectedTerm)}` : '';
-                                                        handleDownload(
-                                                            `/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}${termParam}`,
-                                                            `scholastic_${cls.class_name}_${sec.section_name}${selectedTerm ? '_' + selectedTerm.replace(' ', '') : ''}.xlsx`
-                                                        );
-                                                    }}
-                                                    className="w-full text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
-                                                >
-                                                    Scholastic
-                                                </button>
-                                            </div>
+                                {(() => {
+                                    const template = getTemplateForClass(cls.class_name);
+                                    const showScholastic = template !== ReportTemplate.NURSERY && template !== ReportTemplate.LKG_UKG && template !== ReportTemplate.I_II;
+
+                                    if (!showScholastic) return null;
+
+                                    return (
+                                        <div className="pt-4 border-t border-gray-100">
+                                            <p className="text-gray-500 text-sm mb-2 font-medium">Cumulative Reports (Excel)</p>
+                                            {cls.sections?.map((sec: any) => (
+                                                <div key={sec.id} className="flex flex-col gap-2 mb-2 p-2 bg-gray-50 rounded">
+                                                    <span className="text-xs text-gray-500 font-semibold">{sec.section_name} Section</span>
+                                                    <div className="flex gap-2">
+                                                        <button
+                                                            onClick={() => {
+                                                                const termParam = selectedTerm ? `&term=${encodeURIComponent(selectedTerm)}` : '';
+                                                                handleDownload(
+                                                                    `/api/reports/cumulative/scholastic?class_id=${cls.id}&section_id=${sec.id}${termParam}`,
+                                                                    `scholastic_${cls.class_name}_${sec.section_name}${selectedTerm ? '_' + selectedTerm.replace(' ', '') : ''}.xlsx`
+                                                                );
+                                                            }}
+                                                            className="w-full text-xs bg-green-600 text-white py-1.5 rounded hover:bg-green-700 transition"
+                                                        >
+                                                            Scholastic
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
+                                    );
+                                })()}
                             </div>
                         </div>
                     ))}

@@ -547,8 +547,8 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* SIGNATURE SECTION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Signature With Date</SectionHeading>
-                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
-                            <table className="foundational-table" style={{ tableLayout: 'fixed', borderCollapse: 'collapse', width: '100%', fontSize: '11.5px' }}>
+                        <div style={{ marginTop: 8 }}>
+                            <table className="foundational-table" style={{ tableLayout: 'fixed', borderCollapse: 'collapse', width: '100%', fontSize: '11.5px', border: `1px solid ${C.navy}` }}>
                                 <thead>
                                     <tr>
                                         {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (

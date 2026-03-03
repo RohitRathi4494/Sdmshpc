@@ -106,40 +106,40 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* GENERAL INFORMATION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading mt={0}>General Information</SectionHeading>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, borderRadius: 6, overflow: 'hidden', fontSize: 13, background: C.white }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 13, background: C.white }}>
                             <tbody>
                                 <tr>
-                                    <td style={{ width: '22%', background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Student Name:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
+                                    <td style={{ width: '22%', background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Student Name:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Roll No.:</td>
-                                    <td style={{ width: '28%', padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
-                                    <td style={{ width: '15%', background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Adm No.:</td>
-                                    <td style={{ width: '35%', padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Roll No.:</td>
+                                    <td style={{ width: '28%', padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
+                                    <td style={{ width: '15%', background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Adm No.:</td>
+                                    <td style={{ width: '35%', padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Class / Section:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Class / Section:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Date of Birth:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Date of Birth:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Address:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Address:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Phone:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Phone:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.border}`, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.border}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '10px 12px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.border}`, textAlign: 'left' }}>Father/Guardian Name:</td>
+                                    <td style={{ background: C.rowEven, padding: '10px 12px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Father/Guardian Name:</td>
                                     <td colSpan={3} style={{ padding: '10px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
                                 </tr>
                             </tbody>
@@ -209,7 +209,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
-                        <div style={{ overflowX: 'auto', borderRadius: '4px', border: `1px solid ${C.navy}` }}>
+                        <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table">
                                 <thead>
                                     <tr>
@@ -333,7 +333,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* CO-SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Co-Scholastic Domains</SectionHeading>
-                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
+                        <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table">
                                 <thead>
                                     <tr>
@@ -389,7 +389,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
                     {/* CO-SCHOLASTIC DOMAINS (Continued) */}
                     <div className="section" style={{ marginTop: 0 }}>
-                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden', borderTop: 'none' }}>
+                        <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table">
                                 <tbody style={{ pageBreakInside: 'avoid' }}>
                                     <tr style={{ visibility: 'collapse' }}>
@@ -429,7 +429,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* PERSONALITY DEVELOPMENT SKILLS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Personality Development Skills</SectionHeading>
-                        <div style={{ borderRadius: '4px', border: `1px solid ${C.navy}`, overflow: 'hidden' }}>
+                        <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table">
                                 <thead>
                                     <tr>
@@ -675,7 +675,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-attendance td {
             padding: 12px 6px !important;
-            border: 1px solid ${C.border} !important;
+            border: 1px solid ${C.navy} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
             font-size: 13px !important;
@@ -687,6 +687,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         .foundational-table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid ${C.navy} !important;
         }
         .foundational-table th {
             background: ${C.navy} !important;
@@ -704,7 +705,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-table td {
             padding: 6px 10px !important;
-            border: 1px solid ${C.border} !important;
+            border: 1px solid ${C.navy} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
             font-size: 11px !important;

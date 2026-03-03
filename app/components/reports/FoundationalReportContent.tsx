@@ -78,12 +78,12 @@ const obsThStyle: React.CSSProperties = {
     padding: '9px 14px', textAlign: 'center', border: '1px solid rgba(255,255,255,0.15)',
 };
 const obsTdStyle: React.CSSProperties = {
-    padding: '8px 14px', border: `1px solid ${C.border}`, fontFamily: FONT_STACK,
+    padding: '8px 14px', border: `1px solid ${C.navy}`, fontFamily: FONT_STACK,
     color: C.text, verticalAlign: 'middle', fontSize: 12,
 };
 const subheadTd: React.CSSProperties = {
     background: C.subheadBg, color: C.navy, fontWeight: 700, fontFamily: FONT_STACK,
-    fontSize: 12, padding: '7px 14px', border: `1px solid ${C.border}`,
+    fontSize: 12, padding: '7px 14px', border: `1px solid ${C.navy}`,
 };
 
 // ── Section Heading ───────────────────────────────────────────────────────────
@@ -164,7 +164,7 @@ function DomainTable({ domainKey, ratings, rowHeight, tableHeader }: { domainKey
         }
     });
     return (
-        <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5, marginBottom: 6, pageBreakInside: 'avoid' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12.5, marginBottom: 6, pageBreakInside: 'avoid' }}>
             <thead>
                 <tr>
                     <th style={{ ...obsThStyle, textAlign: 'left', width: '68%' }}>{tableHeader || 'Skills'}</th>
@@ -278,8 +278,8 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 {/* GENERAL INFORMATION */}
                 <div className="section" style={{ marginTop: 16 }}>
                     <h2 className="section-title">General Information</h2>
-                    <div style={{ border: `1px solid ${C.border}`, borderRadius: 6, overflow: 'hidden', pageBreakInside: 'avoid' }}>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 11.5 }}>
+                    <div style={{ pageBreakInside: 'avoid' }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 11.5 }}>
                             <tbody>
                                 <tr>
                                     <td className="g-label" style={{ width: 140 }}>Student Name:</td>
@@ -323,7 +323,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 {/* ATTENDANCE RECORD */}
                 <div className="section" style={{ marginTop: 10 }}>
                     <h2 className="section-title">Attendance Record</h2>
-                    <table className="attendance-table">
+                    <table className="attendance-table" style={{ borderCollapse: 'collapse', border: `1px solid ${C.navy}` }}>
                         <thead>
                             <tr>
                                 <th style={{ width: '15%' }}>Months</th>
@@ -414,7 +414,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </div>
 
                 <div style={{ marginTop: 4 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
+                    <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12.5 }}>
                         <thead>
                             <tr>
                                 <th style={{ ...obsThStyle, textAlign: 'left' }}>My favourite things to do</th>
@@ -483,7 +483,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 <p style={{ fontSize: 12, color: C.muted, fontStyle: 'italic', marginBottom: 8 }}>
                     (Self reflection on inter-disciplinary activity done by the child)
                 </p>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12.5 }}>
                     <thead>
                         <tr>
                             <th style={{ ...obsThStyle, textAlign: 'left', width: '60%' }}></th>
@@ -511,7 +511,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </div>
 
                 <SectionHeading>Parent's Feedback</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12.5 }}>
                     <thead>
                         <tr>
                             <th style={{ ...obsThStyle, textAlign: 'left', width: '55%' }}>Aspect</th>
@@ -531,7 +531,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </table>
 
                 <SectionHeading>Signature with Date</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12.5 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12.5 }}>
                     <thead>
                         <tr>
                             {['Parent / Guardian', 'Class Teacher', 'Block Incharge', 'Principal'].map((h) => (
@@ -547,7 +547,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 </table>
                 <div style={{ marginTop: 28 }} />
                 <SectionHeading mt={0}>Assessment & Grading Framework</SectionHeading>
-                <table style={{ width: '100%', borderCollapse: 'collapse', outline: `1px solid ${C.border}`, fontSize: 12, marginTop: 8 }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12, marginTop: 8 }}>
                     <thead>
                         <tr>
                             <th style={{ ...obsThStyle, width: '12%' }}>Rating</th>
@@ -634,8 +634,8 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     font-weight: 700;
                     color: ${C.navy};
                     padding: 8px 12px;
-                    border-bottom: 1px solid ${C.border};
-                    border-right: 1px solid ${C.border};
+                    border-bottom: 1px solid ${C.navy};
+                    border-right: 1px solid ${C.navy};
                     vertical-align: middle;
                     text-align: left;
                     font-size: 11.5px;
@@ -644,7 +644,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                     background: ${C.white};
                     color: ${C.text};
                     padding: 8px 12px;
-                    border-bottom: 1px solid ${C.border};
+                    border-bottom: 1px solid ${C.navy};
                     vertical-align: middle;
                     text-align: left;
                     font-size: 11.5px;
@@ -667,7 +667,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 }
                 .foundational-page .attendance-table td {
                     padding: 8px 3px !important;
-                    border: 1px solid ${C.border};
+                    border: 1px solid ${C.navy};
                     color: ${C.text};
                     vertical-align: middle;
                     font-size: 11px;

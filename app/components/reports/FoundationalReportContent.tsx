@@ -245,7 +245,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
     const getText = (term: string, key: string) => texts[`${term}:${key}`] || '';
     const getAnyText = (key: string) => texts[`TERM2:${key}`] || texts[`TERM1:${key}`] || '';
 
-    const MONTHS = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+    const MONTHS = ['Apr', 'May', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
     const attMap: Record<string, { present: number; total: number }> = {};
     attendance.forEach((a: any) => { attMap[a.month] = { present: Number(a.present), total: Number(a.total) }; });
 
@@ -358,7 +358,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                             </tr>
                             <tr>
                                 <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
-                                <td colSpan={13} className="input-cell" style={{ textAlign: 'left', paddingLeft: '8px' }}>
+                                <td colSpan={12} className="input-cell" style={{ textAlign: 'left', paddingLeft: '8px' }}>
                                     {getAnyText('gi_attendance_reason')}
                                 </td>
                             </tr>

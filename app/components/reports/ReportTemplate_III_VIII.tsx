@@ -75,7 +75,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.marks ?? ''}</td>;
     };
 
-    const months = ['Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+    const months = ['Apr', 'May', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
     const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
 
     const getCoScholastic = (subSkill: string, term: string) => {
@@ -185,7 +185,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                     </tr>
                                     <tr>
                                         <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
-                                        <td colSpan={13} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
+                                        <td colSpan={12} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
                                             {reportData.attendance?.[0]?.reason_for_low_attendance || ''}
                                         </td>
                                     </tr>

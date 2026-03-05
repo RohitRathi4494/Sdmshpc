@@ -77,7 +77,7 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
     return (
         <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#dde8f5', padding: '16px 12px' }}>
             <div className="print-page page-break" style={{
-                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto', background: C.white,
+                width: '100%', maxWidth: '210mm', margin: '0 auto', background: C.white,
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>

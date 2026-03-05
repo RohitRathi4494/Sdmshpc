@@ -77,7 +77,7 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
     return (
         <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: C.white, padding: '0' }}>
             <div className="print-page page-break" style={{
-                width: '100%', maxWidth: '210mm', minHeight: '290mm', margin: '0 auto', background: C.white,
+                width: '100%', maxWidth: '210mm', margin: '0 auto', background: C.white,
                 borderRadius: 4, overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>

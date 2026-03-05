@@ -53,7 +53,7 @@ export async function POST(request: Request, context: { params: Promise<{ studen
             const studentName = reportData.student.student_name?.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_') || `Student_${student_id}`;
             const assessment = report_type ? `_${report_type.replace(/\s+/g, '_')}` : '';
 
-            filename = `Report_Card_${className}_${sectionName}${assessment}_${studentName}.pdf`;
+            filename = `${studentName}_${className}_${sectionName}${assessment}.pdf`;
         }
 
         // Return PDF Stream

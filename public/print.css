@@ -167,16 +167,21 @@ th {
     text-align: center;
     font-weight: 600;
     letter-spacing: 0.5px;
-    border: 1px solid #000;
-    /* Black border for print clarity */
     color: white !important;
 }
 
 td {
     padding: 6px;
-    border: 1px solid var(--border-grey);
     background: white;
     text-align: center;
+}
+
+/* Base borders for foundational tables */
+.foundational-table th,
+.foundational-table td,
+.attendance-table th,
+.attendance-table td {
+    border: 1px solid #1B3D6F !important;
 }
 
 td.subject-name {

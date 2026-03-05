@@ -6,6 +6,8 @@ import { ApiClient } from '@/app/lib/api-client';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
+import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
+import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
 
 export default function AdminReportViewPage() {
     const params = useParams();
@@ -13,6 +15,7 @@ export default function AdminReportViewPage() {
     const [reportData, setReportData] = useState<any | null>(null);
     const [loading, setLoading] = useState(true);
     const [generating, setGenerating] = useState(false);
+    const [reportType, setReportType] = useState('FULL_HPC');
     const router = useRouter();
 
     useEffect(() => {
@@ -55,7 +58,7 @@ export default function AdminReportViewPage() {
                     'Content-Type': 'application/json',
                     'Authorization': `Bearer ${token}`
                 },
-                body: JSON.stringify({ academic_year_id: 1 })
+                body: JSON.stringify({ academic_year_id: 1, report_type: reportType })
             });
 
             if (!response.ok) {
@@ -112,10 +115,31 @@ export default function AdminReportViewPage() {
                     </button>
                 </div>
 
+                {reportData && getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII && (
+                    <div className="flex justify-end mb-6 mt-4 no-print">
+                        <select
+                            value={reportType}
+                            onChange={(e) => setReportType(e.target.value)}
+                            className="border border-gray-300 rounded p-2 text-gray-700 shadow-sm focus:ring-blue-500 focus:border-blue-500"
+                        >
+                            <option value="FULL_HPC">Full Year HPC</option>
+                            <option value="PA1">Periodic Assessment 1 (PA1)</option>
+                            <option value="TA1">Terminal Assessment 1 (TA1)</option>
+                            <option value="PA2">Periodic Assessment 2 (PA2)</option>
+                            <option value="TA2">Terminal Assessment 2 (TA2)</option>
+                        </select>
+                    </div>
+                )}
+
                 {(() => {
                     const template = getTemplateForClass(reportData.student?.class_name);
 
                     if (template === ReportTemplate.III_VIII) {
+                        if (reportType === 'PA1' || reportType === 'PA2') {
+                            return <ReportTemplate_III_VIII_Periodic reportData={reportData} reportType={reportType} />;
+                        } else if (reportType === 'TA1' || reportType === 'TA2') {
+                            return <ReportTemplate_III_VIII_Terminal reportData={reportData} reportType={reportType} />;
+                        }
                         return <ReportTemplate_III_VIII reportData={reportData} />;
                     } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
                         return (

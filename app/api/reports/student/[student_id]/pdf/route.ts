@@ -15,9 +15,11 @@ export async function POST(request: Request, context: { params: Promise<{ studen
         }
 
         let academic_year_id;
+        let report_type;
         try {
             const body = await request.json();
             academic_year_id = body.academic_year_id;
+            report_type = body.report_type;
         } catch (e) {
             // Body might be empty
         }
@@ -38,7 +40,7 @@ export async function POST(request: Request, context: { params: Promise<{ studen
         const student_id = parseInt(params.student_id, 10);
 
         // Generate PDF
-        const pdfBuffer = await generatePdf(student_id, Number(academic_year_id));
+        const pdfBuffer = await generatePdf(student_id, Number(academic_year_id), report_type);
 
         // Return PDF Stream
         return new NextResponse(pdfBuffer as any, {

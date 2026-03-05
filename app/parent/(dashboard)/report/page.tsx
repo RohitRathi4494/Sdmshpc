@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
+import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
+import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
 
 // Helper types
 interface ReportData {
@@ -21,6 +23,7 @@ export default function ParentReportPage() {
     const [reportData, setReportData] = useState<ReportData | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [reportType, setReportType] = useState('FULL_HPC');
 
     useEffect(() => {
         const fetchReport = async () => {
@@ -104,7 +107,24 @@ export default function ParentReportPage() {
                         </svg>
                         Back to Dashboard
                     </button>
-                    <div className="font-semibold">View Only Mode</div>
+                    {reportData && getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII ? (
+                        <div className="flex items-center space-x-2">
+                            <span className="text-sm font-semibold">Report Type:</span>
+                            <select
+                                value={reportType}
+                                onChange={(e) => setReportType(e.target.value)}
+                                className="border border-white/30 bg-blue-700/50 rounded py-1 px-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-white"
+                            >
+                                <option value="FULL_HPC">Full Year HPC</option>
+                                <option value="PA1">Periodic Assessment 1 (PA1)</option>
+                                <option value="TA1">Terminal Assessment 1 (TA1)</option>
+                                <option value="PA2">Periodic Assessment 2 (PA2)</option>
+                                <option value="TA2">Terminal Assessment 2 (TA2)</option>
+                            </select>
+                        </div>
+                    ) : (
+                        <div className="font-semibold">View Only Mode</div>
+                    )}
                 </div>
 
                 {/* Report Content Wrapper */}
@@ -113,7 +133,12 @@ export default function ParentReportPage() {
                         const template = getTemplateForClass(reportData.student?.class_name);
 
                         if (template === ReportTemplate.III_VIII) {
-                            return <ReportTemplate_III_VIII reportData={reportData} />;
+                            if (reportType === 'PA1' || reportType === 'PA2') {
+                                return <ReportTemplate_III_VIII_Periodic reportData={reportData as any} reportType={reportType as any} />;
+                            } else if (reportType === 'TA1' || reportType === 'TA2') {
+                                return <ReportTemplate_III_VIII_Terminal reportData={reportData as any} reportType={reportType as any} />;
+                            }
+                            return <ReportTemplate_III_VIII reportData={reportData as any} />;
                         } else {
                             return (
                                 <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">

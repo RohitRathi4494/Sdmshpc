@@ -5,6 +5,8 @@ import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
+import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
+import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 
 interface PrintPageProps {
@@ -14,6 +16,7 @@ interface PrintPageProps {
     searchParams: {
         token?: string;
         academic_year_id?: string;
+        report_type?: string;
     };
 }
 
@@ -43,13 +46,23 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
     const template = getTemplateForClass(reportData.student?.class_name);
 
     if (template === ReportTemplate.III_VIII) {
+        const reportType = searchParams.report_type;
+
+        let TemplateComponent = <ReportTemplate_III_VIII reportData={reportData} />;
+
+        if (reportType === 'PA1' || reportType === 'PA2') {
+            TemplateComponent = <ReportTemplate_III_VIII_Periodic reportData={reportData as any} reportType={reportType as any} />;
+        } else if (reportType === 'TA1' || reportType === 'TA2') {
+            TemplateComponent = <ReportTemplate_III_VIII_Terminal reportData={reportData as any} reportType={reportType as any} />;
+        }
+
         return (
             <html>
                 <head>
                     <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
                 </head>
                 <body className="print-mode bg-white">
-                    <ReportTemplate_III_VIII reportData={reportData} />
+                    {TemplateComponent}
                 </body>
             </html>
         );

@@ -75,60 +75,60 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
     const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
 
     return (
-        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#dde8f5', padding: '16px 12px' }}>
+        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: C.white, padding: '0' }}>
             <div className="print-page page-break" style={{
-                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                width: '100%', maxWidth: '210mm', minHeight: '290mm', margin: '0 auto', background: C.white,
+                borderRadius: 4, overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <SchoolHeader title={reportTitle} />
-                <div style={{ padding: '16px 12px' }}>
+                <div style={{ padding: '12px' }}>
 
                     {/* GENERAL INFORMATION */}
-                    <div className="section" style={{ marginTop: 16 }}>
+                    <div className="section" style={{ marginTop: 8 }}>
                         <SectionHeading mt={0}>General Information</SectionHeading>
                         <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 13, background: C.white }}>
                             <tbody>
                                 <tr>
-                                    <td style={{ width: '22%', background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Student Name:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
+                                    <td style={{ width: '22%', background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Student Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Roll No.:</td>
-                                    <td style={{ width: '28%', padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
-                                    <td style={{ width: '15%', background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Adm No.:</td>
-                                    <td style={{ width: '35%', padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Roll No.:</td>
+                                    <td style={{ width: '28%', padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
+                                    <td style={{ width: '15%', background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Adm No.:</td>
+                                    <td style={{ width: '35%', padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Class / Section:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Class / Section:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Date of Birth:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Date of Birth:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Address:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Address:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Phone:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Phone:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '6px 10px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Father/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '6px 10px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Father/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     {/* ATTENDANCE RECORD */}
-                    <div className="section" style={{ marginTop: 16 }}>
+                    <div className="section" style={{ marginTop: 12 }}>
                         <SectionHeading>Attendance Record ({termName})</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="attendance-table foundational-attendance" style={{ border: `1px solid ${C.navy}` }}>
@@ -181,7 +181,7 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
 
 
                     {/* SCHOLASTIC RECORD */}
-                    <div className="section" style={{ marginTop: 24 }}>
+                    <div className="section" style={{ marginTop: 12 }}>
                         <SectionHeading>Scholastic Performance</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}` }}>

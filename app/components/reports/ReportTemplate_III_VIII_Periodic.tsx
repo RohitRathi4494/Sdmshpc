@@ -182,7 +182,7 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
 
                     {/* SCHOLASTIC RECORD */}
                     <div className="section" style={{ marginTop: 24 }}>
-                        <SectionHeading>Scholastic Performance ({termName})</SectionHeading>
+                        <SectionHeading>Scholastic Performance</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}` }}>
                                 <thead>
@@ -193,19 +193,45 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reportData.subjects?.map((sub: any) => {
-                                        const subject = sub.subject_name;
-                                        const scoreObj = getScholasticScore(subject, 'Periodic Assessment', termName);
-                                        const marks = scoreObj?.marks ?? '-';
+                                    {(() => {
+                                        let totalMarksObj = 0;
+
+                                        const rows = reportData.subjects?.map((sub: any) => {
+                                            const subject = sub.subject_name;
+                                            const scoreObj = getScholasticScore(subject, 'Periodic Assessment', termName);
+                                            const marks = scoreObj?.marks ?? '-';
+
+                                            if (marks !== '-' && !isNaN(Number(marks))) {
+                                                totalMarksObj += Number(marks);
+                                            }
+
+                                            return (
+                                                <tr key={subject}>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
+                                                    <td style={{ textAlign: 'center', borderRight: `1px solid ${C.navy}` }}>30</td>
+                                                    <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{marks}</td>
+                                                </tr>
+                                            );
+                                        });
+
+                                        const totalMax = (reportData.subjects?.length || 0) * 30;
+                                        const percentage = totalMax > 0 ? ((totalMarksObj / totalMax) * 100).toFixed(2) : '-';
 
                                         return (
-                                            <tr key={subject}>
-                                                <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
-                                                <td style={{ textAlign: 'center', borderRight: `1px solid ${C.navy}` }}>10</td>
-                                                <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{marks}</td>
-                                            </tr>
+                                            <>
+                                                {rows}
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}`, background: C.paleBg }}>Total</td>
+                                                    <td style={{ textAlign: 'center', fontWeight: 700, borderRight: `1px solid ${C.navy}`, background: C.paleBg }}>{totalMax}</td>
+                                                    <td style={{ textAlign: 'center', fontWeight: 700, background: C.paleBg }}>{totalMarksObj}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}`, background: C.subheadBg }}>Percentage</td>
+                                                    <td colSpan={2} style={{ textAlign: 'center', fontWeight: 700, background: C.subheadBg }}>{percentage}%</td>
+                                                </tr>
+                                            </>
                                         );
-                                    })}
+                                    })()}
                                 </tbody>
                             </table>
                         </div>

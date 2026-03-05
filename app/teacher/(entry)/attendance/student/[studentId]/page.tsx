@@ -13,7 +13,7 @@ interface AttendanceRecord {
 }
 
 const MONTHS = [
-    { id: 1, name: 'Apr' }, { id: 2, name: 'May' }, { id: 3, name: 'Jun' },
+    { id: 1, name: 'Apr' }, { id: 2, name: 'May' },
     { id: 4, name: 'Jul' }, { id: 5, name: 'Aug' }, { id: 6, name: 'Sep' },
     { id: 7, name: 'Oct' }, { id: 8, name: 'Nov' }, { id: 9, name: 'Dec' },
     { id: 10, name: 'Jan' }, { id: 11, name: 'Feb' }, { id: 12, name: 'Mar' },

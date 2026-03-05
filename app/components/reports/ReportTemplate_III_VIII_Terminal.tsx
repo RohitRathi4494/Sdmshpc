@@ -194,10 +194,10 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                         <th className="gold-bg">Total</th>
                                     </tr>
                                     <tr>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 10</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 30</th>
                                         <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 5</th>
                                         <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 5</th>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 80</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 60</th>
                                         <th className="gold-bg" style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 100</th>
                                     </tr>
                                 </thead>

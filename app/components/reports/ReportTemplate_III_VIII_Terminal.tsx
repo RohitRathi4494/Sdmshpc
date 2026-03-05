@@ -18,9 +18,9 @@ const C = {
 // ── Section Heading Component ──
 function SectionHeading({ children, mt }: { children: React.ReactNode; mt?: number }) {
     return (
-        <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: `${mt ?? 22}px 0 6px` }}>
-            <div style={{ width: 5, height: 22, background: C.gold, borderRadius: 3, flexShrink: 0 }} />
-            <h3 style={{ fontSize: 14, fontWeight: 800, color: C.navy, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: `${mt ?? 8}px 0 4px` }}>
+            <div style={{ width: 4, height: 18, background: C.gold, borderRadius: 3, flexShrink: 0 }} />
+            <h3 style={{ fontSize: 13, fontWeight: 800, color: C.navy, textTransform: 'uppercase', letterSpacing: 0.5 }}>
                 {children}
             </h3>
         </div>
@@ -75,61 +75,61 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
     const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
 
     return (
-        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: C.white, padding: '0' }}>
+        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 12, color: C.text, background: C.white, padding: '0' }}>
             <div className="print-page page-break" style={{
                 width: '100%', maxWidth: '210mm', margin: '0 auto', background: C.white,
                 borderRadius: 4, overflow: 'hidden',
                 boxSizing: 'border-box', position: 'relative'
             }}>
                 <SchoolHeader title={reportTitle} />
-                <div style={{ padding: '12px' }}>
+                <div style={{ padding: '8px 12px' }}>
 
                     {/* GENERAL INFORMATION */}
-                    <div className="section" style={{ marginTop: 8 }}>
+                    <div className="section" style={{ marginTop: 4 }}>
                         <SectionHeading mt={0}>General Information</SectionHeading>
-                        <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 13, background: C.white }}>
+                        <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12, background: C.white }}>
                             <tbody>
                                 <tr>
-                                    <td style={{ width: '22%', background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Student Name:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
+                                    <td style={{ width: '22%', background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Student Name:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.student_name}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Roll No.:</td>
-                                    <td style={{ width: '28%', padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
-                                    <td style={{ width: '15%', background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Adm No.:</td>
-                                    <td style={{ width: '35%', padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Roll No.:</td>
+                                    <td style={{ width: '28%', padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
+                                    <td style={{ width: '15%', background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Adm No.:</td>
+                                    <td style={{ width: '35%', padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Class / Section:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Class / Section:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Date of Birth:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Date of Birth:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Address:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Address:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Phone:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Phone:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderBottom: `1px solid ${C.navy}`, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Mother/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, borderBottom: `1px solid ${C.navy}`, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '4px 8px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Father/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '4px 8px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '3px 6px', fontWeight: 700, color: C.navy, borderRight: `1px solid ${C.navy}`, textAlign: 'left' }}>Father/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '3px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
 
                     {/* ATTENDANCE RECORD */}
-                    <div className="section" style={{ marginTop: 12 }}>
-                        <SectionHeading>Attendance Record ({termName})</SectionHeading>
+                    <div className="section" style={{ marginTop: 8 }}>
+                        <SectionHeading mt={4}>Attendance Record ({termName})</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="attendance-table foundational-attendance" style={{ border: `1px solid ${C.navy}` }}>
                                 <thead>
@@ -142,15 +142,15 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                 <tbody>
                                     <tr>
                                         <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>No. of Working days</td>
-                                        {months.map(m => <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.working_days || ''}</td>)}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
+                                        {months.map(m => <td key={m} className="input-cell" style={{ padding: '2px 4px', borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.working_days || ''}</td>)}
+                                        <td className="input-cell" style={{ padding: '2px 4px', borderBottom: `1px solid ${C.navy}` }}>
                                             {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0}
                                         </td>
                                     </tr>
                                     <tr>
                                         <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>No. of Days Present</td>
-                                        {months.map(m => <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.days_present || ''}</td>)}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
+                                        {months.map(m => <td key={m} className="input-cell" style={{ padding: '2px 4px', borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.days_present || ''}</td>)}
+                                        <td className="input-cell" style={{ padding: '2px 4px', borderBottom: `1px solid ${C.navy}` }}>
                                             {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0}
                                         </td>
                                     </tr>
@@ -158,9 +158,9 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                         <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>% of attendance</td>
                                         {months.map(m => {
                                             const att = getAttendance(m);
-                                            return <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
+                                            return <td key={m} className="input-cell" style={{ padding: '2px 4px', borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
                                         })}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
+                                        <td className="input-cell" style={{ padding: '2px 4px', borderBottom: `1px solid ${C.navy}` }}>
                                             {(() => {
                                                 const totalW = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0;
                                                 const totalP = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0;
@@ -180,8 +180,8 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                     </div>
 
                     {/* SCHOLASTIC RECORD */}
-                    <div className="section" style={{ marginTop: 12 }}>
-                        <SectionHeading>Scholastic Performance ({termName})</SectionHeading>
+                    <div className="section" style={{ marginTop: 8 }}>
+                        <SectionHeading mt={4}>Scholastic Performance ({termName})</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}` }}>
                                 <thead>
@@ -194,11 +194,11 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                         <th className="gold-bg">Total</th>
                                     </tr>
                                     <tr>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 30</th>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 5</th>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 5</th>
-                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 60</th>
-                                        <th className="gold-bg" style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '4px' }}>Max: 100</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 30</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 5</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 5</th>
+                                        <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 60</th>
+                                        <th className="gold-bg" style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 100</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -228,12 +228,12 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
 
                                             return (
                                                 <tr key={subject}>
-                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
-                                                    <td className="input-cell">{paVal}</td>
-                                                    <td className="input-cell">{seaVal}</td>
-                                                    <td className="input-cell">{iaVal}</td>
-                                                    <td className="input-cell">{taVal}</td>
-                                                    <td className="input-cell" style={{ fontWeight: 'bold' }}>{totalVal}</td>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{paVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{seaVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{iaVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{taVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 'bold' }}>{totalVal}</td>
                                                 </tr>
                                             );
                                         });
@@ -245,13 +245,13 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                             <>
                                                 {rows}
                                                 <tr>
-                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Total</td>
-                                                    <td colSpan={4} style={{ textAlign: 'center', fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>{totalMax}</td>
-                                                    <td className="input-cell" style={{ fontWeight: 700 }}>{totalMarksObj}</td>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Total</td>
+                                                    <td colSpan={4} style={{ textAlign: 'center', fontWeight: 700, padding: '2px 4px', borderRight: `1px solid ${C.navy}` }}>{totalMax}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{totalMarksObj}</td>
                                                 </tr>
                                                 <tr>
-                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Percentage</td>
-                                                    <td colSpan={5} style={{ textAlign: 'center', fontWeight: 700 }}>{percentage}%</td>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Percentage</td>
+                                                    <td colSpan={5} style={{ textAlign: 'center', padding: '2px 4px', fontWeight: 700 }}>{percentage}%</td>
                                                 </tr>
                                             </>
                                         );

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { verifyAuth, extractToken } from '@/app/lib/auth';
 import { generatePdf } from '@/app/lib/pdf-engine';
+import { getStudentReportData } from '@/app/lib/report-service';
 
 export async function POST(request: Request, context: { params: Promise<{ student_id: string }> }) {
     try {
@@ -42,11 +43,24 @@ export async function POST(request: Request, context: { params: Promise<{ studen
         // Generate PDF
         const pdfBuffer = await generatePdf(student_id, Number(academic_year_id), report_type);
 
+        // Fetch student data for filename
+        const reportData = await getStudentReportData(student_id, Number(academic_year_id));
+        let filename = `Report_Card_${student_id}.pdf`;
+
+        if (reportData && reportData.student) {
+            const className = reportData.student.class_name?.replace(/\s+/g, '_') || 'Class';
+            const sectionName = reportData.student.section_name?.replace(/\s+/g, '_') || 'Sec';
+            const studentName = reportData.student.student_name?.replace(/[^a-zA-Z0-9 ]/g, '').replace(/\s+/g, '_') || `Student_${student_id}`;
+            const assessment = report_type ? `_${report_type.replace(/\s+/g, '_')}` : '';
+
+            filename = `Report_Card_${className}_${sectionName}${assessment}_${studentName}.pdf`;
+        }
+
         // Return PDF Stream
         return new NextResponse(pdfBuffer as any, {
             headers: {
                 'Content-Type': 'application/pdf',
-                'Content-Disposition': `attachment; filename="Report_Card_${student_id}.pdf"`,
+                'Content-Disposition': `attachment; filename="${filename}"`,
             },
         });
 

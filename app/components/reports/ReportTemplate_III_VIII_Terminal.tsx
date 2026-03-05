@@ -202,38 +202,60 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {reportData.subjects?.map((sub: any) => {
-                                        const subject = sub.subject_name;
+                                    {(() => {
+                                        let totalMarksObj = 0;
 
-                                        const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
-                                        const seaScore = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.marks || 0;
-                                        const iaScore = getScholasticScore(subject, 'Internal Assessment', termName)?.marks || 0;
-                                        const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
+                                        const rows = reportData.subjects?.map((sub: any) => {
+                                            const subject = sub.subject_name;
 
-                                        // Handle absent or unentered ('-' or empty string vs 0)
-                                        // We just render marks directly or sum if they are numbers
-                                        const paVal = paScore || '-';
-                                        const seaVal = seaScore || '-';
-                                        const iaVal = iaScore || '-';
-                                        const taVal = taScore || '-';
+                                            const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
+                                            const seaScore = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.marks || 0;
+                                            const iaScore = getScholasticScore(subject, 'Internal Assessment', termName)?.marks || 0;
+                                            const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
 
-                                        let totalVal: number | string = '-';
+                                            const paVal = paScore || '-';
+                                            const seaVal = seaScore || '-';
+                                            const iaVal = iaScore || '-';
+                                            const taVal = taScore || '-';
 
-                                        if (paScore || seaScore || iaScore || taScore) {
-                                            totalVal = Number(paScore || 0) + Number(seaScore || 0) + Number(iaScore || 0) + Number(taScore || 0);
-                                        }
+                                            let totalVal: number | string = '-';
+
+                                            if (paScore || seaScore || iaScore || taScore) {
+                                                const numericTotal = Number(paScore || 0) + Number(seaScore || 0) + Number(iaScore || 0) + Number(taScore || 0);
+                                                totalVal = numericTotal;
+                                                totalMarksObj += numericTotal;
+                                            }
+
+                                            return (
+                                                <tr key={subject}>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
+                                                    <td className="input-cell">{paVal}</td>
+                                                    <td className="input-cell">{seaVal}</td>
+                                                    <td className="input-cell">{iaVal}</td>
+                                                    <td className="input-cell">{taVal}</td>
+                                                    <td className="input-cell" style={{ fontWeight: 'bold' }}>{totalVal}</td>
+                                                </tr>
+                                            );
+                                        });
+
+                                        const totalMax = (reportData.subjects?.length || 0) * 100;
+                                        const percentage = totalMax > 0 ? ((totalMarksObj / totalMax) * 100).toFixed(2) : '-';
 
                                         return (
-                                            <tr key={subject}>
-                                                <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600, borderRight: `1px solid ${C.navy}` }}>{subject}</td>
-                                                <td className="input-cell">{paVal}</td>
-                                                <td className="input-cell">{seaVal}</td>
-                                                <td className="input-cell">{iaVal}</td>
-                                                <td className="input-cell">{taVal}</td>
-                                                <td className="input-cell" style={{ fontWeight: 'bold' }}>{totalVal}</td>
-                                            </tr>
+                                            <>
+                                                {rows}
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Total</td>
+                                                    <td colSpan={4} style={{ textAlign: 'center', fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>{totalMax}</td>
+                                                    <td className="input-cell" style={{ fontWeight: 700 }}>{totalMarksObj}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 700, borderRight: `1px solid ${C.navy}` }}>Percentage</td>
+                                                    <td colSpan={5} style={{ textAlign: 'center', fontWeight: 700 }}>{percentage}%</td>
+                                                </tr>
+                                            </>
                                         );
-                                    })}
+                                    })()}
                                 </tbody>
                             </table>
                         </div>

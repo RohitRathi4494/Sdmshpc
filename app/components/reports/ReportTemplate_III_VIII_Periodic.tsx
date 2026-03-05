@@ -127,57 +127,7 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
                         </table>
                     </div>
 
-                    {/* ATTENDANCE RECORD */}
-                    <div className="section" style={{ marginTop: 12 }}>
-                        <SectionHeading>Attendance Record ({termName})</SectionHeading>
-                        <div style={{ overflowX: 'auto' }}>
-                            <table className="attendance-table foundational-attendance" style={{ border: `1px solid ${C.navy}` }}>
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: '20%' }}>Months</th>
-                                        {months.map(m => <th key={m}>{m}</th>)}
-                                        <th style={{ width: '12%' }}>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>No. of Working days</td>
-                                        {months.map(m => <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.working_days || ''}</td>)}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
-                                            {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>No. of Days Present</td>
-                                        {months.map(m => <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{getAttendance(m)?.days_present || ''}</td>)}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
-                                            {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>% of attendance</td>
-                                        {months.map(m => {
-                                            const att = getAttendance(m);
-                                            return <td key={m} className="input-cell" style={{ borderRight: `1px solid ${C.navy}`, borderBottom: `1px solid ${C.navy}` }}>{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
-                                        })}
-                                        <td className="input-cell" style={{ borderBottom: `1px solid ${C.navy}` }}>
-                                            {(() => {
-                                                const totalW = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0;
-                                                const totalP = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0;
-                                                return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
-                                            })()}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px', borderRight: `1px solid ${C.navy}` }}>If attendance is low then reason</td>
-                                        <td colSpan={months.length + 1} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
-                                            {reportData.attendance?.find(a => months.some(m => a.month_name?.startsWith(m)) && a.reason_for_low_attendance)?.reason_for_low_attendance || ''}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+
 
 
                     {/* SCHOLASTIC RECORD */}

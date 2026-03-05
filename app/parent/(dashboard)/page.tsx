@@ -141,6 +141,7 @@ export default function ParentDashboard() {
                         <p className="text-gray-500 text-sm">Access the latest Holistic Progress Card (HPC)</p>
                     </div>
 
+                    {/* 
                     <div onClick={() => router.push('/parent/fees')} className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition cursor-pointer group">
                         <div className="flex items-center justify-between mb-4">
                             <div className="w-12 h-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center group-hover:bg-purple-600 group-hover:text-white transition">
@@ -153,6 +154,7 @@ export default function ParentDashboard() {
                         <h3 className="text-lg font-bold text-gray-800 mb-1">Fee Status</h3>
                         <p className="text-gray-500 text-sm">Check pending dues and payment history</p>
                     </div>
+                    */}
                 </div>
 
                 {/* Notices Section */}

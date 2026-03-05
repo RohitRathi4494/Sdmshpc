@@ -106,7 +106,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* GENERAL INFORMATION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading mt={0}>General Information</SectionHeading>
-                        <table className="foundational-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 13, background: C.white }}>
+                        <table className="foundational-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, background: C.white }}>
                             <tbody>
                                 <tr>
                                     <td style={{ width: '22%', background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Student Name:</td>

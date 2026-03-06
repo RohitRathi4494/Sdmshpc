@@ -712,7 +712,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             text-align: left !important;
         }
         .foundational-table.gen-info-table td {
-            padding: 26px 12px !important;
+            padding: 18px 12px !important;
         }
         .foundational-table tr.domain-header td {
             background: ${C.subheadBg} !important;

@@ -662,7 +662,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.navy} !important;
             color: ${C.white} !important;
             font-weight: 700 !important;
-            padding: 8px 6px !important;
+            padding: 6px 4px !important;
             text-align: center !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
             font-size: 12px !important;
@@ -671,7 +671,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             background: ${C.gold} !important;
         }
         .foundational-attendance td {
-            padding: 12px 6px !important;
+            padding: 6px 4px !important;
             border: 1px solid ${C.navy} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;

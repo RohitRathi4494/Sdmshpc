@@ -106,7 +106,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     {/* GENERAL INFORMATION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading mt={0}>General Information</SectionHeading>
-                        <table className="foundational-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, background: C.white }}>
+                        <table className="foundational-table gen-info-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, background: C.white }}>
                             <tbody>
                                 <tr>
                                     <td style={{ width: '22%', background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Student Name:</td>
@@ -665,7 +665,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             padding: 6px 4px !important;
             text-align: center !important;
             border: 1px solid rgba(255,255,255,0.15) !important;
-            font-size: 12px !important;
+            font-size: 10.5px !important;
         }
         .foundational-attendance th:last-child {
             background: ${C.gold} !important;
@@ -675,7 +675,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             border: 1px solid ${C.navy} !important;
             color: ${C.text} !important;
             vertical-align: middle !important;
-            font-size: 13px !important;
+            font-size: 11px !important;
         }
         .foundational-attendance td:first-child,
         .foundational-attendance td:last-child {
@@ -685,6 +685,9 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             width: 100%;
             border-collapse: collapse;
             border: 1px solid ${C.navy} !important;
+        }
+        .gen-info-table td {
+            padding: 26px 12px !important;
         }
         .foundational-table th {
             background: ${C.navy} !important;

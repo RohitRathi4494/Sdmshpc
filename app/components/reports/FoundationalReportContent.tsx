@@ -266,7 +266,9 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
             if (m < 0 || (m === 0 && today.getDate() < dob.getDate())) {
                 age--;
             }
-            calculatedAge = age.toString();
+            if (!isNaN(age)) {
+                calculatedAge = age.toString();
+            }
         }
     }
 

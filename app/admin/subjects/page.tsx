@@ -311,13 +311,13 @@ export default function SubjectMappingPage() {
                                                             <div key={comp.id} className="w-28 shrink-0">
                                                                 <input
                                                                     type="number"
-                                                                    value={data.assessment_max_marks[comp.id] ?? comp.max_marks}
+                                                                    value={data.assessment_max_marks[comp.id] ?? (comp.max_marks || 100)}
                                                                     onChange={e => handleAssessmentMarksChange(subject.id, comp.id, parseInt(e.target.value) || 0)}
                                                                     disabled={!isSelected}
                                                                     className="w-full px-2 py-1 text-center border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
                                                                     min="1"
                                                                     max="1000"
-                                                                    placeholder={comp.max_marks.toString()}
+                                                                    placeholder={(comp.max_marks || 100).toString()}
                                                                 />
                                                             </div>
                                                         ))}

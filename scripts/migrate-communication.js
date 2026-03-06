@@ -1,50 +1,70 @@
 const { Pool } = require('pg');
-const path = require('path');
-require('dotenv').config({ path: path.resolve(__dirname, '../.env.local') });
+require('dotenv').config({ path: '.env.local' });
 
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL,
 });
 
-async function migrate() {
+async function main() {
+    const client = await pool.connect();
+
     try {
-        console.log('Starting Communication Module Migration...');
+        await client.query('BEGIN');
 
-        // 1. Create Notices Table
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS notices (
-                id SERIAL PRIMARY KEY,
-                title VARCHAR(255) NOT NULL,
-                content TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                sender_id INTEGER REFERENCES users(id)
-            );
-        `);
-        console.log('Created notices table (or already exists).');
+        console.log("Renaming domain 'Physical Education' to 'Communication'...");
 
-        // 2. Create Notice Recipients Table
-        await pool.query(`
-            CREATE TABLE IF NOT EXISTS notice_recipients (
-                id SERIAL PRIMARY KEY,
-                notice_id INTEGER REFERENCES notices(id) ON DELETE CASCADE,
-                recipient_type VARCHAR(50) NOT NULL CHECK (recipient_type IN ('CLASS', 'STUDENT')),
-                recipient_id INTEGER NOT NULL
-            );
-        `);
-        console.log('Created notice_recipients table (or already exists).');
+        // 1. Rename Domain
+        await client.query(`
+      UPDATE domains 
+      SET domain_name = 'Communication' 
+      WHERE domain_name = 'Physical Education'
+    `);
 
-        // 3. Create Index
-        await pool.query(`
-            CREATE INDEX IF NOT EXISTS idx_notice_recipients_target ON notice_recipients(recipient_type, recipient_id);
-        `);
-        console.log('Created index on notice_recipients.');
+        // Fetch the updated domain to get its ID
+        const domainRes = await client.query(`SELECT id FROM domains WHERE domain_name = 'Communication' LIMIT 1`);
+        if (domainRes.rows.length === 0) {
+            throw new Error("Communication domain not found. Aborting.");
+        }
+        const domainId = domainRes.rows[0].id;
 
-        console.log('Migration completed successfully.');
-    } catch (error) {
-        console.error('Migration failed:', error);
+        console.log(`Domain updated successfully (ID: ${domainId}). Renaming sub-skills...`);
+
+        // 2. Fetch the 4 Sub-Skills explicitly by ID so that we overwrite them sequentially
+        // Our previous script identified the IDs as: 1, 2, 3, 4
+
+        const updates = [
+            { id: 1, name: 'Articulation & Clarity in Expression' },
+            { id: 2, name: 'Active Listening & Understanding' },
+            { id: 3, name: 'Confidence in Public Speaking' },
+            { id: 4, name: 'Vocabulary Usage & Language Fluency' },
+        ];
+
+        for (const update of updates) {
+            await client.query(`
+        UPDATE sub_skills
+        SET sub_skill_name = $1
+        WHERE id = $2 AND domain_id = $3
+      `, [update.name, update.id, domainId]);
+        }
+
+        console.log("Sub-skills updated successfully. Verifying...");
+
+        const verify = await client.query(`
+      SELECT * FROM sub_skills WHERE domain_id = $1 ORDER BY id ASC
+    `, [domainId]);
+
+        console.log("Final Sub-skills in DB:", verify.rows);
+
+        await client.query('COMMIT');
+        console.log("✅ Database update committed successfully.");
+
+    } catch (err) {
+        await client.query('ROLLBACK');
+        console.error("❌ Error occurred, rolling back changes:", err);
     } finally {
-        await pool.end();
+        client.release();
+        pool.end();
     }
 }
 
-migrate();
+main();

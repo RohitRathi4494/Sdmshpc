@@ -346,11 +346,11 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                     </tr>
                                 </thead>
                                 <tbody style={{ pageBreakInside: 'avoid' }}>
-                                    {/* Physical Education */}
+                                    {/* Communication */}
                                     <tr className="domain-header">
-                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Physical Education</td>
+                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Communication</td>
                                     </tr>
-                                    {['Physical Fitness', 'Muscular Strength', 'Agility & Balance', 'Stamina'].map(skill => (
+                                    {['Articulation & Clarity in Expression', 'Active Listening & Understanding', 'Confidence in Public Speaking', 'Vocabulary Usage & Language Fluency'].map(skill => (
                                         <tr key={skill} style={{ height: 32 }}>
                                             <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
                                             <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
@@ -599,20 +599,20 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
                     <div className="section compact-section">
-                        <h2 className="section-title">Evaluation Levels: Physical Education</h2>
+                        <h2 className="section-title">Evaluation Levels: Communication</h2>
                         <table className="compact-table">
                             <tbody>
                                 <tr>
                                     <td style={{ fontWeight: 700, width: '50px' }}>A</td>
-                                    <td style={{ textAlign: 'left' }}>Actively and effectively participates in activities involving agility, balance, coordination, speed and strength.</td>
+                                    <td style={{ textAlign: 'left' }}>Communicates ideas clearly and confidently, with excellent vocabulary and active listening skills.</td>
                                 </tr>
                                 <tr>
                                     <td style={{ fontWeight: 700 }}>B</td>
-                                    <td style={{ textAlign: 'left' }}>Participates adequately in physical activities with moderate proficiency.</td>
+                                    <td style={{ textAlign: 'left' }}>Communicates effectively in most situations but requires some encouragement for public speaking.</td>
                                 </tr>
                                 <tr>
                                     <td style={{ fontWeight: 700 }}>C</td>
-                                    <td style={{ textAlign: 'left' }}>Requires support and encouragement to participate effectively in physical activities.</td>
+                                    <td style={{ textAlign: 'left' }}>Requires support and practice to articulate thoughts clearly and engage in active listening.</td>
                                 </tr>
                             </tbody>
                         </table>

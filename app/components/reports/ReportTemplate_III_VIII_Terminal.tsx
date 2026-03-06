@@ -5,6 +5,7 @@ interface ReportData {
     scholastic: any[];
     attendance: any[];
     subjects?: any[];
+    components?: any[];
 }
 
 // ── style tokens matching the Foundational Stage HTML reference ──
@@ -204,9 +205,27 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                 <tbody>
                                     {(() => {
                                         let totalMarksObj = 0;
+                                        let totalMax = 0;
+
+                                        const getComponentMax = (subInfo: any, componentName: string) => {
+                                            const comp = reportData.components?.find((c: any) => c.component_name === componentName);
+                                            if (!comp) return 0;
+                                            const cid = comp.id.toString();
+                                            if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
+                                                return Number(subInfo.assessment_max_marks[cid]);
+                                            }
+                                            return comp.max_marks || 0;
+                                        };
 
                                         const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
+
+                                            const maxPA = getComponentMax(sub, 'Periodic Assessment');
+                                            const maxSEA = getComponentMax(sub, 'Subject Enrichment Activities');
+                                            const maxIA = getComponentMax(sub, 'Internal Assessment');
+                                            const maxTA = getComponentMax(sub, 'Terminal Assessment');
+
+                                            totalMax += maxPA + maxSEA + maxIA + maxTA;
 
                                             const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
                                             const seaScore = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.marks || 0;
@@ -238,7 +257,6 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                             );
                                         });
 
-                                        const totalMax = (reportData.subjects?.length || 0) * 100;
                                         const percentage = totalMax > 0 ? ((totalMarksObj / totalMax) * 100).toFixed(2) : '-';
 
                                         return (

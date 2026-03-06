@@ -7,6 +7,7 @@ interface ReportData {
     attendance: any[];
     remarks: any[];
     subjects?: any[];
+    components?: any[];
 }
 // ── style tokens matching the Foundational Stage HTML reference ──
 const C = {
@@ -179,8 +180,19 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         let grandTotal1 = 0;
                                         let grandTotal2 = 0;
                                         let grandTotalAvg = 0;
-                                        let subjectCount1 = 0;
-                                        let subjectCount2 = 0;
+                                        let maxTotal1 = 0;
+                                        let maxTotal2 = 0;
+                                        let maxTotalAvg = 0;
+
+                                        const getComponentMax = (subInfo: any, componentName: string) => {
+                                            const comp = reportData.components?.find((c: any) => c.component_name === componentName);
+                                            if (!comp) return 0;
+                                            const cid = comp.id.toString();
+                                            if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
+                                                return Number(subInfo.assessment_max_marks[cid]);
+                                            }
+                                            return comp.max_marks || 0;
+                                        };
 
                                         const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
@@ -207,18 +219,21 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                                 getVal('Internal Assessment', 'Term II') +
                                                 getVal('Terminal Assessment', 'Term II');
 
+                                            const subMaxTotal = getComponentMax(sub, 'Periodic Assessment') + getComponentMax(sub, 'Subject Enrichment Activities') + getComponentMax(sub, 'Internal Assessment') + getComponentMax(sub, 'Terminal Assessment');
+
                                             if (hasMarks('Term I')) {
                                                 grandTotal1 += total1;
-                                                subjectCount1++;
+                                                maxTotal1 += subMaxTotal;
                                             }
                                             if (hasMarks('Term II')) {
                                                 grandTotal2 += total2;
-                                                subjectCount2++;
+                                                maxTotal2 += subMaxTotal;
                                             }
 
                                             const avg = (total1 + total2) / 2;
                                             if (hasMarks('Term I') || hasMarks('Term II')) {
                                                 grandTotalAvg += avg;
+                                                maxTotalAvg += subMaxTotal;
                                             }
 
                                             const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
@@ -243,20 +258,16 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             );
                                         });
 
-                                        const max1 = subjectCount1 * 100;
-                                        const max2 = subjectCount2 * 100;
-                                        const maxAvg = Math.max(subjectCount1, subjectCount2) * 100;
-
-                                        const p1 = max1 > 0 ? ((grandTotal1 / max1) * 100).toFixed(2) : '';
-                                        const p2 = max2 > 0 ? ((grandTotal2 / max2) * 100).toFixed(2) : '';
-                                        const pAvg = maxAvg > 0 ? ((grandTotalAvg / maxAvg) * 100).toFixed(2) : '';
+                                        const p1 = maxTotal1 > 0 ? ((grandTotal1 / maxTotal1) * 100).toFixed(2) : '';
+                                        const p2 = maxTotal2 > 0 ? ((grandTotal2 / maxTotal2) * 100).toFixed(2) : '';
+                                        const pAvg = maxTotalAvg > 0 ? ((grandTotalAvg / maxTotalAvg) * 100).toFixed(2) : '';
 
                                         return (
                                             <>
                                                 {rows}
                                                 <tr className="domain-header">
                                                     <td colSpan={11} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
-                                                    <td style={{ fontWeight: 800, color: C.navy }}>{maxAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxAvg}` : ''}</td>
+                                                    <td style={{ fontWeight: 800, color: C.navy }}>{maxTotalAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxTotalAvg}` : ''}</td>
                                                 </tr>
                                                 <tr className="domain-header" style={{ background: '#d1e0f7' }}>
                                                     <td colSpan={11} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>

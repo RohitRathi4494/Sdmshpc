@@ -5,6 +5,7 @@ interface ReportData {
     scholastic: any[];
     attendance: any[];
     subjects?: any[];
+    components?: any[];
 }
 
 // ── style tokens matching the Foundational Stage HTML reference ──
@@ -145,12 +146,26 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
                                 <tbody>
                                     {(() => {
                                         let totalMarksObj = 0;
+                                        let totalMax = 0;
+
+                                        const getComponentMax = (subInfo: any, componentName: string) => {
+                                            const comp = reportData.components?.find((c: any) => c.component_name === componentName);
+                                            if (!comp) return 0;
+                                            const cid = comp.id.toString();
+                                            if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
+                                                return Number(subInfo.assessment_max_marks[cid]);
+                                            }
+                                            return comp.max_marks || 0;
+                                        };
 
                                         const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
+                                            const maxPA = getComponentMax(sub, 'Periodic Assessment');
+
                                             const scoreObj = getScholasticScore(subject, 'Periodic Assessment', termName);
                                             const marks = scoreObj?.marks ?? '-';
 
+                                            totalMax += maxPA;
                                             if (marks !== '-' && !isNaN(Number(marks))) {
                                                 totalMarksObj += Number(marks);
                                             }
@@ -158,13 +173,12 @@ export default function ReportTemplate_III_VIII_Periodic({ reportData, reportTyp
                                             return (
                                                 <tr key={subject}>
                                                     <td style={{ textAlign: 'left', paddingLeft: 12, fontWeight: 600 }}>{subject}</td>
-                                                    <td style={{ textAlign: 'center' }}>30</td>
+                                                    <td style={{ textAlign: 'center' }}>{maxPA}</td>
                                                     <td style={{ textAlign: 'center', fontWeight: 'bold' }}>{marks}</td>
                                                 </tr>
                                             );
                                         });
 
-                                        const totalMax = (reportData.subjects?.length || 0) * 30;
                                         const percentage = totalMax > 0 ? ((totalMarksObj / totalMax) * 100).toFixed(2) : '-';
 
                                         return (

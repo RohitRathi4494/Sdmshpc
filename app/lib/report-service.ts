@@ -61,7 +61,7 @@ export async function getStudentReportData(student_id: number, academic_year_id:
 
   // 6. Class Subjects
   const subjectsQuery = `
-        SELECT sub.id, sub.subject_name, cs.max_marks
+        SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks
         FROM class_subjects cs
         JOIN subjects sub ON cs.subject_id = sub.id
         WHERE cs.class_id = $1 AND cs.academic_year_id = $2
@@ -70,6 +70,10 @@ export async function getStudentReportData(student_id: number, academic_year_id:
   // student.class_id is now available from query 1
   const subjectsRes = await db.query(subjectsQuery, [student.class_id, academic_year_id]);
 
+  // 7. Assessment Components
+  const componentsQuery = `SELECT * FROM assessment_components`;
+  const componentsRes = await db.query(componentsQuery);
+
   return {
     student,
     scholastic: scholasticRes.rows,
@@ -77,6 +81,7 @@ export async function getStudentReportData(student_id: number, academic_year_id:
     attendance: attendanceRes.rows,
     remarks: remarksRes.rows,
     subjects: subjectsRes.rows,
+    components: componentsRes.rows,
     generated_at: new Date().toISOString(),
   };
 }

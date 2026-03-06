@@ -70,8 +70,26 @@ export async function POST(request: Request) {
                 let grade = 'NA'; // Default safe value
                 if (marks !== null && marks !== undefined) {
                     try {
-                        const compRes = await db.query('SELECT max_marks FROM assessment_components WHERE id = $1', [component_id]);
-                        const maxMarks = compRes.rows[0]?.max_marks || 100;
+                        const enrollRes = await db.query('SELECT class_id FROM student_enrollments WHERE student_id = $1 AND academic_year_id = $2', [student_id, academic_year_id]);
+                        const classId = enrollRes.rows[0]?.class_id;
+
+                        let maxMarks = 100;
+                        if (classId) {
+                            const csRes = await db.query('SELECT assessment_max_marks, max_marks FROM class_subjects WHERE class_id = $1 AND subject_id = $2 AND academic_year_id = $3', [classId, subject_id, academic_year_id]);
+                            const csRow = csRes.rows[0];
+                            if (csRow) {
+                                const componentIdStr = component_id.toString();
+                                if (csRow.assessment_max_marks && typeof csRow.assessment_max_marks[componentIdStr] === 'number') {
+                                    maxMarks = csRow.assessment_max_marks[componentIdStr];
+                                } else if (csRow.max_marks) {
+                                    maxMarks = csRow.max_marks;
+                                }
+                            }
+                        } else {
+                            const compRes = await db.query('SELECT max_marks FROM assessment_components WHERE id = $1', [component_id]);
+                            maxMarks = compRes.rows[0]?.max_marks || 100;
+                        }
+
                         const percentage = (marks / maxMarks) * 100;
                         grade = calculateGrade(percentage);
                     } catch (e) {

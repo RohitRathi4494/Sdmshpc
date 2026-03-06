@@ -21,9 +21,16 @@ interface AcademicYear {
     is_active: boolean;
 }
 
+interface AssessmentComponent {
+    id: number;
+    component_name: string;
+    max_marks: number;
+}
+
 interface Assignment {
     subject_id: number;
     max_marks: number;
+    assessment_max_marks: Record<string, number>;
 }
 
 export default function SubjectMappingPage() {
@@ -31,12 +38,13 @@ export default function SubjectMappingPage() {
     const [classes, setClasses] = useState<ClassData[]>([]);
     const [years, setYears] = useState<AcademicYear[]>([]);
     const [allSubjects, setAllSubjects] = useState<Subject[]>([]);
+    const [assessmentComponents, setAssessmentComponents] = useState<AssessmentComponent[]>([]);
 
     const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
     const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
 
     // Map of subjectId -> { max_marks, display_order }. If present in map, it's assigned.
-    const [assignments, setAssignments] = useState<Map<number, { max_marks: number, display_order: number }>>(new Map());
+    const [assignments, setAssignments] = useState<Map<number, { max_marks: number, assessment_max_marks: Record<string, number>, display_order: number }>>(new Map());
 
     const [loadingInitial, setLoadingInitial] = useState(true);
     const [loadingMapping, setLoadingMapping] = useState(false);
@@ -45,15 +53,17 @@ export default function SubjectMappingPage() {
     const fetchMasters = async () => {
         try {
             const token = sessionStorage.getItem('hpc_token') || '';
-            const [classesData, yearsData, subjectsData] = await Promise.all([
+            const [classesData, yearsData, subjectsData, componentsData] = await Promise.all([
                 ApiClient.get<ClassData[]>('/admin/classes', token),
                 ApiClient.get<AcademicYear[]>('/admin/academic-years', token),
                 ApiClient.get<Subject[]>('/admin/subjects', token),
+                ApiClient.get<AssessmentComponent[]>('/teacher/assessment-components', token),
             ]);
 
             setClasses(classesData);
             setYears(yearsData);
             setAllSubjects(subjectsData);
+            setAssessmentComponents(componentsData);
 
             // Auto-select active year
             if (!selectedYearId) {
@@ -83,12 +93,13 @@ export default function SubjectMappingPage() {
             setLoadingMapping(true);
             try {
                 const token = sessionStorage.getItem('hpc_token') || '';
-                // API now returns { subject_id, max_marks, display_order }[]
+                // API now returns { subject_id, max_marks, assessment_max_marks, display_order }[]
                 const data = await ApiClient.get<any[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`, token);
 
-                const newMap = new Map<number, { max_marks: number, display_order: number }>();
+                const newMap = new Map<number, { max_marks: number, assessment_max_marks: Record<string, number>, display_order: number }>();
                 data.forEach(item => newMap.set(item.subject_id, {
                     max_marks: item.max_marks || 100,
+                    assessment_max_marks: item.assessment_max_marks || {},
                     display_order: item.display_order || 0
                 }));
                 setAssignments(newMap);
@@ -111,7 +122,7 @@ export default function SubjectMappingPage() {
             if (newMap.has(subjectId)) {
                 newMap.delete(subjectId);
             } else {
-                newMap.set(subjectId, { max_marks: 100, display_order: 0 }); // Default
+                newMap.set(subjectId, { max_marks: 100, assessment_max_marks: {}, display_order: 0 }); // Default
             }
             return newMap;
         });
@@ -128,6 +139,23 @@ export default function SubjectMappingPage() {
         });
     };
 
+    const handleAssessmentMarksChange = (subjectId: number, componentId: number, value: number) => {
+        setAssignments(prev => {
+            const newMap = new Map(prev);
+            const current = newMap.get(subjectId);
+            if (current) {
+                newMap.set(subjectId, {
+                    ...current,
+                    assessment_max_marks: {
+                        ...current.assessment_max_marks,
+                        [componentId]: value
+                    }
+                });
+            }
+            return newMap;
+        });
+    };
+
     const handleSave = async () => {
         if (!selectedClassId || !selectedYearId) return;
 
@@ -138,6 +166,7 @@ export default function SubjectMappingPage() {
             const subjectsPayload = Array.from(assignments.entries()).map(([subject_id, data]) => ({
                 subject_id,
                 max_marks: data.max_marks,
+                assessment_max_marks: data.assessment_max_marks,
                 display_order: data.display_order
             }));
 
@@ -235,58 +264,67 @@ export default function SubjectMappingPage() {
                                 </button>
                             </div>
 
-                            <div className="p-6">
+                            <div className="p-6 overflow-x-auto">
                                 {loadingMapping ? (
                                     <div className="text-center py-4 text-gray-500">Loading assignments...</div>
                                 ) : (
-                                    <div className="grid grid-cols-1 gap-4">
-                                        <div className="grid grid-cols-12 gap-4 font-semibold text-gray-500 border-b pb-2 mb-2">
-                                            <div className="col-span-1 text-center">Select</div>
-                                            <div className="col-span-5">Subject Name</div>
-                                            <div className="col-span-3">Display Order</div>
-                                            <div className="col-span-3">Max Marks (Weightage)</div>
-                                        </div>
-                                        {allSubjects.map(subject => {
-                                            const isSelected = assignments.has(subject.id);
-                                            const data = assignments.get(subject.id) || { max_marks: 100, display_order: 0 };
-
-                                            return (
-                                                <div key={subject.id} className={`grid grid-cols-12 gap-4 items-center p-3 rounded border transition-colors ${isSelected ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
-                                                    <div className="col-span-1 flex justify-center">
-                                                        <input
-                                                            type="checkbox"
-                                                            checked={isSelected}
-                                                            onChange={() => handleToggleSubject(subject.id)}
-                                                            className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-5 font-medium text-gray-800">
-                                                        {subject.subject_name}
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                        <input
-                                                            type="number"
-                                                            value={data.display_order}
-                                                            onChange={e => handleAssignmentChange(subject.id, 'display_order', parseInt(e.target.value) || 0)}
-                                                            disabled={!isSelected}
-                                                            className="w-full px-3 py-1 border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
-                                                            min="0"
-                                                        />
-                                                    </div>
-                                                    <div className="col-span-3">
-                                                        <input
-                                                            type="number"
-                                                            value={data.max_marks}
-                                                            onChange={e => handleAssignmentChange(subject.id, 'max_marks', parseInt(e.target.value) || 0)}
-                                                            disabled={!isSelected}
-                                                            className="w-full px-3 py-1 border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
-                                                            min="1"
-                                                            max="1000"
-                                                        />
-                                                    </div>
+                                    <div className="min-w-max">
+                                        <div className="flex gap-4 font-semibold text-gray-500 border-b pb-2 mb-2 text-sm items-center">
+                                            <div className="w-16 text-center shrink-0">Select</div>
+                                            <div className="w-56 shrink-0">Subject Name</div>
+                                            <div className="w-24 shrink-0 text-center">Display Order</div>
+                                            {assessmentComponents.map(comp => (
+                                                <div key={comp.id} className="w-28 shrink-0 text-center text-xs leading-tight">
+                                                    {comp.component_name}<br />(Max)
                                                 </div>
-                                            );
-                                        })}
+                                            ))}
+                                        </div>
+                                        <div className="grid grid-cols-1 gap-4">
+                                            {allSubjects.map(subject => {
+                                                const isSelected = assignments.has(subject.id);
+                                                const data = assignments.get(subject.id) || { max_marks: 100, assessment_max_marks: {}, display_order: 0 };
+
+                                                return (
+                                                    <div key={subject.id} className={`flex gap-4 items-center p-3 rounded border transition-colors ${isSelected ? 'bg-indigo-50 border-indigo-200' : 'bg-white border-gray-200 hover:bg-gray-50'}`}>
+                                                        <div className="w-16 shrink-0 flex justify-center">
+                                                            <input
+                                                                type="checkbox"
+                                                                checked={isSelected}
+                                                                onChange={() => handleToggleSubject(subject.id)}
+                                                                className="w-5 h-5 text-indigo-600 rounded focus:ring-indigo-500 border-gray-300"
+                                                            />
+                                                        </div>
+                                                        <div className="w-56 shrink-0 font-medium text-gray-800 truncate" title={subject.subject_name}>
+                                                            {subject.subject_name}
+                                                        </div>
+                                                        <div className="w-24 shrink-0">
+                                                            <input
+                                                                type="number"
+                                                                value={data.display_order}
+                                                                onChange={e => handleAssignmentChange(subject.id, 'display_order', parseInt(e.target.value) || 0)}
+                                                                disabled={!isSelected}
+                                                                className="w-full px-2 py-1 text-center border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
+                                                                min="0"
+                                                            />
+                                                        </div>
+                                                        {assessmentComponents.map(comp => (
+                                                            <div key={comp.id} className="w-28 shrink-0">
+                                                                <input
+                                                                    type="number"
+                                                                    value={data.assessment_max_marks[comp.id] ?? comp.max_marks}
+                                                                    onChange={e => handleAssessmentMarksChange(subject.id, comp.id, parseInt(e.target.value) || 0)}
+                                                                    disabled={!isSelected}
+                                                                    className="w-full px-2 py-1 text-center border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
+                                                                    min="1"
+                                                                    max="1000"
+                                                                    placeholder={comp.max_marks.toString()}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
                                     </div>
                                 )}
                             </div>

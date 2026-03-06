@@ -457,7 +457,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         <div className="feedback-grid">
                             <div className="feedback-card">
                                 <h3>Learner's Profile by the Teacher</h3>
-                                <div className="feedback-input" style={{ minHeight: '120px' }}>
+                                <div className="feedback-input" style={{ minHeight: '80px' }}>
                                     {getRemark('Learner’s Profile by the teacher')}
                                 </div>
                             </div>
@@ -472,7 +472,15 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 ))}
                             </div>
 
-
+                            <div className="feedback-card">
+                                <h3>Student Feedback (Self-Assessment)</h3>
+                                {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
+                                    <div className="feedback-row" key={label}>
+                                        <div className="feedback-label">{label}</div>
+                                        <div className="feedback-input">{getRemark("Self-Assessment", label)}</div>
+                                    </div>
+                                ))}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -486,22 +494,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <GoldBar />
                 <div style={{ padding: '22px 14px 28px' }}>
-                    <div className="section" style={{ marginTop: 0 }}>
-                        <div className="feedback-grid">
-                            {/* Self Assessment */}
-                            <div className="feedback-card">
-                                <h3>Student Feedback (Self-Assessment)</h3>
-                                {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
-                                    <div className="feedback-row" key={label}>
-                                        <div className="feedback-label">{label}</div>
-                                        <div className="feedback-input">{getRemark("Self-Assessment", label)}</div>
-                                    </div>
-                                ))}
-                            </div>
 
-
-                        </div>
-                    </div>
 
                     {/* ATTENDANCE RECORD */}
                     <div className="section" style={{ marginTop: 16 }}>

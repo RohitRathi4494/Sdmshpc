@@ -109,38 +109,38 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         <table className="foundational-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, background: C.white }}>
                             <tbody>
                                 <tr>
-                                    <td style={{ width: '22%', background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Student Name:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.student_name}</td>
+                                    <td style={{ width: '22%', background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Student Name:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.student_name}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Roll No.:</td>
-                                    <td style={{ width: '28%', padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
-                                    <td style={{ width: '15%', background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Adm No.:</td>
-                                    <td style={{ width: '35%', padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Roll No.:</td>
+                                    <td style={{ width: '28%', padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
+                                    <td style={{ width: '15%', background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Adm No.:</td>
+                                    <td style={{ width: '35%', padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Class / Section:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Class / Section:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Date of Birth:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Date of Birth:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Address:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Address:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Phone:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Phone:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Mother/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Mother/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
                                 </tr>
                                 <tr>
-                                    <td style={{ background: C.rowEven, padding: '20px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Father/Guardian Name:</td>
-                                    <td colSpan={3} style={{ padding: '20px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
+                                    <td style={{ background: C.rowEven, padding: '26px 12px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Father/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '26px 12px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
                                 </tr>
                             </tbody>
                         </table>
@@ -270,7 +270,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                                    </div>
+                </div>
             </div>
 
             {/* ---> PAGE BREAK <--- */}
@@ -281,7 +281,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <GoldBar />
                 <div style={{ padding: '22px 14px 28px' }}>
-{/* CO-SCHOLASTIC DOMAINS */}
+                    {/* CO-SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Co-Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
@@ -321,21 +321,6 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-{/* CO-SCHOLASTIC DOMAINS (Continued) */}
-                    <div className="section" style={{ marginTop: 0 }}>
-                        <div style={{ overflowX: 'auto' }}>
-                            <table className="foundational-table">
-                                <tbody style={{ pageBreakInside: 'avoid' }}>
-                                    <tr style={{ visibility: 'collapse' }}>
-                                        <th style={{ width: '50%' }}></th>
-                                        <th style={{ width: '25%' }}></th>
-                                        <th style={{ width: '25%' }}></th>
-                                    </tr>
                                     {/* Performing Art - Dance */}
                                     <tr className="domain-header">
                                         <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
@@ -420,7 +405,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             }}>
                 <GoldBar />
                 <div style={{ padding: '22px 14px 28px' }}>
-{/* PERSONALITY DEVELOPMENT SKILLS */}
+                    {/* PERSONALITY DEVELOPMENT SKILLS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Personality Development Skills (Continued)</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
@@ -435,7 +420,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         <th style={{ width: '25%' }}>Term II</th>
                                     </tr>
                                 </thead>
-                                
+
                                 <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Work Habit */}
                                     <tr className="domain-header">
@@ -467,7 +452,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
 
-{/* FEEDBACK SECTIONS */}
+                    {/* FEEDBACK SECTIONS */}
                     <div className="section">
                         <div className="feedback-grid">
                             <div className="feedback-card">
@@ -487,7 +472,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 ))}
                             </div>
 
-                            
+
                         </div>
                     </div>
                 </div>
@@ -503,7 +488,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                 <div style={{ padding: '22px 14px 28px' }}>
                     <div className="section" style={{ marginTop: 0 }}>
                         <div className="feedback-grid">
-{/* Self Assessment */}
+                            {/* Self Assessment */}
                             <div className="feedback-card">
                                 <h3>Student Feedback (Self-Assessment)</h3>
                                 {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
@@ -567,7 +552,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
 
-{/* SIGNATURE SECTION */}
+                    {/* SIGNATURE SECTION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Signature With Date</SectionHeading>
                         <div style={{ marginTop: 8 }}>
@@ -589,7 +574,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
 
-{/* EVALUATION LEVELS */}
+                    {/* EVALUATION LEVELS */}
                     <div className="section compact-section">
                         <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
                         <table className="compact-table">

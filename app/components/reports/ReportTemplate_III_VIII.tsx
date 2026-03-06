@@ -686,9 +686,6 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
             border-collapse: collapse;
             border: 1px solid ${C.navy} !important;
         }
-        .gen-info-table td {
-            padding: 26px 12px !important;
-        }
         .foundational-table th {
             background: ${C.navy} !important;
             color: ${C.white} !important;
@@ -713,6 +710,9 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         }
         .foundational-table td.text-left {
             text-align: left !important;
+        }
+        .foundational-table.gen-info-table td {
+            padding: 26px 12px !important;
         }
         .foundational-table tr.domain-header td {
             background: ${C.subheadBg} !important;

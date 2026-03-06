@@ -146,66 +146,6 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </table>
                     </div>
 
-                    {/* ATTENDANCE RECORD */}
-                    <div className="section" style={{ marginTop: 16 }}>
-                        <SectionHeading>Attendance Record</SectionHeading>
-                        <div style={{ overflowX: 'auto' }}>
-                            <table className="attendance-table foundational-attendance">
-                                <thead>
-                                    <tr>
-                                        <th style={{ width: '15%' }}>Months</th>
-                                        {months.map(m => <th key={m}>{m}</th>)}
-                                        <th style={{ width: '8%' }}>Total</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
-                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.working_days || ''}</td>)}
-                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Days Present</td>
-                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.days_present || ''}</td>)}
-                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0}</td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>% of attendance</td>
-                                        {months.map(m => {
-                                            const att = getAttendance(m);
-                                            return <td key={m} className="input-cell">{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
-                                        })}
-                                        <td className="input-cell">
-                                            {(() => {
-                                                const totalW = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0;
-                                                const totalP = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0;
-                                                return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
-                                            })()}
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
-                                        <td colSpan={12} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
-                                            {reportData.attendance?.[0]?.reason_for_low_attendance || ''}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            {/* ---> PAGE BREAK <--- */}
-            <div className="print-page page-break" style={{
-                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-                boxSizing: 'border-box', position: 'relative'
-            }}>
-                <GoldBar />
-                <div style={{ padding: '22px 14px 28px' }}>
                     {/* SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
@@ -330,7 +270,18 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    {/* CO-SCHOLASTIC DOMAINS */}
+                                    </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <GoldBar />
+                <div style={{ padding: '22px 14px 28px' }}>
+{/* CO-SCHOLASTIC DOMAINS */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Co-Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
@@ -375,19 +326,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                </div>
-            </div>
-
-            {/* ---> PAGE BREAK <--- */}
-            <div className="print-page page-break" style={{
-                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-                boxSizing: 'border-box', position: 'relative'
-            }}>
-                <GoldBar />
-                <div style={{ padding: '22px 14px 28px' }}>
-
-                    {/* CO-SCHOLASTIC DOMAINS (Continued) */}
+{/* CO-SCHOLASTIC DOMAINS (Continued) */}
                     <div className="section" style={{ marginTop: 0 }}>
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table">
@@ -467,6 +406,36 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         </tr>
                                     ))}
                                 </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <GoldBar />
+                <div style={{ padding: '22px 14px 28px' }}>
+{/* PERSONALITY DEVELOPMENT SKILLS */}
+                    <div className="section" style={{ marginTop: 16 }}>
+                        <SectionHeading>Personality Development Skills (Continued)</SectionHeading>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table className="foundational-table">
+                                <thead>
+                                    <tr>
+                                        <th rowSpan={2} style={{ textAlign: 'left', width: '50%' }}>Sub-Skills</th>
+                                        <th colSpan={2}>Grades</th>
+                                    </tr>
+                                    <tr>
+                                        <th style={{ width: '25%' }}>Term I</th>
+                                        <th style={{ width: '25%' }}>Term II</th>
+                                    </tr>
+                                </thead>
+                                
                                 <tbody style={{ pageBreakInside: 'avoid' }}>
                                     {/* Work Habit */}
                                     <tr className="domain-header">
@@ -498,18 +467,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
 
-                </div>
-            </div>
-
-            {/* ---> PAGE BREAK <--- */}
-            <div className="print-page page-break" style={{
-                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-                boxSizing: 'border-box', position: 'relative'
-            }}>
-                <GoldBar />
-                <div style={{ padding: '22px 28px 28px' }}>
-                    {/* FEEDBACK SECTIONS */}
+{/* FEEDBACK SECTIONS */}
                     <div className="section">
                         <div className="feedback-grid">
                             <div className="feedback-card">
@@ -529,9 +487,25 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 ))}
                             </div>
 
-                            {/* Self Assessment */}
+                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            {/* ---> PAGE BREAK <--- */}
+            <div className="print-page page-break" style={{
+                width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
+                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <GoldBar />
+                <div style={{ padding: '22px 14px 28px' }}>
+                    <div className="section" style={{ marginTop: 0 }}>
+                        <div className="feedback-grid">
+{/* Self Assessment */}
                             <div className="feedback-card">
-                                <h3>Self-Assessment</h3>
+                                <h3>Student Feedback (Self-Assessment)</h3>
                                 {['Activities I enjoy the most', 'Activities I find challenging', 'Activities I enjoy doing with my friends'].map(label => (
                                     <div className="feedback-row" key={label}>
                                         <div className="feedback-label">{label}</div>
@@ -544,7 +518,56 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                         </div>
                     </div>
 
-                    {/* SIGNATURE SECTION */}
+                    {/* ATTENDANCE RECORD */}
+                    <div className="section" style={{ marginTop: 16 }}>
+                        <SectionHeading>Attendance Record</SectionHeading>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table className="attendance-table foundational-attendance">
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '15%' }}>Months</th>
+                                        {months.map(m => <th key={m}>{m}</th>)}
+                                        <th style={{ width: '8%' }}>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.working_days || ''}</td>)}
+                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Days Present</td>
+                                        {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.days_present || ''}</td>)}
+                                        <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0}</td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>% of attendance</td>
+                                        {months.map(m => {
+                                            const att = getAttendance(m);
+                                            return <td key={m} className="input-cell">{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
+                                        })}
+                                        <td className="input-cell">
+                                            {(() => {
+                                                const totalW = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0;
+                                                const totalP = reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.days_present || 0), 0) || 0;
+                                                return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
+                                            })()}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
+                                        <td colSpan={12} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
+                                            {reportData.attendance?.[0]?.reason_for_low_attendance || ''}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+{/* SIGNATURE SECTION */}
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Signature With Date</SectionHeading>
                         <div style={{ marginTop: 8 }}>
@@ -566,18 +589,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                     </div>
 
 
-                </div>
-            </div>
-
-            {/* ---> PAGE BREAK <--- */}
-            <div className="print-page page-break" style={{
-                width: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
-                borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
-                boxSizing: 'border-box', position: 'relative'
-            }}>
-                <GoldBar />
-                <div style={{ padding: '22px 14px 28px' }}>
-                    {/* EVALUATION LEVELS */}
+{/* EVALUATION LEVELS */}
                     <div className="section compact-section">
                         <h2 className="section-title">Evaluation Levels – Co-Scholastic & Personal Skills</h2>
                         <table className="compact-table">

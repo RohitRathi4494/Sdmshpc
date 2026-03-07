@@ -7,6 +7,9 @@ import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
 import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
 import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
+import ReportTemplate_IX_XII from '@/app/components/reports/ReportTemplate_IX_XII';
+import ReportTemplate_IX_XII_Periodic from '@/app/components/reports/ReportTemplate_IX_XII_Periodic';
+import ReportTemplate_IX_XII_Terminal from '@/app/components/reports/ReportTemplate_IX_XII_Terminal';
 
 // Helper types
 interface ReportData {
@@ -107,7 +110,7 @@ export default function ParentReportPage() {
                         </svg>
                         Back to Dashboard
                     </button>
-                    {reportData && getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII ? (
+                    {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX_XII) ? (
                         <div className="flex items-center space-x-2">
                             <span className="text-sm font-semibold">Report Type:</span>
                             <select
@@ -139,6 +142,13 @@ export default function ParentReportPage() {
                                 return <ReportTemplate_III_VIII_Terminal reportData={reportData as any} reportType={reportType as any} />;
                             }
                             return <ReportTemplate_III_VIII reportData={reportData as any} />;
+                        } else if (template === ReportTemplate.IX_XII) {
+                            if (reportType === 'PA1' || reportType === 'PA2') {
+                                return <ReportTemplate_IX_XII_Periodic reportData={reportData as any} reportType={reportType as any} />;
+                            } else if (reportType === 'TA1' || reportType === 'TA2') {
+                                return <ReportTemplate_IX_XII_Terminal reportData={reportData as any} reportType={reportType as any} />;
+                            }
+                            return <ReportTemplate_IX_XII reportData={reportData as any} />;
                         } else {
                             return (
                                 <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">

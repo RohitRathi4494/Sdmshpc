@@ -32,10 +32,10 @@ export async function GET(request: Request) {
             const classQuery = `
                 SELECT c.class_name 
                 FROM students s
-                JOIN student_academic_records sar ON s.id = sar.student_id
-                JOIN classes c ON sar.class_id = c.id
+                JOIN student_enrollments se ON s.id = se.student_id
+                JOIN classes c ON se.class_id = c.id
                 WHERE s.id = $1
-                ORDER BY sar.created_at DESC LIMIT 1
+                ORDER BY se.academic_year_id DESC LIMIT 1
             `;
             const classResult = await db.query(classQuery, [studentId]);
             const className = classResult.rows[0]?.class_name?.toUpperCase() || '';

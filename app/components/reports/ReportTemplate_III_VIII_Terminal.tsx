@@ -240,7 +240,9 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
 
                                             let totalVal: number | string = '-';
 
-                                            if (paScore || seaScore || iaScore || taScore) {
+                                            if (subMaxTotal === 0) {
+                                                totalVal = 'NA';
+                                            } else if (paScore || seaScore || iaScore || taScore) {
                                                 const numericTotal = Number(paScore || 0) + Number(seaScore || 0) + Number(iaScore || 0) + Number(taScore || 0);
                                                 totalVal = `${numericTotal}/${subMaxTotal}`;
                                                 totalMarksObj += numericTotal;

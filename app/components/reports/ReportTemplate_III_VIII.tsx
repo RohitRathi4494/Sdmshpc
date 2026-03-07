@@ -238,7 +238,12 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
 
                                             const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
                                             const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
-                                            const displayAvg = (hasMarks('Term I') || hasMarks('Term II')) ? `${parseFloat(avg.toFixed(2))}/${subMaxTotal}` : '';
+                                            let displayAvg: string | number = '';
+                                            if (subMaxTotal === 0) {
+                                                displayAvg = 'NA';
+                                            } else if (hasMarks('Term I') || hasMarks('Term II')) {
+                                                displayAvg = `${parseFloat(avg.toFixed(2))}/${subMaxTotal}`;
+                                            }
 
                                             return (
                                                 <tr key={subject}>

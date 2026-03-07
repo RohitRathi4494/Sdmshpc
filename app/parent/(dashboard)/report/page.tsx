@@ -27,6 +27,7 @@ export default function ParentReportPage() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [reportType, setReportType] = useState('FULL_HPC');
+    const [publishedReports, setPublishedReports] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchReport = async () => {
@@ -76,6 +77,22 @@ export default function ParentReportPage() {
 
                 setReportData(reportJson.data);
 
+                // 3. Fetch Published Settings
+                const settingsRes = await fetch(`/api/parent/report/settings?academic_year_id=${yearId}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+
+                if (settingsRes.ok) {
+                    const settingsData = await settingsRes.json();
+                    if (settingsData.success) {
+                        setPublishedReports(settingsData.data);
+                        // Auto-select the first available published report if FULL_HPC is not published
+                        if (!settingsData.data.includes('FULL_HPC') && settingsData.data.length > 0) {
+                            setReportType(settingsData.data[0]);
+                        }
+                    }
+                }
+
             } catch (err: any) {
                 console.error("Error fetching report:", err);
                 setError(err.message);
@@ -118,11 +135,12 @@ export default function ParentReportPage() {
                                 onChange={(e) => setReportType(e.target.value)}
                                 className="border border-white/30 bg-blue-700/50 rounded py-1 px-2 text-white text-sm focus:outline-none focus:ring-1 focus:ring-white"
                             >
-                                <option value="FULL_HPC">Full Year HPC</option>
-                                <option value="PA1">Periodic Assessment 1 (PA1)</option>
-                                <option value="TA1">Terminal Assessment 1 (TA1)</option>
-                                <option value="PA2">Periodic Assessment 2 (PA2)</option>
-                                <option value="TA2">Terminal Assessment 2 (TA2)</option>
+                                {publishedReports.includes('FULL_HPC') && <option value="FULL_HPC">Full Year HPC</option>}
+                                {publishedReports.includes('PA1') && <option value="PA1">Periodic Assessment 1 (PA1)</option>}
+                                {publishedReports.includes('TA1') && <option value="TA1">Terminal Assessment 1 (TA1)</option>}
+                                {publishedReports.includes('PA2') && <option value="PA2">Periodic Assessment 2 (PA2)</option>}
+                                {publishedReports.includes('TA2') && <option value="TA2">Terminal Assessment 2 (TA2)</option>}
+                                {publishedReports.length === 0 && <option value="">No Reports Published</option>}
                             </select>
                         </div>
                     ) : (
@@ -134,6 +152,16 @@ export default function ParentReportPage() {
                 <div className="p-8 overflow-x-auto">
                     {(() => {
                         const template = getTemplateForClass(reportData.student?.class_name);
+
+                        // Check visibility constraint first
+                        if (publishedReports.length === 0) {
+                            return (
+                                <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">
+                                    <h2 className="text-xl font-semibold text-gray-600">Report Not Available</h2>
+                                    <p className="text-gray-500 mt-2">The report card has not been published by the administration yet.</p>
+                                </div>
+                            );
+                        }
 
                         if (template === ReportTemplate.III_VIII) {
                             if (reportType === 'PA1' || reportType === 'PA2') {

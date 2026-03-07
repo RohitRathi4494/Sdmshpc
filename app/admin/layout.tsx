@@ -36,6 +36,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { label: 'Classes & Sections', href: '/admin/classes', icon: '🏫' },
         { label: 'Subject Mapping', href: '/admin/subjects', icon: '📚' },
         { label: 'Report Cards', href: '/admin/reports', icon: '📄' },
+        { label: 'Publish Settings', href: '/admin/reports/settings', icon: '⚙️' },
         { label: 'Manage Teachers', href: '/admin/teachers', icon: '👨‍🏫' },
         { label: 'Office Staff', href: '/admin/office-staff', icon: '🏢' },
         { label: 'Student Management', href: '/admin/students', icon: '👨‍🎓' },

@@ -24,7 +24,7 @@ export async function GET(request: Request) {
         }
 
         const query = `
-            SELECT id, report_type, is_published 
+            SELECT id, report_type, is_published, published_classes 
             FROM report_publish_settings 
             WHERE academic_year_id = $1
             ORDER BY report_type
@@ -51,7 +51,7 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { academic_year_id, report_type, is_published } = body;
+        const { academic_year_id, report_type, is_published, published_classes = [] } = body;
 
         if (!academic_year_id || !report_type) {
             return NextResponse.json({ success: false, message: 'Missing required fields' }, { status: 400 });
@@ -59,13 +59,18 @@ export async function POST(request: Request) {
 
         // Upsert setting
         const query = `
-            INSERT INTO report_publish_settings (academic_year_id, report_type, is_published)
-            VALUES ($1, $2, $3)
+            INSERT INTO report_publish_settings (academic_year_id, report_type, is_published, published_classes)
+            VALUES ($1, $2, $3, $4)
             ON CONFLICT (academic_year_id, report_type) 
-            DO UPDATE SET is_published = EXCLUDED.is_published
-            RETURNING id, report_type, is_published
+            DO UPDATE SET is_published = EXCLUDED.is_published, published_classes = EXCLUDED.published_classes
+            RETURNING id, report_type, is_published, published_classes
         `;
-        const { rows } = await db.query(query, [parseInt(academic_year_id), report_type, is_published === true]);
+        const { rows } = await db.query(query, [
+            parseInt(academic_year_id),
+            report_type,
+            is_published === true,
+            published_classes
+        ]);
 
         return NextResponse.json({ success: true, data: rows[0] });
 

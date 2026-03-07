@@ -109,6 +109,18 @@ export default function ScholasticEntryPage() {
         loadData();
     }, [studentId]);
 
+    // Helper to get dynamic max marks
+    const getDynamicMaxMarks = useCallback((subjectId: number, componentId: number) => {
+        const subject = subjects.find(s => s.id === subjectId || s.subject_id === subjectId);
+        const comp = components.find(c => c.id === componentId);
+        if (!comp) return 0;
+
+        if (subject && subject.assessment_max_marks && subject.assessment_max_marks[componentId] !== undefined) {
+            return Number(subject.assessment_max_marks[componentId]);
+        }
+        return COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks;
+    }, [subjects, components]);
+
     // Upsert Handler
     const handleScoreChange = useCallback(async (
         subjectId: number,
@@ -120,14 +132,18 @@ export default function ScholasticEntryPage() {
         setSaveError(null); // Clear previous error
 
         // Validation for marks
-        if (field === 'marks') {
-            const component = components.find(c => c.id === componentId);
-            if (component && typeof value === 'number') {
-                const maxMarks = COMPONENT_MAX_MARKS[component.component_name] || component.max_marks;
-                if (value < 0 || value > maxMarks) {
-                    alert(`Marks for ${component.component_name} must be between 0 and ${maxMarks}`);
-                    return;
-                }
+        if (field === 'marks' && typeof value === 'number') {
+            const maxMarks = getDynamicMaxMarks(subjectId, componentId);
+            const comp = components.find(c => c.id === componentId);
+            const compName = comp ? comp.component_name : 'Assessment';
+
+            if (maxMarks === 0) {
+                alert(`${compName} is disabled for this subject (Max Marks: 0).`);
+                return;
+            }
+            if (value < 0 || value > maxMarks) {
+                alert(`Marks for ${compName} in this subject must be between 0 and ${maxMarks}`);
+                return;
             }
         }
 
@@ -156,7 +172,7 @@ export default function ScholasticEntryPage() {
             setSaveError(error.message || 'Failed to save changes!');
             setSaving(false);
         }
-    }, [scores, studentId, components]);
+    }, [scores, studentId, components, getDynamicMaxMarks]);
 
     if (loading) return <div className="p-8 text-center">Loading assessment data...</div>;
 
@@ -222,13 +238,15 @@ export default function ScholasticEntryPage() {
                                         {TERMS.map(term => {
                                             const key = `${subject.id}-${comp.id}-${term.id}`;
                                             const score = scores[key] || {};
+                                            const maxMarks = getDynamicMaxMarks(subject.id, comp.id);
                                             return (
                                                 <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                     <input
                                                         type="number"
-                                                        placeholder=""
-                                                        className="block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
+                                                        placeholder={maxMarks === 0 ? 'N/A' : ''}
+                                                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center ${maxMarks === 0 ? 'bg-gray-100 cursor-not-allowed' : ''}`}
                                                         value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
+                                                        disabled={maxMarks === 0}
                                                         onChange={(e) => {
                                                             const val = e.target.value;
                                                             // Convert to float, or null if empty
@@ -240,7 +258,7 @@ export default function ScholasticEntryPage() {
                                                             // HandleScoreChange takes string | number.
                                                             handleScoreChange(subject.id, comp.id, term.id, 'marks', numVal);
                                                         }}
-                                                        max={COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks}
+                                                        max={maxMarks}
                                                         min={0}
                                                     />
                                                 </td>

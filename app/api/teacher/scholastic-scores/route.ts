@@ -8,7 +8,10 @@ const scoreSchema = z.object({
     subject_id: z.number().int().positive(),
     component_id: z.number().int().positive(),
     term_id: z.number().int().positive(),
-    marks: z.number().nullable().optional(),
+    marks: z.preprocess(
+        (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
+        z.number().nullable().optional()
+    ),
     academic_year_id: z.number().int().positive(),
 });
 

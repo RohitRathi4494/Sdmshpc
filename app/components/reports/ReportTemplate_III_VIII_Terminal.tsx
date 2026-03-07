@@ -187,12 +187,12 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}` }}>
                                 <thead>
                                     <tr>
-                                        <th rowSpan={2} style={{ width: '25%', textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
+                                        <th rowSpan={2} style={{ width: '20%', textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
                                         <th>Periodic Assessment</th>
                                         <th>Sub. Enrichment</th>
                                         <th>Internal Assessment</th>
                                         <th>Terminal Assessment</th>
-                                        <th className="gold-bg">Total</th>
+                                        <th className="gold-bg" style={{ width: '12%' }}>Total</th>
                                     </tr>
                                     <tr>
                                         <th style={{ fontSize: 11, fontWeight: 'normal', fontStyle: 'italic', padding: '2px' }}>Max: 30</th>

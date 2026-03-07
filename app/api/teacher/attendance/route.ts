@@ -17,7 +17,7 @@ export async function POST(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || user.role !== UserRole.TEACHER) {
+        if (!user || (user.role !== UserRole.TEACHER && user.role !== UserRole.ADMIN)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }

@@ -9,7 +9,7 @@ interface ReportSetting {
     is_published: boolean;
 }
 
-export default function ReportPublishSettingsPage() {
+export default function ReportPublishSettingsPageV3() {
     const [settings, setSettings] = useState<ReportSetting[]>([]);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
@@ -43,7 +43,10 @@ export default function ReportPublishSettingsPage() {
                 const res = await fetch(`/api/admin/settings/reports?academic_year_id=${currentYearId}`, {
                     headers: { 'Authorization': `Bearer ${token}` }
                 });
-                if (!res.ok) throw new Error('Failed to fetch settings');
+                if (!res.ok) {
+                    const text = await res.text();
+                    throw new Error(`HTTP ${res.status}: ${text.substring(0, 100)}`);
+                }
 
                 const data = await res.json();
 
@@ -106,7 +109,7 @@ export default function ReportPublishSettingsPage() {
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards <span className="text-xs text-gray-400 font-normal">v2 (Updated)</span></h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards <span className="text-xs text-blue-500 font-normal">v3</span></h1>
             <p className="text-sm text-gray-500 mb-8">
                 Toggle the switch to control which report cards are visible to parents in the Parent Dashboard for the current active Academic Year.
             </p>

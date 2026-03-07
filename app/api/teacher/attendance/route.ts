@@ -34,17 +34,17 @@ export async function POST(request: Request) {
             );
         }
 
-        const { student_id, month_id, working_days, days_present, academic_year_id, reason_for_low_attendance } = result.data;
+        const { student_id, month_id, working_days, days_present, academic_year_id } = result.data;
 
         const query = `
-      INSERT INTO attendance_records (student_id, month_id, working_days, days_present, academic_year_id, reason_for_low_attendance)
-      VALUES ($1, $2, $3, $4, $5, $6)
+      INSERT INTO attendance_records (student_id, month_id, working_days, days_present, academic_year_id)
+      VALUES ($1, $2, $3, $4, $5)
       ON CONFLICT (student_id, month_id, academic_year_id)
-      DO UPDATE SET working_days = EXCLUDED.working_days, days_present = EXCLUDED.days_present, reason_for_low_attendance = EXCLUDED.reason_for_low_attendance
+      DO UPDATE SET working_days = EXCLUDED.working_days, days_present = EXCLUDED.days_present
       RETURNING id
     `;
 
-        const { rows } = await db.query(query, [student_id, month_id, working_days, days_present, academic_year_id, reason_for_low_attendance]);
+        const { rows } = await db.query(query, [student_id, month_id, working_days, days_present, academic_year_id]);
 
         return NextResponse.json({
             success: true,

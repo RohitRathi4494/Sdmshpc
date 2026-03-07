@@ -8,6 +8,8 @@ export async function GET(request: Request) {
     try {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
+        const { searchParams } = new URL(request.url);
+        const studentId = searchParams.get('student_id');
 
         if (!user || (user.role !== UserRole.TEACHER && user.role !== UserRole.ADMIN)) {
             return NextResponse.json(
@@ -17,15 +19,35 @@ export async function GET(request: Request) {
         }
 
         // Fetch Domains with SubSkills
-        const query = `
+        let query = `
             SELECT d.id as domain_id, d.domain_name, 
                    ss.id as skill_id, ss.sub_skill_name
             FROM domains d
             JOIN sub_skills ss ON d.id = ss.domain_id
-            ORDER BY d.id, ss.id
         `;
+        const queryParams: any[] = [];
 
-        const { rows } = await db.query(query);
+        // Check student class if provided to filter domains
+        if (studentId) {
+            const classQuery = `
+                SELECT c.class_name 
+                FROM students s
+                JOIN student_academic_records sar ON s.id = sar.student_id
+                JOIN classes c ON sar.class_id = c.id
+                WHERE s.id = $1
+                ORDER BY sar.created_at DESC LIMIT 1
+            `;
+            const classResult = await db.query(classQuery, [studentId]);
+            const className = classResult.rows[0]?.class_name?.toUpperCase() || '';
+
+            if (className === 'IX' || className === '9') {
+                query += ` WHERE d.domain_name NOT IN ('Performing Art - Dance', 'Performing Art - Music') `;
+            }
+        }
+
+        query += ` ORDER BY d.id, ss.id `;
+
+        const { rows } = await db.query(query, queryParams);
 
         // Group by Domain
         const domainsMap = new Map();

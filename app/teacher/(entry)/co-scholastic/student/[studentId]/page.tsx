@@ -56,7 +56,7 @@ export default function CoScholasticEntryPage() {
                 }
 
                 // 1. Fetch Metadata (Domains & Skills)
-                const metadataRes = await ApiClient.get<{ success: boolean; data: any[] }>('/teacher/co-scholastic-scores/metadata', token);
+                const metadataRes = await ApiClient.get<{ success: boolean; data: any[] }>(`/teacher/co-scholastic-scores/metadata?student_id=${studentId}`, token);
                 // Handle response structure depending on if it's wrapped
                 const fetchedDomains = Array.isArray(metadataRes) ? metadataRes : (metadataRes.data || []);
                 setDomains(fetchedDomains);

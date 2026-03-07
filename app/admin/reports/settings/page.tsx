@@ -163,7 +163,7 @@ export default function ReportPublishSettingsPageV4() {
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards <span className="text-xs text-blue-500 font-normal">v4 (Class-wise)</span></h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards</h1>
             <p className="text-sm text-gray-500 mb-8">
                 Toggle the master switch to enable a report type, and select exactly which classes are allowed to view it in the Parent Dashboard.
             </p>

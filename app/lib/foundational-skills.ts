@@ -57,7 +57,7 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
         sections: [
             { key: 'ae_01', label: 'Shows imaginative and creative expression in art' },
             { key: 'ae_02', label: 'Responds to rhythm and dances confidently' },
-            { key: 'ae_03', label: 'Sings tunefully' },
+            { key: 'ae_03', label: 'Participates in cultural celebrations' },
         ],
     },
     {
@@ -82,16 +82,16 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
             {
                 subLabel: 'Reading Skills',
                 skills: [
-                    { key: 'en_rs_01', label: 'Identifies rhyming words' },
-                    { key: 'en_rs_02', label: 'Blends sounds to read words' },
-                    { key: 'en_rs_03', label: 'Reads selected sight words' },
+                    { key: 'en_rs_01', label: 'Identifies letters/words' },
+                    { key: 'en_rs_02', label: 'Recognition of picture' },
+                    { key: 'en_rs_03', label: 'Associate letters with their sounds' },
                 ],
             },
             {
                 subLabel: 'Writing Skills',
                 skills: [
-                    { key: 'en_ws_01', label: 'Attempts phonetic spelling' },
-                    { key: 'en_ws_02', label: 'Writes simple words' },
+                    { key: 'en_ws_01', label: 'Writes letters/words with correct formation' },
+                    { key: 'en_ws_02', label: 'Completes tasks independently and within the alloted time' },
                 ],
             },
         ],
@@ -105,7 +105,7 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
                 subLabel: 'श्रवण कौशल',
                 skills: [
                     { key: 'hi_ls_01', label: 'समझना और प्रतिक्रिया देना' },
-                    { key: 'hi_ls_02', label: 'कहानी को समझने का प्रयास' },
+                    { key: 'hi_ls_02', label: 'कहानी/कविता को सुनकर समझने का प्रयास' },
                 ],
             },
             {
@@ -118,15 +118,15 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
             {
                 subLabel: 'पठन कौशल',
                 skills: [
-                    { key: 'hi_rs_01', label: 'अक्षरों की पहचान' },
+                    { key: 'hi_rs_01', label: 'अक्षरों/शब्दों की पहचान' },
                     { key: 'hi_rs_02', label: 'ध्वनि को अक्षर से जोड़ना' },
                 ],
             },
             {
                 subLabel: 'लेखन कौशल',
                 skills: [
-                    { key: 'hi_ws_01', label: 'अक्षरों की सही बनावट' },
-                    { key: 'hi_ws_02', label: 'साधारण शब्द लिखना' },
+                    { key: 'hi_ws_01', label: 'अक्षरों/शब्दों की सही बनावट' },
+                    { key: 'hi_ws_02', label: 'साधारण अक्षर/शब्द स्वतंत्र रूप से लिखना' },
                 ],
             },
         ],
@@ -140,9 +140,9 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
             { key: 'cog_02', label: 'Explores and applies basic concepts' },
             { key: 'cog_03', label: 'Shows curiosity and connects learning to real life' },
             { key: 'cog_04', label: 'Observes and assimilates new concepts' },
-            { key: 'cog_05', label: 'Demonstrates good mouse control' },
+            { key: 'cog_05', label: 'Sorts and classifies objects(Pre number concepts)' },
             { key: 'cog_06', label: 'Expresses ideas clearly' },
-            { key: 'cog_07', label: 'Uses the keyboard appropriately' },
+            { key: 'cog_07', label: 'Explores colors, shapes and patterns creatively' },
         ],
     },
     {

@@ -335,7 +335,7 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                         </thead>
                         <tbody>
                             <tr>
-                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working Days</td>
                                 {MONTHS.map(m => <td key={m} className="input-cell">{attMap[m]?.total ?? ''}</td>)}
                                 <td className="input-cell">{attendance.reduce((s: number, a: any) => s + Number(a.total), 0) || ''}</td>
                             </tr>

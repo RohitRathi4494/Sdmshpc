@@ -531,7 +531,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working Days</td>
                                         {months.map(m => <td key={m} className="input-cell">{getAttendance(m)?.working_days || ''}</td>)}
                                         <td className="input-cell">{reportData.attendance?.reduce((acc: number, curr: any) => acc + (curr.working_days || 0), 0) || 0}</td>
                                     </tr>

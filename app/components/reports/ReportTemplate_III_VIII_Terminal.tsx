@@ -142,7 +142,7 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working days</td>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working Days</td>
                                         {months.map(m => <td key={m} className="input-cell" style={{ padding: '2px 4px' }}>{getAttendance(m)?.working_days || ''}</td>)}
                                         <td className="input-cell" style={{ padding: '2px 4px' }}>
                                             {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0}

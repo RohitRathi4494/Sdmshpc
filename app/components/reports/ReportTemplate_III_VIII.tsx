@@ -71,7 +71,22 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
         );
     };
 
-    const renderScoreCell = (subject: string, component: string, term: string) => {
+    const getComponentMax = (subInfo: any, componentName: string) => {
+        const comp = reportData.components?.find((c: any) => c.component_name === componentName);
+        if (!comp) return 0;
+        const cid = comp.id.toString();
+        if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
+            return Number(subInfo.assessment_max_marks[cid]);
+        }
+        return comp.max_marks || 0;
+    };
+
+    const renderScoreCell = (subInfo: any, component: string, term: string) => {
+        const subject = subInfo.subject_name;
+        const maxMarks = getComponentMax(subInfo, component);
+        if (maxMarks === 0) {
+            return <td className="input-cell" key={`${subject}-${component}-${term}`}>NA</td>;
+        }
         const score = getScholasticScore(subject, component, term);
         return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.marks ?? ''}</td>;
     };
@@ -184,15 +199,7 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                         let maxTotal2 = 0;
                                         let maxTotalAvg = 0;
 
-                                        const getComponentMax = (subInfo: any, componentName: string) => {
-                                            const comp = reportData.components?.find((c: any) => c.component_name === componentName);
-                                            if (!comp) return 0;
-                                            const cid = comp.id.toString();
-                                            if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
-                                                return Number(subInfo.assessment_max_marks[cid]);
-                                            }
-                                            return comp.max_marks || 0;
-                                        };
+
 
                                         const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
@@ -239,23 +246,21 @@ export default function ReportTemplate_III_VIII({ reportData }: { reportData: Re
                                             const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
                                             const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
                                             let displayAvg: string | number = '';
-                                            if (subMaxTotal === 0) {
-                                                displayAvg = 'NA';
-                                            } else if (hasMarks('Term I') || hasMarks('Term II')) {
+                                            if (hasMarks('Term I') || hasMarks('Term II')) {
                                                 displayAvg = `${parseFloat(avg.toFixed(2))}/${subMaxTotal}`;
                                             }
 
                                             return (
                                                 <tr key={subject}>
                                                     <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
-                                                    {renderScoreCell(subject, 'Periodic Assessment', 'Term I')}
-                                                    {renderScoreCell(subject, 'Periodic Assessment', 'Term II')}
-                                                    {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term I')}
-                                                    {renderScoreCell(subject, 'Subject Enrichment Activities', 'Term II')}
-                                                    {renderScoreCell(subject, 'Internal Assessment', 'Term I')}
-                                                    {renderScoreCell(subject, 'Internal Assessment', 'Term II')}
-                                                    {renderScoreCell(subject, 'Terminal Assessment', 'Term I')}
-                                                    {renderScoreCell(subject, 'Terminal Assessment', 'Term II')}
+                                                    {renderScoreCell(sub, 'Periodic Assessment', 'Term I')}
+                                                    {renderScoreCell(sub, 'Periodic Assessment', 'Term II')}
+                                                    {renderScoreCell(sub, 'Subject Enrichment Activities', 'Term I')}
+                                                    {renderScoreCell(sub, 'Subject Enrichment Activities', 'Term II')}
+                                                    {renderScoreCell(sub, 'Internal Assessment', 'Term I')}
+                                                    {renderScoreCell(sub, 'Internal Assessment', 'Term II')}
+                                                    {renderScoreCell(sub, 'Terminal Assessment', 'Term I')}
+                                                    {renderScoreCell(sub, 'Terminal Assessment', 'Term II')}
                                                     <td style={{ fontWeight: 700 }}>{displayTotal1}</td>
                                                     <td style={{ fontWeight: 700 }}>{displayTotal2}</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{displayAvg}</td>

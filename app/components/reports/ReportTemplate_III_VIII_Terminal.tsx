@@ -233,16 +233,14 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                             const iaScore = getScholasticScore(subject, 'Internal Assessment', termName)?.marks || 0;
                                             const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
 
-                                            const paVal = paScore || '-';
-                                            const seaVal = seaScore || '-';
-                                            const iaVal = iaScore || '-';
-                                            const taVal = taScore || '-';
+                                            const paVal = maxPA === 0 ? 'NA' : (paScore || '-');
+                                            const seaVal = maxSEA === 0 ? 'NA' : (seaScore || '-');
+                                            const iaVal = maxIA === 0 ? 'NA' : (iaScore || '-');
+                                            const taVal = maxTA === 0 ? 'NA' : (taScore || '-');
 
                                             let totalVal: number | string = '-';
 
-                                            if (subMaxTotal === 0) {
-                                                totalVal = 'NA';
-                                            } else if (paScore || seaScore || iaScore || taScore) {
+                                            if (paScore || seaScore || iaScore || taScore) {
                                                 const numericTotal = Number(paScore || 0) + Number(seaScore || 0) + Number(iaScore || 0) + Number(taScore || 0);
                                                 totalVal = `${numericTotal}/${subMaxTotal}`;
                                                 totalMarksObj += numericTotal;

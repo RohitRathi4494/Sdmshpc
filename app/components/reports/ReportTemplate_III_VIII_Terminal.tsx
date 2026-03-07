@@ -225,7 +225,8 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
                                             const maxIA = getComponentMax(sub, 'Internal Assessment');
                                             const maxTA = getComponentMax(sub, 'Terminal Assessment');
 
-                                            totalMax += maxPA + maxSEA + maxIA + maxTA;
+                                            const subMaxTotal = maxPA + maxSEA + maxIA + maxTA;
+                                            totalMax += subMaxTotal;
 
                                             const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
                                             const seaScore = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.marks || 0;
@@ -241,7 +242,7 @@ export default function ReportTemplate_III_VIII_Terminal({ reportData, reportTyp
 
                                             if (paScore || seaScore || iaScore || taScore) {
                                                 const numericTotal = Number(paScore || 0) + Number(seaScore || 0) + Number(iaScore || 0) + Number(taScore || 0);
-                                                totalVal = numericTotal;
+                                                totalVal = `${numericTotal}/${subMaxTotal}`;
                                                 totalMarksObj += numericTotal;
                                             }
 

@@ -552,25 +552,25 @@ export function FoundationalReportContent({ autoPrint = true }: { autoPrint?: bo
                 <table style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12, marginTop: 8 }}>
                     <thead>
                         <tr>
-                            <th style={{ ...obsThStyle, width: '12%' }}>Rating</th>
                             <th style={{ ...obsThStyle, width: '22%' }}>Level</th>
                             <th style={obsThStyle}>Description</th>
+                            <th style={{ ...obsThStyle, width: '15%' }}>Rating</th>
                         </tr>
                     </thead>
                     <tbody>
                         {[
-                            { badge: '★★★', color: C.tagA, level: 'Advanced', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
-                            { badge: '★★', color: C.tagB, level: 'Age Appropriate', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
-                            { badge: '★', color: C.tagC, level: 'Getting There', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
+                            { badge: '★★★', color: C.tagA, level: 'Blooming Beautifully', desc: 'Consistently demonstrates the skill independently with confidence, creativity, and beyond age-level expectations.' },
+                            { badge: '★★', color: C.tagB, level: 'Blooming Brightly', desc: 'Demonstrates understanding of the skill and applies it with confidence appropriate to their developmental stage.' },
+                            { badge: '★', color: C.tagC, level: 'Blooming Gradually', desc: 'Requires support and encouragement to understand and apply the skill effectively; still developing at their own pace.' },
                         ].map((r, ri) => (
                             <tr key={ri} style={{ background: ri % 2 === 0 ? C.rowOdd : C.rowEven }}>
+                                <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
+                                <td style={obsTdStyle}>{r.desc}</td>
                                 <td style={{ ...obsTdStyle, textAlign: 'center' }}>
                                     <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                         {r.badge.split('').map((_, i) => <StarSVG key={i} color={r.color} />)}
                                     </div>
                                 </td>
-                                <td style={{ ...obsTdStyle, fontWeight: 700 }}>{r.level}</td>
-                                <td style={obsTdStyle}>{r.desc}</td>
                             </tr>
                         ))}
                     </tbody>

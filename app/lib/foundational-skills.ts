@@ -83,7 +83,7 @@ export const FOUNDATIONAL_DOMAINS: FoundationalDomain[] = [
                 subLabel: 'Reading Skills',
                 skills: [
                     { key: 'en_rs_01', label: 'Identifies letters/words' },
-                    { key: 'en_rs_02', label: 'Recognition of picture' },
+                    { key: 'en_rs_02', label: 'Recognition of pictures' },
                     { key: 'en_rs_03', label: 'Associate letters with their sounds' },
                 ],
             },
@@ -190,9 +190,9 @@ export function isFoundationalClass(className: string): boolean {
 
 // Rating display helpers
 export const RATINGS = [
-    { value: 'A', label: 'A', stars: '★★★', color: '#1a7a3b', light: '#ecfdf5', meaning: 'Advanced' },
-    { value: 'B', label: 'B', stars: '★★', color: '#2563EB', light: '#eff6ff', meaning: 'Age Appropriate' },
-    { value: 'C', label: 'C', stars: '★', color: '#d97706', light: '#fffbeb', meaning: 'Getting There' },
+    { value: 'A', label: 'A', stars: '★★★', color: '#1a7a3b', light: '#ecfdf5', meaning: 'Blooming Beautifully' },
+    { value: 'B', label: 'B', stars: '★★', color: '#2563EB', light: '#eff6ff', meaning: 'Blooming Brightly' },
+    { value: 'C', label: 'C', stars: '★', color: '#d97706', light: '#fffbeb', meaning: 'Blooming Gradually' },
 ] as const;
 
 export type Rating = 'A' | 'B' | 'C' | '';

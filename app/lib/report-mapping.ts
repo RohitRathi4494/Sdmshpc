@@ -4,7 +4,8 @@ export enum ReportTemplate {
     LKG_UKG = 'LKG_UKG',
     I_II = 'I_II',
     III_VIII = 'III_VIII',
-    IX_XII = 'IX_XII',
+    IX = 'IX',
+    X_XII = 'X_XII', // Placeholder for future use
     UNKNOWN = 'UNKNOWN'
 }
 
@@ -22,8 +23,12 @@ export function getTemplateForClass(className: string): ReportTemplate {
     if (middleClasses.includes(upperClass)) return ReportTemplate.III_VIII;
 
     // IX to XII
-    const highClasses = ['IX', 'X', 'XI', 'XII'];
-    if (highClasses.includes(upperClass)) return ReportTemplate.IX_XII;
+    if (['IX', '9'].includes(upperClass)) {
+        return ReportTemplate.IX;
+    }
 
+    if (['X', '10', 'XI', '11', 'XII', '12'].includes(upperClass)) {
+        return ReportTemplate.X_XII;
+    }
     return ReportTemplate.UNKNOWN;
 }

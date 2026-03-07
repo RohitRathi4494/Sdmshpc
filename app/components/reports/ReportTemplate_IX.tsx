@@ -59,7 +59,7 @@ function GoldBar() {
     return <div style={{ height: 4, background: `linear-gradient(90deg, ${C.gold}, ${C.goldLight}, ${C.gold})` }} />;
 }
 
-export default function ReportTemplate_IX_XII({ reportData }: { reportData: ReportData }) {
+export default function ReportTemplate_IX({ reportData }: { reportData: ReportData }) {
     if (!reportData) return null;
 
     // --- Helpers ---

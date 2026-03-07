@@ -9,9 +9,9 @@ import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
 import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
 import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
-import ReportTemplate_IX_XII from '@/app/components/reports/ReportTemplate_IX_XII';
-import ReportTemplate_IX_XII_Periodic from '@/app/components/reports/ReportTemplate_IX_XII_Periodic';
-import ReportTemplate_IX_XII_Terminal from '@/app/components/reports/ReportTemplate_IX_XII_Terminal';
+import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
+import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
+import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
 
@@ -111,7 +111,7 @@ export default function ReportPreviewPage() {
                     </button>
                 </div>
 
-                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX_XII) && (
+                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX) && (
                     <div className="flex justify-end mb-6 mt-4 no-print">
                         <select
                             value={reportType}
@@ -137,13 +137,13 @@ export default function ReportPreviewPage() {
                             return <ReportTemplate_III_VIII_Terminal reportData={reportData} reportType={reportType as any} />;
                         }
                         return <ReportTemplate_III_VIII reportData={reportData} />;
-                    } else if (template === ReportTemplate.IX_XII) {
+                    } else if (template === ReportTemplate.IX) {
                         if (reportType === 'PA1' || reportType === 'PA2') {
-                            return <ReportTemplate_IX_XII_Periodic reportData={reportData} reportType={reportType as any} />;
+                            return <ReportTemplate_IX_Periodic reportData={reportData} reportType={reportType as any} />;
                         } else if (reportType === 'TA1' || reportType === 'TA2') {
-                            return <ReportTemplate_IX_XII_Terminal reportData={reportData} reportType={reportType as any} />;
+                            return <ReportTemplate_IX_Terminal reportData={reportData} reportType={reportType as any} />;
                         }
-                        return <ReportTemplate_IX_XII reportData={reportData} />;
+                        return <ReportTemplate_IX reportData={reportData} />;
                     } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG) {
                         return (
                             <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>

@@ -54,7 +54,7 @@ function SchoolHeader({ title }: { title: string }) {
     );
 }
 
-export default function ReportTemplate_IX_XII_Terminal({ reportData, reportType }: { reportData: ReportData, reportType: 'TA1' | 'TA2' }) {
+export default function ReportTemplate_IX_Terminal({ reportData, reportType }: { reportData: ReportData, reportType: 'TA1' | 'TA2' }) {
     if (!reportData) return null;
 
     const termName = reportType === 'TA1' ? 'Term I' : 'Term II';

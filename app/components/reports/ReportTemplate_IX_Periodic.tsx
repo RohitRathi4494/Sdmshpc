@@ -54,7 +54,7 @@ function SchoolHeader({ title }: { title: string }) {
     );
 }
 
-export default function ReportTemplate_IX_XII_Periodic({ reportData, reportType }: { reportData: ReportData, reportType: 'PA1' | 'PA2' }) {
+export default function ReportTemplate_IX_Periodic({ reportData, reportType }: { reportData: ReportData, reportType: 'PA1' | 'PA2' }) {
     if (!reportData) return null;
 
     const termName = reportType === 'PA1' ? 'Term I' : 'Term II';

@@ -8,6 +8,8 @@ import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
 import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
 import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
+import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
+import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
 
 export default function AdminReportViewPage() {
     const params = useParams();
@@ -142,11 +144,16 @@ export default function AdminReportViewPage() {
                             return <ReportTemplate_III_VIII_Terminal reportData={reportData} reportType={reportType} />;
                         }
                         return <ReportTemplate_III_VIII reportData={reportData} />;
-                    } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
+                    } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG) {
                         return (
-                            <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">
-                                <h2 className="text-xl font-semibold text-gray-600">Report Card Template Coming Soon</h2>
-                                <p className="text-gray-500 mt-2">The design for Class {reportData.student?.class_name} is under development.</p>
+                            <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                                <FoundationalReportContent autoPrint={false} />
+                            </div>
+                        );
+                    } else if (template === ReportTemplate.I_II) {
+                        return (
+                            <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                                <FoundationalReportContent_I_II autoPrint={false} />
                             </div>
                         );
                     } else {

@@ -8,6 +8,7 @@ import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III
 import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
 import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
+import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
 
 interface PrintPageProps {
     params: {
@@ -66,7 +67,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 </body>
             </html>
         );
-    } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG || template === ReportTemplate.I_II) {
+    } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG) {
         return (
             <html>
                 <head>
@@ -75,6 +76,19 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 <body className="print-mode bg-white">
                     <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
                         <FoundationalReportContent autoPrint={false} />
+                    </div>
+                </body>
+            </html>
+        )
+    } else if (template === ReportTemplate.I_II) {
+        return (
+            <html>
+                <head>
+                    <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
+                </head>
+                <body className="print-mode bg-white">
+                    <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
+                        <FoundationalReportContent_I_II autoPrint={false} />
                     </div>
                 </body>
             </html>

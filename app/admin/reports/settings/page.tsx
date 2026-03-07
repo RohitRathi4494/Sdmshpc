@@ -56,7 +56,7 @@ export default function ReportPublishSettingsPage() {
                 setSettings(mappedSettings);
             } catch (err: any) {
                 console.error(err);
-                setError('Failed to load report settings');
+                setError(`Failed to load report settings: ${err.message || String(err)}`);
             } finally {
                 setLoading(false);
             }
@@ -106,7 +106,7 @@ export default function ReportPublishSettingsPage() {
 
     return (
         <div className="max-w-4xl mx-auto p-4 sm:p-8">
-            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards</h1>
+            <h1 className="text-2xl font-bold text-gray-800 mb-2">Publish Report Cards <span className="text-xs text-gray-400 font-normal">v2 (Updated)</span></h1>
             <p className="text-sm text-gray-500 mb-8">
                 Toggle the switch to control which report cards are visible to parents in the Parent Dashboard for the current active Academic Year.
             </p>

@@ -342,30 +342,6 @@ export default function ReportTemplate_IX({ reportData }: { reportData: ReportDa
                                             <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
                                         </tr>
                                     ))}
-                                    {/* Performing Art - Dance */}
-                                    <tr className="domain-header">
-                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Dance</td>
-                                    </tr>
-                                    {['Posture', 'Expression', 'Rhythm', 'Overall Performance'].map(skill => (
-                                        <tr key={skill} style={{ height: 32 }}>
-                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                                <tbody style={{ pageBreakInside: 'avoid' }}>
-                                    {/* Performing Art - Music */}
-                                    <tr className="domain-header">
-                                        <td colSpan={3} className="text-left" style={{ textAlign: 'center' }}>Performing Art - Music</td>
-                                    </tr>
-                                    {['Rhythm', 'Pitch', 'Melody (Sings in Tune)', 'Overall Performance'].map(skill => (
-                                        <tr key={skill} style={{ height: 32 }}>
-                                            <td className="text-left" style={{ paddingLeft: '15px' }}>{skill}</td>
-                                            <td>{getCoScholastic(skill, 'Term I')?.grade || ''}</td>
-                                            <td>{getCoScholastic(skill, 'Term II')?.grade || ''}</td>
-                                        </tr>
-                                    ))}
                                 </tbody>
                             </table>
                         </div>

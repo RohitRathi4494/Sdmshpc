@@ -323,14 +323,28 @@ export default function StudentsPage() {
                                                     <td className="px-6 py-3 text-gray-500 whitespace-nowrap">
                                                         {sec ? <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">{sec.section_name}</span> : '-'}
                                                     </td>
-                                                    <td className="px-6 py-3 whitespace-nowrap">
+                                                    <td className="px-6 py-3 whitespace-nowrap flex items-center gap-2">
                                                         <button
                                                             onClick={() => setEditingStudent(student)}
                                                             className="text-indigo-600 hover:text-indigo-900 font-medium text-xs border border-indigo-200 px-3 py-1 rounded hover:bg-indigo-50"
                                                         >
                                                             Edit
                                                         </button>
+                                                        {(() => {
+                                                            const cls = classes.find(c => c.id === filterClassId);
+                                                            const clsName = cls?.class_name?.toUpperCase() || '';
+                                                            const isXiOrXii = clsName.includes('XI') || clsName.includes('XII') || clsName === '11' || clsName === '12';
+                                                            return isXiOrXii ? (
+                                                                <button
+                                                                    onClick={() => router.push(`/office/student/${student.id}/subjects`)}
+                                                                    className="text-purple-600 hover:text-purple-900 font-medium text-xs border border-purple-200 px-3 py-1 rounded hover:bg-purple-50"
+                                                                >
+                                                                    Subjects
+                                                                </button>
+                                                            ) : null;
+                                                        })()}
                                                     </td>
+
                                                 </tr>
                                             );
                                         })}

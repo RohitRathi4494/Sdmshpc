@@ -21,7 +21,9 @@ export default function BulkSubjectAssignmentPage() {
     const router = useRouter();
     const [classes, setClasses] = useState<any[]>([]);
     const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+    const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
     const [academicYear, setAcademicYear] = useState<any>(null);
+    const [allSections, setAllSections] = useState<any[]>([]);
     const [students, setStudents] = useState<any[]>([]);
     const [subjects, setSubjects] = useState<any[]>([]);
     const [assignments, setAssignments] = useState<AssignmentMap>({});
@@ -32,9 +34,10 @@ export default function BulkSubjectAssignmentPage() {
     useEffect(() => {
         const init = async () => {
             const token = sessionStorage.getItem('hpc_token') || '';
-            const [cls, yrs] = await Promise.all([
+            const [cls, yrs, secs] = await Promise.all([
                 ApiClient.get<any[]>('/admin/classes', token),
                 ApiClient.get<any[]>('/admin/academic-years', token),
+                ApiClient.get<any[]>('/admin/sections', token),
             ]);
             // Only XI / XII classes
             const highClasses = cls.filter(c => {
@@ -42,6 +45,7 @@ export default function BulkSubjectAssignmentPage() {
                 return n.includes('XI') || n.includes('XII') || n === '11' || n === '12';
             });
             setClasses(highClasses);
+            setAllSections(secs);
             const active = yrs.find(y => y.is_active);
             if (active) setAcademicYear(active);
         };
@@ -56,8 +60,12 @@ export default function BulkSubjectAssignmentPage() {
             try {
                 const token = sessionStorage.getItem('hpc_token') || '';
                 const [studs, classSubs, existingRaw] = await Promise.all([
-                    ApiClient.get<any[]>(`/admin/students?class_id=${selectedClassId}&academic_year_id=${academicYear.id}`, token),
-                    ApiClient.get<any[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${academicYear.id}`, token),
+                    ApiClient.get<any[]>(`/admin/students?class_id=${selectedClassId}&academic_year_id=${academicYear.id}${selectedSectionId ? `&section_id=${selectedSectionId}` : ''}`, token),
+                    (() => {
+                        let url = `/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${academicYear.id}`;
+                        if (selectedSectionId) url += `&section_id=${selectedSectionId}`;
+                        return ApiClient.get<any[]>(url, token);
+                    })(),
                     fetch(`/api/admin/student-subjects?class_id=${selectedClassId}&academic_year_id=${academicYear.id}`, { headers: { Authorization: `Bearer ${token}` } }).then(r => r.json()),
                 ]);
 
@@ -90,7 +98,7 @@ export default function BulkSubjectAssignmentPage() {
             }
         };
         load();
-    }, [selectedClassId, academicYear]);
+    }, [selectedClassId, selectedSectionId, academicYear]);
 
     // Cycle through: null → mandatory → optional_5th → additional_6th → null
     const cycleCell = useCallback((studentId: number, subjectId: number) => {
@@ -179,17 +187,32 @@ export default function BulkSubjectAssignmentPage() {
                 <span className="text-gray-500 italic">← Click any cell to cycle through assignments</span>
             </div>
 
-            {/* Class Selector */}
+            {/* Class + Section Selector */}
             <div className="flex items-center gap-4 mb-6">
                 <label className="text-sm font-medium text-gray-700">Select Class:</label>
                 <select
                     value={selectedClassId || ''}
-                    onChange={e => setSelectedClassId(e.target.value ? Number(e.target.value) : null)}
+                    onChange={e => { setSelectedClassId(e.target.value ? Number(e.target.value) : null); setSelectedSectionId(null); }}
                     className="border border-gray-300 rounded px-3 py-2 text-sm w-48"
                 >
                     <option value="">-- Select Class --</option>
                     {classes.map(c => <option key={c.id} value={c.id}>{c.class_name}</option>)}
                 </select>
+                {selectedClassId && (
+                    <>
+                        <label className="text-sm font-medium text-gray-700">Section:</label>
+                        <select
+                            value={selectedSectionId || ''}
+                            onChange={e => setSelectedSectionId(e.target.value ? Number(e.target.value) : null)}
+                            className="border border-gray-300 rounded px-3 py-2 text-sm w-40"
+                        >
+                            <option value="">All Sections</option>
+                            {allSections.filter(s => s.class_id === selectedClassId).map(s => (
+                                <option key={s.id} value={s.id}>{s.section_name}</option>
+                            ))}
+                        </select>
+                    </>
+                )}
             </div>
 
             {/* Grid */}

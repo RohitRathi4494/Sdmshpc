@@ -15,6 +15,12 @@ interface ClassData {
     class_name: string;
 }
 
+interface SectionData {
+    id: number;
+    section_name: string;
+    class_id: number;
+}
+
 interface AcademicYear {
     id: number;
     year_name: string;
@@ -37,10 +43,12 @@ export default function SubjectMappingPage() {
     const [activeTab, setActiveTab] = useState<'mapping' | 'master'>('mapping');
     const [classes, setClasses] = useState<ClassData[]>([]);
     const [years, setYears] = useState<AcademicYear[]>([]);
+    const [sections, setSections] = useState<SectionData[]>([]);
     const [allSubjects, setAllSubjects] = useState<Subject[]>([]);
     const [assessmentComponents, setAssessmentComponents] = useState<AssessmentComponent[]>([]);
 
     const [selectedClassId, setSelectedClassId] = useState<number | null>(null);
+    const [selectedSectionId, setSelectedSectionId] = useState<number | null>(null);
     const [selectedYearId, setSelectedYearId] = useState<number | null>(null);
 
     // Map of subjectId -> { max_marks, display_order }. If present in map, it's assigned.
@@ -53,17 +61,19 @@ export default function SubjectMappingPage() {
     const fetchMasters = async () => {
         try {
             const token = sessionStorage.getItem('hpc_token') || '';
-            const [classesData, yearsData, subjectsData, componentsData] = await Promise.all([
+            const [classesData, yearsData, subjectsData, componentsData, sectionsData] = await Promise.all([
                 ApiClient.get<ClassData[]>('/admin/classes', token),
                 ApiClient.get<AcademicYear[]>('/admin/academic-years', token),
                 ApiClient.get<Subject[]>('/admin/subjects', token),
                 ApiClient.get<AssessmentComponent[]>('/teacher/assessment-components', token),
+                ApiClient.get<SectionData[]>('/admin/sections', token),
             ]);
 
             setClasses(classesData);
             setYears(yearsData);
             setAllSubjects(subjectsData);
             setAssessmentComponents(componentsData);
+            setSections(sectionsData);
 
             // Auto-select active year
             if (!selectedYearId) {
@@ -93,8 +103,9 @@ export default function SubjectMappingPage() {
             setLoadingMapping(true);
             try {
                 const token = sessionStorage.getItem('hpc_token') || '';
-                // API now returns { subject_id, max_marks, assessment_max_marks, display_order }[]
-                const data = await ApiClient.get<any[]>(`/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`, token);
+                let url = `/admin/class-subjects?class_id=${selectedClassId}&academic_year_id=${selectedYearId}`;
+                if (selectedSectionId) url += `&section_id=${selectedSectionId}`;
+                const data = await ApiClient.get<any[]>(url, token);
 
                 const newMap = new Map<number, { max_marks: number, assessment_max_marks: Record<string, number>, display_order: number }>();
                 data.forEach(item => newMap.set(item.subject_id, {
@@ -113,7 +124,7 @@ export default function SubjectMappingPage() {
         };
         fetchMapping();
 
-    }, [selectedClassId, selectedYearId]);
+    }, [selectedClassId, selectedSectionId, selectedYearId]);
 
 
     const handleToggleSubject = (subjectId: number) => {
@@ -172,6 +183,7 @@ export default function SubjectMappingPage() {
 
             await ApiClient.post('/admin/class-subjects', {
                 class_id: selectedClassId,
+                section_id: selectedSectionId || null,
                 academic_year_id: selectedYearId,
                 subjects: subjectsPayload
             }, token);
@@ -239,13 +251,31 @@ export default function SubjectMappingPage() {
                             <label className="block text-sm font-medium text-gray-700 mb-1">Class</label>
                             <select
                                 value={selectedClassId || ''}
-                                onChange={e => setSelectedClassId(Number(e.target.value))}
+                                onChange={e => { setSelectedClassId(Number(e.target.value)); setSelectedSectionId(null); }}
                                 className="w-full px-3 py-2 border border-gray-300 rounded-md"
                             >
                                 <option value="">Select Class</option>
                                 {classes.map(c => (
                                     <option key={c.id} value={c.id}>{c.class_name}</option>
                                 ))}
+                            </select>
+                        </div>
+                        <div className="w-1/3">
+                            <label className="block text-sm font-medium text-gray-700 mb-1">
+                                Section <span className="text-gray-400 font-normal text-xs">(optional — leave blank for class-wide)</span>
+                            </label>
+                            <select
+                                value={selectedSectionId || ''}
+                                onChange={e => setSelectedSectionId(e.target.value ? Number(e.target.value) : null)}
+                                disabled={!selectedClassId}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-md disabled:bg-gray-100"
+                            >
+                                <option value="">All Sections (class-wide)</option>
+                                {sections
+                                    .filter(s => s.class_id === selectedClassId)
+                                    .map(s => (
+                                        <option key={s.id} value={s.id}>{s.section_name}</option>
+                                    ))}
                             </select>
                         </div>
                     </div>

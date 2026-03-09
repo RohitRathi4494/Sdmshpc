@@ -166,7 +166,19 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                     <div className="section" style={{ marginTop: 16 }}>
                         <SectionHeading>Scholastic Domains</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
-                            <table className="foundational-table scholastic-table">
+                            <table className="foundational-table scholastic-table" style={{ tableLayout: 'fixed' }}>
+                                <colgroup>
+                                    <col style={{ width: '20%' }} />{/* Subjects */}
+                                    <col style={{ width: '7%' }} />{/* PA T1 */}
+                                    <col style={{ width: '7%' }} />{/* PA T2 */}
+                                    <col style={{ width: '9%' }} />{/* Theory T1 */}
+                                    <col style={{ width: '9%' }} />{/* Practical T1 */}
+                                    <col style={{ width: '9%' }} />{/* Theory T2 */}
+                                    <col style={{ width: '9%' }} />{/* Practical T2 */}
+                                    <col style={{ width: '8%' }} />{/* Total T1 */}
+                                    <col style={{ width: '8%' }} />{/* Total T2 */}
+                                    <col style={{ width: '14%' }} />{/* Final Result */}
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th rowSpan={3} style={{ width: '18%' }}>Subjects</th>

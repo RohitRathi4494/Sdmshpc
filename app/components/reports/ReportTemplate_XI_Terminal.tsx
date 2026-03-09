@@ -184,7 +184,16 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                     <div className="section" style={{ marginTop: 8 }}>
                         <SectionHeading mt={4}>Scholastic Performance ({termName})</SectionHeading>
                         <div style={{ overflowX: 'auto' }}>
-                            <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}` }}>
+                            <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}`, tableLayout: 'fixed' }}>
+                                <colgroup>
+                                    <col style={{ width: '22%' }} />{/* Subjects */}
+                                    <col style={{ width: '10%' }} />{/* PA */}
+                                    <col style={{ width: '12%' }} />{/* Theory T1 */}
+                                    <col style={{ width: '12%' }} />{/* Practical T1 */}
+                                    <col style={{ width: '12%' }} />{/* Theory T2 */}
+                                    <col style={{ width: '12%' }} />{/* Practical T2 */}
+                                    <col style={{ width: '20%' }} />{/* Total */}
+                                </colgroup>
                                 <thead>
                                     <tr>
                                         <th rowSpan={3} style={{ width: '20%', textAlign: 'left', paddingLeft: 12 }}>Subjects</th>

@@ -10,6 +10,9 @@ import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTem
 import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
+import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
+import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
+import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
 
 // Helper types
 interface ReportData {
@@ -177,6 +180,13 @@ export default function ParentReportPage() {
                                 return <ReportTemplate_IX_Terminal reportData={reportData as any} reportType={reportType as any} />;
                             }
                             return <ReportTemplate_IX reportData={reportData as any} />;
+                        } else if (template === ReportTemplate.XI) {
+                            if (reportType === 'PA1' || reportType === 'PA2') {
+                                return <ReportTemplate_XI_Periodic reportData={reportData as any} reportType={reportType as any} />;
+                            } else if (reportType === 'TA1' || reportType === 'TA2') {
+                                return <ReportTemplate_XI_Terminal reportData={reportData as any} reportType={reportType as any} />;
+                            }
+                            return <ReportTemplate_XI reportData={reportData as any} />;
                         } else {
                             return (
                                 <div className="p-12 text-center border-2 border-dashed border-gray-300 rounded-lg">

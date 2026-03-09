@@ -10,6 +10,9 @@ import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTem
 import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
+import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
+import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
+import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
 
@@ -74,6 +77,24 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
             TemplateComponent = <ReportTemplate_IX_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
         } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
             TemplateComponent = <ReportTemplate_IX_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
+        }
+
+        return (
+            <html>
+                <head>
+                    <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
+                </head>
+                <body className="print-mode bg-white">
+                    {TemplateComponent}
+                </body>
+            </html>
+        );
+    } else if (template === ReportTemplate.XI) {
+        let TemplateComponent = <ReportTemplate_XI reportData={reportData} />;
+        if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
+            TemplateComponent = <ReportTemplate_XI_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
+        } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
+            TemplateComponent = <ReportTemplate_XI_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
         }
 
         return (

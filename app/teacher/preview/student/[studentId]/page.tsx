@@ -12,6 +12,9 @@ import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTem
 import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
+import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
+import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
+import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
 
@@ -111,7 +114,7 @@ export default function ReportPreviewPage() {
                     </button>
                 </div>
 
-                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX) && (
+                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.XI) && (
                     <div className="flex justify-end mb-6 mt-4 no-print">
                         <select
                             value={reportType}
@@ -144,6 +147,13 @@ export default function ReportPreviewPage() {
                             return <ReportTemplate_IX_Terminal reportData={reportData} reportType={reportType as any} />;
                         }
                         return <ReportTemplate_IX reportData={reportData} />;
+                    } else if (template === ReportTemplate.XI) {
+                        if (reportType === 'PA1' || reportType === 'PA2') {
+                            return <ReportTemplate_XI_Periodic reportData={reportData} reportType={reportType as any} />;
+                        } else if (reportType === 'TA1' || reportType === 'TA2') {
+                            return <ReportTemplate_XI_Terminal reportData={reportData} reportType={reportType as any} />;
+                        }
+                        return <ReportTemplate_XI reportData={reportData} />;
                     } else if (template === ReportTemplate.NURSERY || template === ReportTemplate.LKG_UKG) {
                         return (
                             <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>

@@ -336,7 +336,7 @@ export default function StudentsPage() {
                                                             const isXiOrXii = clsName.includes('XI') || clsName.includes('XII') || clsName === '11' || clsName === '12';
                                                             return isXiOrXii ? (
                                                                 <button
-                                                                    onClick={() => router.push(`/office/student/${student.id}/subjects`)}
+                                                                    onClick={() => router.push(`/admin/student/${student.id}/subjects`)}
                                                                     className="text-purple-600 hover:text-purple-900 font-medium text-xs border border-purple-200 px-3 py-1 rounded hover:bg-purple-50"
                                                                 >
                                                                     Subjects

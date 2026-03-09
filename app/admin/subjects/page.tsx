@@ -197,6 +197,26 @@ export default function SubjectMappingPage() {
 
     const router = useRouter();
 
+    // IDs of components to hide for XI/XII
+    const XI_XII_HIDDEN_COMPONENTS = new Set([2, 3]); // SEA, Internal Assessment
+    const LAB_ASSESSMENT_ID = 5;
+
+    const isXiOrXii = (() => {
+        if (!selectedClassId) return false;
+        const cls = classes.find(c => c.id === selectedClassId);
+        const n = cls?.class_name?.toUpperCase() || '';
+        return n.includes('XI') || n.includes('XII') || n === '11' || n === '12';
+    })();
+
+    // Components to show in columns
+    const visibleComponents = assessmentComponents.filter(c => {
+        if (c.id === LAB_ASSESSMENT_ID) return false; // Lab handled separately
+        if (isXiOrXii && XI_XII_HIDDEN_COMPONENTS.has(c.id)) return false;
+        return true;
+    });
+
+    const labComponent = assessmentComponents.find(c => c.id === LAB_ASSESSMENT_ID);
+
     if (loadingInitial) return <div className="p-8 text-center text-gray-500">Loading...</div>;
 
     return (
@@ -303,11 +323,16 @@ export default function SubjectMappingPage() {
                                             <div className="w-16 text-center shrink-0">Select</div>
                                             <div className="w-56 shrink-0">Subject Name</div>
                                             <div className="w-24 shrink-0 text-center">Display Order</div>
-                                            {assessmentComponents.map(comp => (
+                                            {visibleComponents.map(comp => (
                                                 <div key={comp.id} className="w-28 shrink-0 text-center text-xs leading-tight">
                                                     {comp.component_name}<br />(Max)
                                                 </div>
                                             ))}
+                                            {isXiOrXii && labComponent && (
+                                                <div className="w-28 shrink-0 text-center text-xs leading-tight text-green-700">
+                                                    Has Lab?<br />(Lab Max Marks)
+                                                </div>
+                                            )}
                                         </div>
                                         <div className="grid grid-cols-1 gap-4">
                                             {allSubjects.map(subject => {
@@ -337,7 +362,7 @@ export default function SubjectMappingPage() {
                                                                 min="0"
                                                             />
                                                         </div>
-                                                        {assessmentComponents.map(comp => (
+                                                        {visibleComponents.map(comp => (
                                                             <div key={comp.id} className="w-28 shrink-0">
                                                                 <input
                                                                     type="number"
@@ -345,12 +370,39 @@ export default function SubjectMappingPage() {
                                                                     onChange={e => handleAssessmentMarksChange(subject.id, comp.id, parseInt(e.target.value) || 0)}
                                                                     disabled={!isSelected}
                                                                     className="w-full px-2 py-1 text-center border border-gray-300 rounded disabled:bg-gray-100 disabled:text-gray-400"
-                                                                    min="1"
-                                                                    max="1000"
+                                                                    min="1" max="1000"
                                                                     placeholder={(comp.max_marks || 100).toString()}
                                                                 />
                                                             </div>
                                                         ))}
+                                                        {isXiOrXii && labComponent && (
+                                                            <div className="w-28 shrink-0">
+                                                                {isSelected ? (
+                                                                    <div className="flex flex-col items-center gap-1">
+                                                                        <label className="flex items-center gap-1 cursor-pointer">
+                                                                            <input
+                                                                                type="checkbox"
+                                                                                checked={!!data.assessment_max_marks[LAB_ASSESSMENT_ID]}
+                                                                                onChange={e => handleAssessmentMarksChange(subject.id, LAB_ASSESSMENT_ID, e.target.checked ? 30 : 0)}
+                                                                                className="text-green-600"
+                                                                            />
+                                                                            <span className="text-xs text-green-700 font-medium">Has Lab</span>
+                                                                        </label>
+                                                                        {!!data.assessment_max_marks[LAB_ASSESSMENT_ID] && (
+                                                                            <input
+                                                                                type="number"
+                                                                                value={data.assessment_max_marks[LAB_ASSESSMENT_ID]}
+                                                                                onChange={e => handleAssessmentMarksChange(subject.id, LAB_ASSESSMENT_ID, parseInt(e.target.value) || 0)}
+                                                                                className="w-full px-2 py-1 text-center border border-green-300 rounded text-xs"
+                                                                                min="1" max="100"
+                                                                            />
+                                                                        )}
+                                                                    </div>
+                                                                ) : (
+                                                                    <div className="text-center text-gray-300 text-xs">—</div>
+                                                                )}
+                                                            </div>
+                                                        )}
                                                     </div>
                                                 );
                                             })}

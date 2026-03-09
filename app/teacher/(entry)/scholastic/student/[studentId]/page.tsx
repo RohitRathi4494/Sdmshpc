@@ -231,7 +231,7 @@ export default function ScholasticEntryPage() {
                             {visibleComponents.map(comp => (
                                 <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
                                     {comp.component_name} <br />
-                                    <span className="text-gray-400 font-normal">({COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks} Marks)</span>
+                                    <span className="text-gray-400 font-normal">({comp.max_marks > 0 ? comp.max_marks : 'varies'} Marks)</span>
                                 </th>
                             ))}
                         </tr>
@@ -290,7 +290,7 @@ export default function ScholasticEntryPage() {
                 <p className="font-bold">Assessment Structure:</p>
                 <ul className="list-disc ml-5 mt-1">
                     {visibleComponents.map(c => (
-                        <li key={c.id}>{c.component_name}: Max {COMPONENT_MAX_MARKS[c.component_name] || c.max_marks} Marks</li>
+                        <li key={c.id}>{c.component_name}: Max {c.max_marks > 0 ? c.max_marks : 'varies'} Marks</li>
                     ))}
                 </ul>
             </div>

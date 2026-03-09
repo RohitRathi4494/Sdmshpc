@@ -262,7 +262,7 @@ export default function ScholasticEntryPage() {
                                         <span className="text-gray-400 font-normal">(20 Marks)</span>
                                     </th>
                                     <th colSpan={4} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
-                                        Theory + Lab Assessment<br />
+                                        Theory + Practical Assessment<br />
                                         <span className="text-gray-400 font-normal">(80 Marks)</span>
                                     </th>
                                 </tr>
@@ -271,8 +271,8 @@ export default function ScholasticEntryPage() {
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-I</th>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-II</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Lab T-I</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Lab T-II</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Practical T-I</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Practical T-II</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">
@@ -373,8 +373,8 @@ export default function ScholasticEntryPage() {
                         <>
                             <li>Periodic Assessment: Max 20 Marks (per term)</li>
                             <li>Theory Assessment: Max varies per subject (per term)</li>
-                            <li>Lab Assessment: Max varies per subject / N/A if no lab assigned (per term)</li>
-                            <li>Theory + Lab combined = 80 Marks per term</li>
+                            <li>Practical Assessment: Max varies per subject / N/A if no practical assigned (per term)</li>
+                            <li>Theory + Practical combined = 80 Marks per term</li>
                         </>
                     ) : (
                         visibleComponents.map(c => (

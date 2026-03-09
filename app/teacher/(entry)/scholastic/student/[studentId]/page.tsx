@@ -193,6 +193,23 @@ export default function ScholasticEntryPage() {
 
     if (!reportData) return <div className="p-8 text-center text-red-600">Student data not found.</div>;
 
+    // Determine if XI/XII to filter components
+    const className = reportData.student?.class_name?.toUpperCase().trim() || '';
+    const isXiOrXii = ['XI', '11', 'XII', '12'].includes(className);
+    const SEA_ID = 2;          // Subject Enrichment Activities
+    const IA_ID = 3;           // Internal Assessment
+    const LAB_ID = 5;          // Lab Assessment
+
+    const visibleComponents = components.filter(c => {
+        if (isXiOrXii) {
+            // For XI/XII: hide SEA and IA; show Lab Assessment
+            return c.id !== SEA_ID && c.id !== IA_ID;
+        } else {
+            // For other classes: hide Lab Assessment
+            return c.id !== LAB_ID;
+        }
+    });
+
     return (
         <div className="max-w-full mx-auto">
 
@@ -211,7 +228,7 @@ export default function ScholasticEntryPage() {
                             <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
                                 Subjects
                             </th>
-                            {components.map(comp => (
+                            {visibleComponents.map(comp => (
                                 <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
                                     {comp.component_name} <br />
                                     <span className="text-gray-400 font-normal">({COMPONENT_MAX_MARKS[comp.component_name] || comp.max_marks} Marks)</span>
@@ -219,7 +236,7 @@ export default function ScholasticEntryPage() {
                             ))}
                         </tr>
                         <tr>
-                            {components.map(comp => (
+                            {visibleComponents.map(comp => (
                                 <React.Fragment key={comp.id}>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term I</th>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term II</th>
@@ -233,7 +250,7 @@ export default function ScholasticEntryPage() {
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r sticky left-0 bg-white z-10">
                                     {subject.subject_name || subject.name}
                                 </td>
-                                {components.map(comp => (
+                                {visibleComponents.map(comp => (
                                     <React.Fragment key={comp.id}>
                                         {TERMS.map(term => {
                                             const key = `${subject.id}-${comp.id}-${term.id}`;
@@ -249,13 +266,10 @@ export default function ScholasticEntryPage() {
                                                         disabled={maxMarks === 0}
                                                         onChange={(e) => {
                                                             const val = e.target.value;
-                                                            // Convert to float, or null if empty
-                                                            let numVal: number | string = ''; // Keep as string '' for input field
+                                                            let numVal: number | string = '';
                                                             if (val !== '') {
                                                                 numVal = parseFloat(val);
                                                             }
-                                                            // Pass parsed number or empty string to handler.
-                                                            // HandleScoreChange takes string | number.
                                                             handleScoreChange(subject.id, comp.id, term.id, 'marks', numVal);
                                                         }}
                                                         max={maxMarks}
@@ -275,7 +289,7 @@ export default function ScholasticEntryPage() {
             <div className="p-4 bg-blue-50 text-blue-800 rounded mb-8 text-sm">
                 <p className="font-bold">Assessment Structure:</p>
                 <ul className="list-disc ml-5 mt-1">
-                    {components.map(c => (
+                    {visibleComponents.map(c => (
                         <li key={c.id}>{c.component_name}: Max {COMPONENT_MAX_MARKS[c.component_name] || c.max_marks} Marks</li>
                     ))}
                 </ul>

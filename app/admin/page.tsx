@@ -29,6 +29,7 @@ export default async function AdminDashboard() {
         { title: 'Subject Mapping', href: '/admin/subjects', icon: '📚', desc: 'Assign subjects to classes for report cards', color: 'bg-purple-500' },
         { title: 'Manage Teachers', href: '/admin/teachers', icon: '👨‍🏫', desc: 'Create teacher accounts and manage access', color: 'bg-teal-500' },
         { title: 'Student Management', href: '/admin/students', icon: '👨‍🎓', desc: 'Import students and manage enrollments', color: 'bg-orange-500' },
+        { title: 'XI/XII Subject Assignment', href: '/admin/student-subjects', icon: '📋', desc: 'Bulk assign 5th/6th subjects to Class XI & XII students', color: 'bg-violet-500' },
         { title: 'Communication', href: '/admin/communication', icon: '📢', desc: 'Send notices and circulars', color: 'bg-indigo-500' },
     ];
 

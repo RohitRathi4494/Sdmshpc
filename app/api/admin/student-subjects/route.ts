@@ -103,11 +103,32 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const student_id = searchParams.get('student_id');
+        const class_id = searchParams.get('class_id');
         const academic_year_id = searchParams.get('academic_year_id');
 
-        if (!student_id || !academic_year_id) {
+        if (!academic_year_id) {
             return NextResponse.json(
-                { success: false, error_code: 'VALIDATION_ERROR', message: 'student_id and academic_year_id are required' },
+                { success: false, error_code: 'VALIDATION_ERROR', message: 'academic_year_id is required' },
+                { status: 400 }
+            );
+        }
+
+        // If class_id provided, return all mappings for all students in that class
+        if (class_id) {
+            const query = `
+                SELECT ss.student_id, ss.subject_id, ss.subject_type
+                FROM student_subjects ss
+                JOIN student_enrollments se ON ss.student_id = se.student_id
+                WHERE se.class_id = $1 AND ss.academic_year_id = $2
+            `;
+            const { rows } = await db.query(query, [parseInt(class_id), parseInt(academic_year_id)]);
+            return NextResponse.json({ success: true, data: rows });
+        }
+
+        // Otherwise return for a specific student
+        if (!student_id) {
+            return NextResponse.json(
+                { success: false, error_code: 'VALIDATION_ERROR', message: 'student_id or class_id is required' },
                 { status: 400 }
             );
         }
@@ -119,10 +140,7 @@ export async function GET(request: Request) {
         `;
         const { rows } = await db.query(query, [parseInt(student_id), parseInt(academic_year_id)]);
 
-        return NextResponse.json({
-            success: true,
-            data: rows,
-        });
+        return NextResponse.json({ success: true, data: rows });
 
     } catch (error: any) {
         return NextResponse.json(

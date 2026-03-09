@@ -221,77 +221,166 @@ export default function ScholasticEntryPage() {
                     {!saving && !saveError && <span className="text-green-600 text-xs bg-green-50 px-2 py-1 rounded">✓ Auto-saved</span>}
                 </div>
             </div>
-            <div className="overflow-x-auto shadow rounded-lg border bg-white mb-10">
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead className="bg-gray-50">
-                        <tr>
-                            <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
-                                Subjects
-                            </th>
-                            {visibleComponents.map(comp => (
-                                <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
-                                    {comp.component_name} <br />
-                                    <span className="text-gray-400 font-normal">({comp.max_marks > 0 ? comp.max_marks : 'varies'} Marks)</span>
+            {isXiOrXii ? (() => {
+                // XI/XII custom layout: PA (20) | Theory + Lab (80 merged)
+                const paComp = components.find(c => c.component_name === 'Periodic Assessment');
+                const taComp = components.find(c => c.component_name === 'Terminal Assessment');
+                const labComp = components.find(c => c.component_name === 'Lab Assessment');
+
+                const mkInput = (subjectId: number, comp: AssessmentComponent, termId: number, maxMarks: number, isNA = false) => {
+                    if (isNA) return (
+                        <td className="px-2 py-2 border-r min-w-[100px] text-center bg-gray-100 text-gray-400 text-sm">N/A</td>
+                    );
+                    const key = `${subjectId}-${comp.id}-${termId}`;
+                    const score = scores[key] || {};
+                    return (
+                        <td key={key} className="px-2 py-2 border-r min-w-[100px] text-center">
+                            <input
+                                type="number"
+                                className="block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
+                                value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
+                                max={maxMarks} min={0}
+                                onChange={(e) => {
+                                    const val = e.target.value;
+                                    handleScoreChange(subjectId, comp.id, termId, 'marks', val !== '' ? parseFloat(val) : '');
+                                }}
+                            />
+                        </td>
+                    );
+                };
+
+                return (
+                    <div className="overflow-x-auto shadow rounded-lg border bg-white mb-10">
+                        <table className="min-w-full divide-y divide-gray-200">
+                            <thead className="bg-gray-50">
+                                <tr>
+                                    <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
+                                        Subjects
+                                    </th>
+                                    <th colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
+                                        Periodic Assessment<br />
+                                        <span className="text-gray-400 font-normal">(20 Marks)</span>
+                                    </th>
+                                    <th colSpan={4} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
+                                        Theory + Lab Assessment<br />
+                                        <span className="text-gray-400 font-normal">(80 Marks)</span>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-I</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-II</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Lab T-I</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Lab T-II</th>
+                                </tr>
+                            </thead>
+                            <tbody className="bg-white divide-y divide-gray-200">
+                                {subjects.map(subject => {
+                                    const labMax = labComp ? getDynamicMaxMarks(subject.id, labComp.id) : 0;
+                                    const taMax = taComp ? getDynamicMaxMarks(subject.id, taComp.id) : 60;
+                                    const hasLab = labMax > 0;
+                                    return (
+                                        <tr key={subject.id} className="hover:bg-gray-50">
+                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r sticky left-0 bg-white z-10">
+                                                {subject.subject_name || subject.name}
+                                            </td>
+                                            {/* PA — Term I & II (max 20) */}
+                                            {paComp ? TERMS.map(t => mkInput(subject.id, paComp, t.id, 20)) : <><td /><td /></>}
+                                            {/* TA — Term I & II */}
+                                            {taComp ? TERMS.map(t => mkInput(subject.id, taComp, t.id, taMax)) : <><td /><td /></>}
+                                            {/* Lab — Term I & II (NA if no lab) */}
+                                            {labComp
+                                                ? TERMS.map(t => mkInput(subject.id, labComp, t.id, labMax, !hasLab))
+                                                : <><td className="px-2 py-2 border-r text-center bg-gray-100 text-gray-400 text-sm">N/A</td><td className="px-2 py-2 border-r text-center bg-gray-100 text-gray-400 text-sm">N/A</td></>
+                                            }
+                                        </tr>
+                                    );
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            })() : (
+                // Generic table for other classes
+                <div className="overflow-x-auto shadow rounded-lg border bg-white mb-10">
+                    <table className="min-w-full divide-y divide-gray-200">
+                        <thead className="bg-gray-50">
+                            <tr>
+                                <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
+                                    Subjects
                                 </th>
-                            ))}
-                        </tr>
-                        <tr>
-                            {visibleComponents.map(comp => (
-                                <React.Fragment key={comp.id}>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term I</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term II</th>
-                                </React.Fragment>
-                            ))}
-                        </tr>
-                    </thead>
-                    <tbody className="bg-white divide-y divide-gray-200">
-                        {subjects.map(subject => (
-                            <tr key={subject.id} className="hover:bg-gray-50">
-                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r sticky left-0 bg-white z-10">
-                                    {subject.subject_name || subject.name}
-                                </td>
+                                {visibleComponents.map(comp => (
+                                    <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
+                                        {comp.component_name} <br />
+                                        <span className="text-gray-400 font-normal">({comp.max_marks > 0 ? comp.max_marks : 'varies'} Marks)</span>
+                                    </th>
+                                ))}
+                            </tr>
+                            <tr>
                                 {visibleComponents.map(comp => (
                                     <React.Fragment key={comp.id}>
-                                        {TERMS.map(term => {
-                                            const key = `${subject.id}-${comp.id}-${term.id}`;
-                                            const score = scores[key] || {};
-                                            const maxMarks = getDynamicMaxMarks(subject.id, comp.id);
-                                            return (
-                                                <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
-                                                    <input
-                                                        type="number"
-                                                        placeholder={maxMarks === 0 ? 'N/A' : ''}
-                                                        className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center ${maxMarks === 0 ? 'bg-gray-100 cursor-not-allowed' : ''}`}
-                                                        value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
-                                                        disabled={maxMarks === 0}
-                                                        onChange={(e) => {
-                                                            const val = e.target.value;
-                                                            let numVal: number | string = '';
-                                                            if (val !== '') {
-                                                                numVal = parseFloat(val);
-                                                            }
-                                                            handleScoreChange(subject.id, comp.id, term.id, 'marks', numVal);
-                                                        }}
-                                                        max={maxMarks}
-                                                        min={0}
-                                                    />
-                                                </td>
-                                            );
-                                        })}
+                                        <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term I</th>
+                                        <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r bg-gray-50">Term II</th>
                                     </React.Fragment>
                                 ))}
                             </tr>
-                        ))}
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody className="bg-white divide-y divide-gray-200">
+                            {subjects.map(subject => (
+                                <tr key={subject.id} className="hover:bg-gray-50">
+                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 border-r sticky left-0 bg-white z-10">
+                                        {subject.subject_name || subject.name}
+                                    </td>
+                                    {visibleComponents.map(comp => (
+                                        <React.Fragment key={comp.id}>
+                                            {TERMS.map(term => {
+                                                const key = `${subject.id}-${comp.id}-${term.id}`;
+                                                const score = scores[key] || {};
+                                                const maxMarks = getDynamicMaxMarks(subject.id, comp.id);
+                                                return (
+                                                    <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
+                                                        <input
+                                                            type="number"
+                                                            placeholder={maxMarks === 0 ? 'N/A' : ''}
+                                                            className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center ${maxMarks === 0 ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                                                            value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
+                                                            disabled={maxMarks === 0}
+                                                            onChange={(e) => {
+                                                                const val = e.target.value;
+                                                                let numVal: number | string = '';
+                                                                if (val !== '') numVal = parseFloat(val);
+                                                                handleScoreChange(subject.id, comp.id, term.id, 'marks', numVal);
+                                                            }}
+                                                            max={maxMarks} min={0}
+                                                        />
+                                                    </td>
+                                                );
+                                            })}
+                                        </React.Fragment>
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            )}
 
             <div className="p-4 bg-blue-50 text-blue-800 rounded mb-8 text-sm">
                 <p className="font-bold">Assessment Structure:</p>
                 <ul className="list-disc ml-5 mt-1">
-                    {visibleComponents.map(c => (
-                        <li key={c.id}>{c.component_name}: Max {c.max_marks > 0 ? c.max_marks : 'varies'} Marks</li>
-                    ))}
+                    {isXiOrXii ? (
+                        <>
+                            <li>Periodic Assessment: Max 20 Marks (per term)</li>
+                            <li>Theory Assessment: Max varies per subject (per term)</li>
+                            <li>Lab Assessment: Max varies per subject / N/A if no lab assigned (per term)</li>
+                            <li>Theory + Lab combined = 80 Marks per term</li>
+                        </>
+                    ) : (
+                        visibleComponents.map(c => (
+                            <li key={c.id}>{c.component_name}: Max {c.max_marks > 0 ? c.max_marks : 'varies'} Marks</li>
+                        ))
+                    )}
                 </ul>
             </div>
         </div>

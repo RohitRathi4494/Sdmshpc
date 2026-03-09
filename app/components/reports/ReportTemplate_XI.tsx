@@ -211,8 +211,9 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                         let maxTotal2 = 0;
                                         let maxTotalAvg = 0;
 
-                                        const rows = reportData.subjects?.map((sub: any) => {
+                                        const rows = reportData.subjects?.map((sub: any, idx: number) => {
                                             const subject = sub.subject_name;
+                                            const isAdditional = idx >= 5; // 6th subject onward
 
                                             const getVal = (comp: string, term: string) => {
                                                 const s = getScholasticScore(subject, comp, term);
@@ -226,7 +227,6 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                                     getScholasticScore(subject, 'Terminal Assessment', term);
                                             };
 
-                                            const labMax1 = getComponentMax(sub, 'Lab Assessment');
                                             const total1 = getVal('Periodic Assessment', 'Term I') +
                                                 getVal('Terminal Assessment', 'Term I') +
                                                 getVal('Lab Assessment', 'Term I');
@@ -239,21 +239,15 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                                 getComponentMax(sub, 'Terminal Assessment') +
                                                 getComponentMax(sub, 'Lab Assessment');
 
-                                            if (hasMarks('Term I')) {
-                                                grandTotal1 += total1;
-                                                maxTotal1 += subMaxTotal;
-                                            }
-                                            if (hasMarks('Term II')) {
-                                                grandTotal2 += total2;
-                                                maxTotal2 += subMaxTotal;
+                                            // Only count non-additional subjects in grand totals
+                                            if (!isAdditional) {
+                                                if (hasMarks('Term I')) { grandTotal1 += total1; maxTotal1 += subMaxTotal; }
+                                                if (hasMarks('Term II')) { grandTotal2 += total2; maxTotal2 += subMaxTotal; }
+                                                const avg = (total1 + total2) / 2;
+                                                if (hasMarks('Term I') || hasMarks('Term II')) { grandTotalAvg += avg; maxTotalAvg += subMaxTotal; }
                                             }
 
                                             const avg = (total1 + total2) / 2;
-                                            if (hasMarks('Term I') || hasMarks('Term II')) {
-                                                grandTotalAvg += avg;
-                                                maxTotalAvg += subMaxTotal;
-                                            }
-
                                             const displayTotal1 = hasMarks('Term I') ? parseFloat(total1.toFixed(2)) : '';
                                             const displayTotal2 = hasMarks('Term II') ? parseFloat(total2.toFixed(2)) : '';
                                             let displayAvg: string | number = '';
@@ -261,12 +255,25 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                                 displayAvg = `${parseFloat(avg.toFixed(2))}/${subMaxTotal}`;
                                             }
 
-                                            // Lab Assessment — show NA if no lab for this subject
                                             const labMax = getComponentMax(sub, 'Lab Assessment');
 
+                                            const rowStyle = isAdditional
+                                                ? { background: '#fff8e1', borderLeft: `4px solid ${C.gold}` }
+                                                : {};
+
                                             return (
-                                                <tr key={subject}>
-                                                    <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
+                                                <tr key={subject} style={rowStyle}>
+                                                    <td className="text-left" style={{ paddingLeft: '12px' }}>
+                                                        {subject}
+                                                        {isAdditional && (
+                                                            <span style={{
+                                                                marginLeft: 6, fontSize: 9, fontWeight: 700,
+                                                                background: C.gold, color: '#fff',
+                                                                borderRadius: 3, padding: '1px 5px',
+                                                                verticalAlign: 'middle', letterSpacing: 0.3
+                                                            }}>ADDITIONAL</span>
+                                                        )}
+                                                    </td>
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term I')}
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term II')}
                                                     {renderScoreCell(sub, 'Terminal Assessment', 'Term I')}
@@ -280,19 +287,17 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                             );
                                         });
 
-                                        const p1 = maxTotal1 > 0 ? ((grandTotal1 / maxTotal1) * 100).toFixed(2) : '';
-                                        const p2 = maxTotal2 > 0 ? ((grandTotal2 / maxTotal2) * 100).toFixed(2) : '';
                                         const pAvg = maxTotalAvg > 0 ? ((grandTotalAvg / maxTotalAvg) * 100).toFixed(2) : '';
 
                                         return (
                                             <>
                                                 {rows}
                                                 <tr className="domain-header">
-                                                    <td colSpan={10} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
+                                                    <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{maxTotalAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxTotalAvg}` : ''}</td>
                                                 </tr>
                                                 <tr className="domain-header" style={{ background: '#d1e0f7' }}>
-                                                    <td colSpan={10} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
+                                                    <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{pAvg ? `${pAvg}%` : ''}</td>
                                                 </tr>
                                             </>

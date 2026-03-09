@@ -169,22 +169,25 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                             <table className="foundational-table scholastic-table">
                                 <thead>
                                     <tr>
-                                        <th rowSpan={2} style={{ width: '18%' }}>Subjects</th>
-                                        <th colSpan={2}>Periodic Assessment</th>
-                                        <th colSpan={2}>Terminal Assessment</th>
-                                        <th colSpan={2}>Lab Assessment</th>
+                                        <th rowSpan={3} style={{ width: '18%' }}>Subjects</th>
+                                        <th colSpan={2}>Periodic Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(20 Marks)</span></th>
+                                        <th colSpan={4}>Terminal Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(80 Marks)</span></th>
                                         <th colSpan={2} className="gold-bg">Total</th>
-                                        <th rowSpan={2} className="gold-bg">Final Result<br />(Avg)</th>
+                                        <th rowSpan={3} className="gold-bg">Final Result<br />(Avg)</th>
                                     </tr>
                                     <tr>
-                                        <th>Term I</th>
-                                        <th>Term II</th>
-                                        <th>Term I</th>
-                                        <th>Term II</th>
-                                        <th>Term I</th>
-                                        <th>Term II</th>
-                                        <th className="gold-bg">Term I</th>
-                                        <th className="gold-bg">Term II</th>
+                                        <th rowSpan={2}>Term I</th>
+                                        <th rowSpan={2}>Term II</th>
+                                        <th colSpan={2}>Term 1</th>
+                                        <th colSpan={2}>Term 2</th>
+                                        <th rowSpan={2} className="gold-bg">Term I</th>
+                                        <th rowSpan={2} className="gold-bg">Term II</th>
+                                    </tr>
+                                    <tr>
+                                        <th>Theory</th>
+                                        <th>Practical</th>
+                                        <th>Theory</th>
+                                        <th>Practical</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -255,8 +258,8 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term I')}
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term II')}
                                                     {renderScoreCell(sub, 'Terminal Assessment', 'Term I')}
-                                                    {renderScoreCell(sub, 'Terminal Assessment', 'Term II')}
                                                     {labMax > 0 ? renderScoreCell(sub, 'Lab Assessment', 'Term I') : <td className="input-cell">NA</td>}
+                                                    {renderScoreCell(sub, 'Terminal Assessment', 'Term II')}
                                                     {labMax > 0 ? renderScoreCell(sub, 'Lab Assessment', 'Term II') : <td className="input-cell">NA</td>}
                                                     <td style={{ fontWeight: 700 }}>{displayTotal1}</td>
                                                     <td style={{ fontWeight: 700 }}>{displayTotal2}</td>
@@ -273,11 +276,11 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                             <>
                                                 {rows}
                                                 <tr className="domain-header">
-                                                    <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
+                                                    <td colSpan={10} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{maxTotalAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxTotalAvg}` : ''}</td>
                                                 </tr>
                                                 <tr className="domain-header" style={{ background: '#d1e0f7' }}>
-                                                    <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
+                                                    <td colSpan={10} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{pAvg ? `${pAvg}%` : ''}</td>
                                                 </tr>
                                             </>

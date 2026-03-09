@@ -254,7 +254,7 @@ export default function ScholasticEntryPage() {
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
-                                    <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
+                                    <th rowSpan={3} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
                                         Subjects
                                     </th>
                                     <th colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
@@ -262,17 +262,21 @@ export default function ScholasticEntryPage() {
                                         <span className="text-gray-400 font-normal">(20 Marks)</span>
                                     </th>
                                     <th colSpan={4} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
-                                        Theory + Practical Assessment<br />
+                                        Terminal Assessment<br />
                                         <span className="text-gray-400 font-normal">(80 Marks)</span>
                                     </th>
                                 </tr>
                                 <tr>
+                                    <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
+                                    <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
+                                    <th colSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50 border-b">Theory</th>
+                                    <th colSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50 border-b">Practical</th>
+                                </tr>
+                                <tr>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
                                     <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-I</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Theory T-II</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Practical T-I</th>
-                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Practical T-II</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
+                                    <th className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-gray-200">

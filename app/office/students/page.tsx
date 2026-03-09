@@ -308,6 +308,8 @@ export default function OfficeStudentsPage() {
                                     <tbody className="divide-y divide-gray-100">
                                         {enrolledStudents.map((student) => {
                                             const sec = sections.find(s => s.id === student.section_id);
+                                            const clsName = classes.find(c => c.id === filterClassId)?.class_name || '';
+                                            const isXiOrXii = clsName.includes('XI') || clsName.includes('11') || clsName.includes('XII') || clsName.includes('12');
                                             return (
                                                 <tr key={student.id} className="hover:bg-gray-50">
                                                     <td className="px-6 py-3 text-gray-500 whitespace-nowrap">{student.roll_no || '-'}</td>
@@ -330,6 +332,14 @@ export default function OfficeStudentsPage() {
                                                         >
                                                             Fees
                                                         </button>
+                                                        {isXiOrXii && (
+                                                            <button
+                                                                onClick={() => router.push(`/office/student/${student.id}/subjects`)}
+                                                                className="text-amber-600 hover:text-amber-900 font-medium text-xs border border-amber-200 px-3 py-1 rounded hover:bg-amber-50"
+                                                            >
+                                                                Subjects
+                                                            </button>
+                                                        )}
                                                     </td>
                                                 </tr>
                                             );

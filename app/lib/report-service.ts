@@ -59,16 +59,42 @@ export async function getStudentReportData(student_id: number, academic_year_id:
   `;
   const remarksRes = await db.query(remarksQuery, [student_id, academic_year_id]);
 
-  // 6. Class Subjects
-  const subjectsQuery = `
+  // 6. Class Subjects (or Student Subjects for XI/XII)
+  let subjectsRes;
+  const isXiOrXii = student.class_name.includes('XI') || student.class_name.includes('XII') || student.class_name.includes('11') || student.class_name.includes('12');
+
+  if (isXiOrXii) {
+    const studentSubjectsQuery = `
+          SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks, ss.subject_type
+          FROM student_subjects ss
+          JOIN subjects sub ON ss.subject_id = sub.id
+          JOIN class_subjects cs ON ss.subject_id = cs.subject_id AND cs.class_id = $1 AND cs.academic_year_id = $2
+          WHERE ss.student_id = $3 AND ss.academic_year_id = $2
+          ORDER BY cs.display_order ASC, sub.subject_name ASC
+      `;
+    subjectsRes = await db.query(studentSubjectsQuery, [student.class_id, academic_year_id, student_id]);
+
+    // Fallback if no specific subjects configured yet for the XI/XII student
+    if (subjectsRes.rows.length === 0) {
+      const subjectsQuery = `
+            SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks
+            FROM class_subjects cs
+            JOIN subjects sub ON cs.subject_id = sub.id
+            WHERE cs.class_id = $1 AND cs.academic_year_id = $2
+            ORDER BY cs.display_order ASC, sub.subject_name ASC
+        `;
+      subjectsRes = await db.query(subjectsQuery, [student.class_id, academic_year_id]);
+    }
+  } else {
+    const subjectsQuery = `
         SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks
         FROM class_subjects cs
         JOIN subjects sub ON cs.subject_id = sub.id
         WHERE cs.class_id = $1 AND cs.academic_year_id = $2
         ORDER BY cs.display_order ASC, sub.subject_name ASC
     `;
-  // student.class_id is now available from query 1
-  const subjectsRes = await db.query(subjectsQuery, [student.class_id, academic_year_id]);
+    subjectsRes = await db.query(subjectsQuery, [student.class_id, academic_year_id]);
+  }
 
   // 7. Assessment Components
   const componentsQuery = `SELECT * FROM assessment_components`;

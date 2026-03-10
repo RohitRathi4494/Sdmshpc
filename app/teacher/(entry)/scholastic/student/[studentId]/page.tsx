@@ -193,9 +193,10 @@ export default function ScholasticEntryPage() {
 
     if (!reportData) return <div className="p-8 text-center text-red-600">Student data not found.</div>;
 
-    // Determine if XI/XII to filter components
+    // Determine class-specific visibility
     const className = reportData.student?.class_name?.toUpperCase().trim() || '';
     const isXiOrXii = ['XI', '11', 'XII', '12'].includes(className);
+    const isClassX = ['X', '10'].includes(className);
     const SEA_ID = 2;          // Subject Enrichment Activities
     const IA_ID = 3;           // Internal Assessment
     const LAB_ID = 5;          // Lab Assessment
@@ -204,6 +205,9 @@ export default function ScholasticEntryPage() {
         if (isXiOrXii) {
             // For XI/XII: hide SEA and IA; show Lab Assessment
             return c.id !== SEA_ID && c.id !== IA_ID;
+        } else if (isClassX) {
+            // For X: hide IA only; SEA stays (rendered as grade)
+            return c.id !== IA_ID && c.id !== LAB_ID;
         } else {
             // For other classes: hide Lab Assessment
             return c.id !== LAB_ID;
@@ -316,10 +320,14 @@ export default function ScholasticEntryPage() {
                                 </th>
                                 {visibleComponents.map(comp => {
                                     const headerMax = subjects.length > 0 ? getDynamicMaxMarks(subjects[0].id, comp.id) : 0;
+                                    // For Class X, SEA is graded not marked
+                                    const headerLabel = (isClassX && comp.id === SEA_ID)
+                                        ? 'Grade'
+                                        : (headerMax > 0 ? `${headerMax} Marks` : 'Varies Marks');
                                     return (
                                         <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
                                             {comp.component_name} <br />
-                                            <span className="text-gray-400 font-normal">({headerMax > 0 ? `${headerMax} Marks` : 'Varies Marks'})</span>
+                                            <span className="text-gray-400 font-normal">({headerLabel})</span>
                                         </th>
                                     );
                                 })}
@@ -345,6 +353,32 @@ export default function ScholasticEntryPage() {
                                                 const key = `${subject.id}-${comp.id}-${term.id}`;
                                                 const score = scores[key] || {};
                                                 const maxMarks = getDynamicMaxMarks(subject.id, comp.id);
+
+                                                // Class X SEA → grade select
+                                                if (isClassX && comp.id === SEA_ID) {
+                                                    return (
+                                                        <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
+                                                            <select
+                                                                className="block w-20 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
+                                                                value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
+                                                                onChange={(e) => {
+                                                                    handleScoreChange(subject.id, comp.id, term.id, 'marks', e.target.value);
+                                                                }}
+                                                            >
+                                                                <option value="">—</option>
+                                                                <option value="A1">A1</option>
+                                                                <option value="A2">A2</option>
+                                                                <option value="B1">B1</option>
+                                                                <option value="B2">B2</option>
+                                                                <option value="C1">C1</option>
+                                                                <option value="C2">C2</option>
+                                                                <option value="D">D</option>
+                                                                <option value="E">E</option>
+                                                            </select>
+                                                        </td>
+                                                    );
+                                                }
+
                                                 return (
                                                     <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                         <input

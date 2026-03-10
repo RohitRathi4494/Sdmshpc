@@ -203,8 +203,8 @@ export default function ScholasticEntryPage() {
 
     const visibleComponents = components.filter(c => {
         if (isXiOrXii) {
-            // For XI/XII: hide SEA and IA; show Lab Assessment
-            return c.id !== SEA_ID && c.id !== IA_ID;
+            // For XI/XII: hide IA only; SEA stays (rendered as grade), Lab Assessment stays
+            return c.id !== IA_ID;
         } else if (isClassX) {
             // For X: hide IA only; SEA stays (rendered as grade)
             return c.id !== IA_ID && c.id !== LAB_ID;
@@ -230,6 +230,7 @@ export default function ScholasticEntryPage() {
                 const paComp = components.find(c => c.component_name === 'Periodic Assessment');
                 const taComp = components.find(c => c.component_name === 'Terminal Assessment');
                 const labComp = components.find(c => c.component_name === 'Lab Assessment');
+                const seaComp = components.find(c => c.component_name === 'Subject Enrichment Activities');
 
                 const mkInput = (subjectId: number, comp: AssessmentComponent, termId: number, maxMarks: number, isNA = false) => {
                     if (isNA) return (
@@ -265,12 +266,18 @@ export default function ScholasticEntryPage() {
                                         Periodic Assessment<br />
                                         <span className="text-gray-400 font-normal">(20 Marks)</span>
                                     </th>
+                                    <th colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
+                                        Subject Enrichment<br />
+                                        <span className="text-gray-400 font-normal">(Grade)</span>
+                                    </th>
                                     <th colSpan={4} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
                                         Terminal Assessment<br />
                                         <span className="text-gray-400 font-normal">(80 Marks)</span>
                                     </th>
                                 </tr>
                                 <tr>
+                                    <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
+                                    <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
                                     <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term I</th>
                                     <th rowSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50">Term II</th>
                                     <th colSpan={2} className="px-3 py-2 text-center text-xs font-medium text-gray-500 uppercase border-r bg-gray-50 border-b">Theory</th>
@@ -295,6 +302,23 @@ export default function ScholasticEntryPage() {
                                             </td>
                                             {/* PA — Term I & II (max 20) */}
                                             {paComp ? TERMS.map(t => mkInput(subject.id, paComp, t.id, 20)) : <><td /><td /></>}
+                                            {/* SEA — Term I & II (grade select) */}
+                                            {seaComp ? TERMS.map(t => {
+                                                const key = `${subject.id}-${seaComp.id}-${t.id}`;
+                                                const score = scores[key] || {};
+                                                return (
+                                                    <td key={key} className="px-2 py-2 border-r min-w-[110px] text-center">
+                                                        <select
+                                                            value={score.grade || ''}
+                                                            onChange={e => handleScoreChange(subject.id, seaComp.id, t.id, 'grade', e.target.value)}
+                                                            className="block w-[90px] text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center bg-white"
+                                                        >
+                                                            <option value="">—</option>
+                                                            {['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
+                                                        </select>
+                                                    </td>
+                                                );
+                                            }) : <><td className="px-2 py-2 border-r text-center bg-gray-100 text-gray-400 text-sm">N/A</td><td className="px-2 py-2 border-r text-center bg-gray-100 text-gray-400 text-sm">N/A</td></>}
                                             {/* TA — Term I & II */}
                                             {taComp ? TERMS.map(t => mkInput(subject.id, taComp, t.id, taMax)) : <><td /><td /></>}
                                             {/* Lab — Term I & II (NA if no lab) */}

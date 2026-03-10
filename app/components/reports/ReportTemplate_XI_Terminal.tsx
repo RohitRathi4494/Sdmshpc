@@ -186,16 +186,18 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}`, tableLayout: 'fixed' }}>
                                 <colgroup>
-                                    <col style={{ width: '25%' }} />{/* Subjects */}
-                                    <col style={{ width: '15%' }} />{/* PA */}
-                                    <col style={{ width: '20%' }} />{/* Theory */}
-                                    <col style={{ width: '20%' }} />{/* Practical */}
+                                    <col style={{ width: '22%' }} />{/* Subjects */}
+                                    <col style={{ width: '11%' }} />{/* PA */}
+                                    <col style={{ width: '11%' }} />{/* SEA */}
+                                    <col style={{ width: '18%' }} />{/* Theory */}
+                                    <col style={{ width: '18%' }} />{/* Practical */}
                                     <col style={{ width: '20%' }} />{/* Total */}
                                 </colgroup>
                                 <thead>
                                     <tr>
                                         <th rowSpan={2} style={{ textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
                                         <th rowSpan={2}>Periodic Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(20 Marks)</span></th>
+                                        <th rowSpan={2}>Sub. Enrichment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(Grade)</span></th>
                                         <th colSpan={2} className="gold-bg">Terminal Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(80 Marks)</span></th>
                                         <th rowSpan={2} className="gold-bg">Total</th>
                                     </tr>
@@ -229,6 +231,7 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                                             const subMaxTotal = maxPA + maxTA + maxLab;
 
                                             const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
+                                            const seaGrade = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.grade || '-';
                                             const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
                                             const labScore = getScholasticScore(subject, 'Lab Assessment', termName)?.marks || 0;
 
@@ -264,6 +267,7 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                                                         )}
                                                     </td>
                                                     <td className="input-cell" style={{ padding: '2px 4px' }}>{paVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{seaGrade}</td>
                                                     <td className="input-cell" style={{ padding: '2px 4px' }}>{taVal}</td>
                                                     <td className="input-cell" style={{ padding: '2px 4px' }}>{labVal}</td>
                                                     <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 'bold' }}>{totalVal}</td>

@@ -12,6 +12,7 @@ const scoreSchema = z.object({
         (val) => (val === '' || val === null || val === undefined ? null : Number(val)),
         z.number().nullable().optional()
     ),
+    grade: z.string().nullable().optional(),
     academic_year_id: z.number().int().positive(),
 });
 
@@ -48,20 +49,21 @@ export async function POST(request: Request) {
             );
         }
 
-        const { student_id, subject_id, component_id, term_id, marks, academic_year_id } = result.data;
+        const { student_id, subject_id, component_id, term_id, marks, grade, academic_year_id } = result.data;
 
         // Strategy: Try saving WITHOUT grade first (assuming schema is fixed).
+        // If grade is explicitly provided (e.g. for SEA in Class X), save it directly.
         // If it fails with "null value in column grade", retry WITH grade.
 
         try {
             const queryNoGrade = `
-                INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, academic_year_id)
-                VALUES ($1, $2, $3, $4, $5, $6)
+                INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7)
                 ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
-                DO UPDATE SET marks = EXCLUDED.marks
+                DO UPDATE SET marks = EXCLUDED.marks, grade = EXCLUDED.grade
                 RETURNING id
             `;
-            const { rows } = await db.query(queryNoGrade, [student_id, subject_id, component_id, term_id, marks ?? null, academic_year_id]);
+            const { rows } = await db.query(queryNoGrade, [student_id, subject_id, component_id, term_id, marks ?? null, grade ?? null, academic_year_id]);
             return NextResponse.json({ success: true, data: rows[0] });
 
         } catch (err: any) {

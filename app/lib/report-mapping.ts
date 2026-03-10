@@ -5,8 +5,9 @@ export enum ReportTemplate {
     I_II = 'I_II',
     III_VIII = 'III_VIII',
     IX = 'IX',
+    X = 'X',
     XI = 'XI',
-    X_XII = 'X_XII', // Placeholder for future use
+    XII = 'XII',
     UNKNOWN = 'UNKNOWN'
 }
 
@@ -28,13 +29,20 @@ export function getTemplateForClass(className: string): ReportTemplate {
         return ReportTemplate.IX;
     }
 
-    // XI and XII separately
+    // X
+    if (['X', '10'].includes(upperClass)) {
+        return ReportTemplate.X;
+    }
+
+    // XI
     if (['XI', '11'].includes(upperClass)) {
         return ReportTemplate.XI;
     }
 
-    if (['X', '10', 'XII', '12'].includes(upperClass)) {
-        return ReportTemplate.X_XII;
+    // XII
+    if (['XII', '12'].includes(upperClass)) {
+        return ReportTemplate.XII;
     }
+
     return ReportTemplate.UNKNOWN;
 }

@@ -10,6 +10,7 @@ import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTem
 import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
+import ReportTemplate_X from '@/app/components/reports/ReportTemplate_X';
 import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
 import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
 import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
@@ -86,6 +87,17 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 </head>
                 <body className="print-mode bg-white">
                     {TemplateComponent}
+                </body>
+            </html>
+        );
+    } else if (template === ReportTemplate.X) {
+        return (
+            <html>
+                <head>
+                    <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
+                </head>
+                <body className="print-mode bg-white">
+                    <ReportTemplate_X reportData={reportData} />
                 </body>
             </html>
         );

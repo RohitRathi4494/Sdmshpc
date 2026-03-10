@@ -117,7 +117,7 @@ export default function ReportPreviewPage() {
                     </button>
                 </div>
 
-                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.XI) && (
+                {reportData && (getTemplateForClass(reportData.student?.class_name) === ReportTemplate.III_VIII || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.IX || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.X || getTemplateForClass(reportData.student?.class_name) === ReportTemplate.XI) && (
                     <div className="flex justify-end mb-6 mt-4 no-print">
                         <select
                             value={reportType}

@@ -211,9 +211,9 @@ export default function ReportTemplate_XI({ reportData }: { reportData: ReportDa
                                         let maxTotal2 = 0;
                                         let maxTotalAvg = 0;
 
-                                        const rows = reportData.subjects?.map((sub: any, idx: number) => {
+                                        const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
-                                            const isAdditional = idx >= 5; // 6th subject onward
+                                            const isAdditional = sub.subject_type === 'additional_6th';
 
                                             const getVal = (comp: string, term: string) => {
                                                 const s = getScholasticScore(subject, comp, term);

@@ -219,9 +219,9 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                                             return comp.max_marks || 0;
                                         };
 
-                                        const rows = reportData.subjects?.map((sub: any, idx: number) => {
+                                        const rows = reportData.subjects?.map((sub: any) => {
                                             const subject = sub.subject_name;
-                                            const isAdditional = idx >= 5;
+                                            const isAdditional = sub.subject_type === 'additional_6th';
 
                                             const maxPA = getComponentMax(sub, 'Periodic Assessment');
                                             const maxTA = getComponentMax(sub, 'Terminal Assessment');

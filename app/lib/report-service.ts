@@ -65,12 +65,18 @@ export async function getStudentReportData(student_id: number, academic_year_id:
 
   if (isXiOrXii) {
     const studentSubjectsQuery = `
-          SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks, ss.subject_type
+          SELECT sub.id, sub.subject_name, cs.max_marks, cs.assessment_max_marks, ss.subject_type,
+                 CASE ss.subject_type
+                   WHEN 'mandatory'      THEN 1
+                   WHEN 'optional_5th'   THEN 2
+                   WHEN 'additional_6th' THEN 3
+                   ELSE 4
+                 END AS subject_sort_order
           FROM student_subjects ss
           JOIN subjects sub ON ss.subject_id = sub.id
           JOIN class_subjects cs ON ss.subject_id = cs.subject_id AND cs.class_id = $1 AND cs.academic_year_id = $2
           WHERE ss.student_id = $3 AND ss.academic_year_id = $2
-          ORDER BY cs.display_order ASC, sub.subject_name ASC
+          ORDER BY subject_sort_order ASC, cs.display_order ASC, sub.subject_name ASC
       `;
     subjectsRes = await db.query(studentSubjectsQuery, [student.class_id, academic_year_id, student_id]);
 

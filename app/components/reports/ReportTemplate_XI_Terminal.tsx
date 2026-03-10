@@ -186,28 +186,20 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                         <div style={{ overflowX: 'auto' }}>
                             <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}`, tableLayout: 'fixed' }}>
                                 <colgroup>
-                                    <col style={{ width: '22%' }} />{/* Subjects */}
-                                    <col style={{ width: '10%' }} />{/* PA */}
-                                    <col style={{ width: '12%' }} />{/* Theory T1 */}
-                                    <col style={{ width: '12%' }} />{/* Practical T1 */}
-                                    <col style={{ width: '12%' }} />{/* Theory T2 */}
-                                    <col style={{ width: '12%' }} />{/* Practical T2 */}
+                                    <col style={{ width: '25%' }} />{/* Subjects */}
+                                    <col style={{ width: '15%' }} />{/* PA */}
+                                    <col style={{ width: '20%' }} />{/* Theory */}
+                                    <col style={{ width: '20%' }} />{/* Practical */}
                                     <col style={{ width: '20%' }} />{/* Total */}
                                 </colgroup>
                                 <thead>
                                     <tr>
-                                        <th rowSpan={3} style={{ width: '20%', textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
-                                        <th rowSpan={3}>Periodic Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(20 Marks)</span></th>
-                                        <th colSpan={4} className="gold-bg">Terminal Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(80 Marks)</span></th>
-                                        <th rowSpan={3} className="gold-bg">Total</th>
+                                        <th rowSpan={2} style={{ textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
+                                        <th rowSpan={2}>Periodic Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(20 Marks)</span></th>
+                                        <th colSpan={2} className="gold-bg">Terminal Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(80 Marks)</span></th>
+                                        <th rowSpan={2} className="gold-bg">Total</th>
                                     </tr>
                                     <tr>
-                                        <th colSpan={2} className="gold-bg">Term 1</th>
-                                        <th colSpan={2} className="gold-bg">Term 2</th>
-                                    </tr>
-                                    <tr>
-                                        <th className="gold-bg">Theory</th>
-                                        <th className="gold-bg">Practical</th>
                                         <th className="gold-bg">Theory</th>
                                         <th className="gold-bg">Practical</th>
                                     </tr>
@@ -227,43 +219,53 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                                             return comp.max_marks || 0;
                                         };
 
-                                        const rows = reportData.subjects?.map((sub: any) => {
+                                        const rows = reportData.subjects?.map((sub: any, idx: number) => {
                                             const subject = sub.subject_name;
+                                            const isAdditional = idx >= 5;
 
                                             const maxPA = getComponentMax(sub, 'Periodic Assessment');
                                             const maxTA = getComponentMax(sub, 'Terminal Assessment');
                                             const maxLab = getComponentMax(sub, 'Lab Assessment');
-
                                             const subMaxTotal = maxPA + maxTA + maxLab;
-                                            totalMax += subMaxTotal;
 
-                                            const paScore = getScholasticScore(subject, 'Periodic Assessment', 'Term I')?.marks || 0;
-                                            const taScore1 = getScholasticScore(subject, 'Terminal Assessment', 'Term I')?.marks || 0;
-                                            const lab1 = getScholasticScore(subject, 'Lab Assessment', 'Term I')?.marks || 0;
-                                            const taScore2 = getScholasticScore(subject, 'Terminal Assessment', 'Term II')?.marks || 0;
-                                            const lab2 = getScholasticScore(subject, 'Lab Assessment', 'Term II')?.marks || 0;
+                                            const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
+                                            const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
+                                            const labScore = getScholasticScore(subject, 'Lab Assessment', termName)?.marks || 0;
 
                                             const paVal = maxPA === 0 ? 'NA' : (paScore || '-');
-                                            const ta1Val = maxTA === 0 ? 'NA' : (taScore1 || '-');
-                                            const lab1Val = maxLab === 0 ? 'NA' : (lab1 || '-');
-                                            const ta2Val = maxTA === 0 ? 'NA' : (taScore2 || '-');
-                                            const lab2Val = maxLab === 0 ? 'NA' : (lab2 || '-');
+                                            const taVal = maxTA === 0 ? 'NA' : (taScore || '-');
+                                            const labVal = maxLab === 0 ? 'NA' : (labScore || '-');
 
                                             let totalVal: number | string = '-';
-                                            if (paScore || taScore1 || lab1 || taScore2 || lab2) {
-                                                const numericTotal = Number(paScore || 0) + Number(taScore1 || 0) + Number(lab1 || 0) + Number(taScore2 || 0) + Number(lab2 || 0);
-                                                totalVal = `${numericTotal}/${subMaxTotal * 2}`;
-                                                totalMarksObj += numericTotal;
+                                            if (paScore || taScore || labScore) {
+                                                const numericTotal = Number(paScore || 0) + Number(taScore || 0) + Number(labScore || 0);
+                                                totalVal = `${numericTotal}/${subMaxTotal}`;
+                                                if (!isAdditional) {
+                                                    totalMarksObj += numericTotal;
+                                                    totalMax += subMaxTotal;
+                                                }
                                             }
 
+                                            const rowStyle = isAdditional
+                                                ? { background: '#fff8e1', borderLeft: `4px solid ${C.gold}` }
+                                                : {};
+
                                             return (
-                                                <tr key={subject}>
-                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 600 }}>{subject}</td>
+                                                <tr key={subject} style={rowStyle}>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 600 }}>
+                                                        {subject}
+                                                        {isAdditional && (
+                                                            <span style={{
+                                                                marginLeft: 6, fontSize: 9, fontWeight: 700,
+                                                                background: C.gold, color: '#fff',
+                                                                borderRadius: 3, padding: '1px 5px',
+                                                                verticalAlign: 'middle', letterSpacing: 0.3
+                                                            }}>ADDITIONAL</span>
+                                                        )}
+                                                    </td>
                                                     <td className="input-cell" style={{ padding: '2px 4px' }}>{paVal}</td>
-                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{ta1Val}</td>
-                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{lab1Val}</td>
-                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{ta2Val}</td>
-                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{lab2Val}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{taVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{labVal}</td>
                                                     <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 'bold' }}>{totalVal}</td>
                                                 </tr>
                                             );
@@ -276,12 +278,12 @@ export default function ReportTemplate_XI_Terminal({ reportData, reportType }: {
                                                 {rows}
                                                 <tr>
                                                     <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700 }}>Total</td>
-                                                    <td colSpan={5} style={{ textAlign: 'center', fontWeight: 700, padding: '2px 4px' }}>{totalMax * 2}</td>
-                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{totalMarksObj}</td>
+                                                    <td colSpan={3} style={{ textAlign: 'center', fontWeight: 700, padding: '2px 4px' }}>{totalMax || ''}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{totalMarksObj || ''}</td>
                                                 </tr>
                                                 <tr>
                                                     <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700 }}>Percentage</td>
-                                                    <td colSpan={6} style={{ textAlign: 'center', padding: '2px 4px', fontWeight: 700 }}>{percentage}%</td>
+                                                    <td colSpan={4} style={{ textAlign: 'center', padding: '2px 4px', fontWeight: 700 }}>{percentage !== '-' ? `${percentage}%` : ''}</td>
                                                 </tr>
                                             </>
                                         );

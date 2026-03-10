@@ -39,6 +39,7 @@ export default function CoScholasticEntryPage() {
     const [error, setError] = useState<string | null>(null);
     const [saving, setSaving] = useState(false);
     const [yearId, setYearId] = useState<number>(1); // Default to 1, but will fetch
+    const [lockedByTerm, setLockedByTerm] = useState<Record<number, number[]>>({}); // term_id -> locked sub_skill_ids
 
     useEffect(() => {
         const loadData = async () => {
@@ -80,6 +81,20 @@ export default function CoScholasticEntryPage() {
                 const report = await ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=${currentYearId}`, token);
                 setReportData(report);
 
+                // Fetch assessment locks for Co-Scholastic
+                try {
+                    const [locksT1, locksT2] = await Promise.all([
+                        ApiClient.get<number[]>(`/teacher/assessment-locks?academic_year_id=${currentYearId}&student_id=${studentId}&term_id=1`, token),
+                        ApiClient.get<number[]>(`/teacher/assessment-locks?academic_year_id=${currentYearId}&student_id=${studentId}&term_id=2`, token)
+                    ]);
+                    setLockedByTerm({
+                        1: locksT1 || [],
+                        2: locksT2 || []
+                    });
+                } catch (lockError) {
+                    console.error('Failed to fetch locks:', lockError);
+                }
+
                 const scoreMap: Record<string, string> = {};
                 if (report.co_scholastic) {
                     report.co_scholastic.forEach((s: any) => {
@@ -100,6 +115,13 @@ export default function CoScholasticEntryPage() {
 
     const handleGradeChange = async (skillId: number, termId: number, grade: string) => {
         const key = `${skillId}-${termId}`;
+
+        const isLocked = lockedByTerm[termId]?.includes(skillId);
+        if (isLocked) {
+            setError("This assessment is locked by the administrator.");
+            return;
+        }
+
         const previousGrade = scores[key];
 
         // Optimistic update
@@ -171,6 +193,7 @@ export default function CoScholasticEntryPage() {
                                                     <div className="flex justify-center space-x-2">
                                                         {getScaleForDomain(domain.name).map(g => {
                                                             const isSelected = scores[`${skill.id}-${termId}`] === g;
+                                                            const isLocked = lockedByTerm[termId]?.includes(skill.id);
                                                             let colorClasses = '';
                                                             if (g === 'A') {
                                                                 colorClasses = isSelected ? 'bg-[#1a7a3b] text-white shadow-sm' : 'bg-[#eafaf1] text-[#1a7a3b]';
@@ -181,14 +204,21 @@ export default function CoScholasticEntryPage() {
                                                             } else {
                                                                 colorClasses = isSelected ? 'bg-gray-600 text-white shadow-sm' : 'bg-gray-50 text-gray-500';
                                                             }
+
+                                                            if (isLocked) {
+                                                                colorClasses += ' opacity-50 cursor-not-allowed';
+                                                            }
+
                                                             return (
                                                                 <button
                                                                     key={g}
                                                                     onClick={() => handleGradeChange(skill.id, termId, g)}
+                                                                    disabled={isLocked}
+                                                                    title={isLocked ? "Locked by Administrator" : ""}
                                                                     className={`
                                                                         w-10 h-10 rounded-[10px] text-base font-extrabold transition-all duration-200 flex items-center justify-center
                                                                         ${colorClasses}
-                                                                        ${isSelected ? 'transform scale-105' : 'hover:scale-105 opacity-80 hover:opacity-100'}
+                                                                        ${isSelected && !isLocked ? 'transform scale-105' : (!isLocked ? 'hover:scale-105 opacity-80 hover:opacity-100' : '')}
                                                                     `}
                                                                 >
                                                                     {g}

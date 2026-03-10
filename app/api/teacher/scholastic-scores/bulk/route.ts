@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import { verifyAuth, UserRole, extractToken } from '@/app/lib/auth';
 import { z } from 'zod';
+import { checkAssessmentLock, getStudentClass } from '@/app/lib/assessment-lock-utils';
 
 const bulkScoreSchema = z.array(z.object({
     student_id: z.number().int().positive(),
@@ -36,6 +37,20 @@ export async function POST(request: Request) {
         }
 
         const scores = result.data;
+
+        if (scores.length > 0) {
+            const firstScore = scores[0];
+            const classId = await getStudentClass(firstScore.student_id, firstScore.academic_year_id);
+            if (classId) {
+                const isLocked = await checkAssessmentLock(firstScore.academic_year_id, classId, firstScore.term_id, firstScore.component_id);
+                if (isLocked) {
+                    return NextResponse.json(
+                        { success: false, error_code: 'ASSESSMENT_LOCKED', message: "This assessment has been locked by the administrator. Marks cannot be modified." },
+                        { status: 403 }
+                    );
+                }
+            }
+        }
 
         // Transaction for bulk upsert
         const client = await db.pool.connect();

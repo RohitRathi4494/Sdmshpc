@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import { verifyAuth, UserRole, extractToken } from '@/app/lib/auth';
 import { z } from 'zod';
+import { checkAssessmentLock, getStudentClass } from '@/app/lib/assessment-lock-utils';
 
 const scoreSchema = z.object({
     student_id: z.number().int().positive(),
@@ -34,6 +35,18 @@ export async function POST(request: Request) {
         }
 
         const { student_id, sub_skill_id, term_id, grade, academic_year_id } = result.data;
+
+        // Check Assessment Lock
+        const classId = await getStudentClass(student_id, academic_year_id);
+        if (classId) {
+            const isLocked = await checkAssessmentLock(academic_year_id, classId, term_id, sub_skill_id);
+            if (isLocked) {
+                return NextResponse.json(
+                    { success: false, error_code: 'ASSESSMENT_LOCKED', message: "This assessment has been locked by the administrator. Grades cannot be modified." },
+                    { status: 403 }
+                );
+            }
+        }
 
         const query = `
       INSERT INTO co_scholastic_scores (student_id, sub_skill_id, term_id, grade, academic_year_id)

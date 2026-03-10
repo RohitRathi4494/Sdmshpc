@@ -41,6 +41,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         { label: 'Office Staff', href: '/admin/office-staff', icon: '🏢' },
         { label: 'Student Management', href: '/admin/students', icon: '👨‍🎓' },
         { label: 'XI/XII Subject Assignment', href: '/admin/student-subjects', icon: '📋' },
+        { label: 'Assessment Locks', href: '/admin/assessment-locks', icon: '🔒' },
         { label: 'Communication', href: '/admin/communication', icon: '📢' },
     ];
 

@@ -62,6 +62,7 @@ export default function ScholasticEntryPage() {
     const [fetchError, setFetchError] = useState<string | null>(null); // New state for fetch errors
     const [subjects, setSubjects] = useState<any[]>([]);
     const [components, setComponents] = useState<AssessmentComponent[]>([]);
+    const [lockedByTerm, setLockedByTerm] = useState<Record<number, number[]>>({}); // term_id -> locked component_ids
 
     // ... (useEffect remains same) ...
     useEffect(() => {
@@ -75,7 +76,20 @@ export default function ScholasticEntryPage() {
                     ApiClient.get<AssessmentComponent[]>('/teacher/assessment-components', token)
                 ]);
 
-                // console.log('Components Data:', componentsData); // Debug log removed
+                // Fetch locks for both terms
+                try {
+                    const [locksT1, locksT2] = await Promise.all([
+                        ApiClient.get<number[]>(`/teacher/assessment-locks?academic_year_id=1&student_id=${studentId}&term_id=1`, token),
+                        ApiClient.get<number[]>(`/teacher/assessment-locks?academic_year_id=1&student_id=${studentId}&term_id=2`, token)
+                    ]);
+                    setLockedByTerm({
+                        1: locksT1 || [],
+                        2: locksT2 || []
+                    });
+                } catch (lockError) {
+                    console.error('Failed to fetch locks:', lockError);
+                }
+
                 setReportData(report);
                 setComponents(componentsData);
 
@@ -145,6 +159,12 @@ export default function ScholasticEntryPage() {
                 alert(`Marks for ${compName} in this subject must be between 0 and ${maxMarks}`);
                 return;
             }
+        }
+
+        const isLocked = lockedByTerm[termId]?.includes(componentId);
+        if (isLocked) {
+            setSaveError("This assessment is locked by the administrator.");
+            return;
         }
 
         const key = `${subjectId}-${componentId}-${termId}`;
@@ -238,13 +258,16 @@ export default function ScholasticEntryPage() {
                     );
                     const key = `${subjectId}-${comp.id}-${termId}`;
                     const score = scores[key] || {};
+                    const isLocked = lockedByTerm[termId]?.includes(comp.id);
                     return (
                         <td key={key} className="px-2 py-2 border-r min-w-[100px] text-center">
                             <input
                                 type="number"
-                                className="block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
+                                className={`block w-20 text-sm border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                 value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
                                 max={maxMarks} min={0}
+                                disabled={isLocked}
+                                title={isLocked ? "Locked by Administrator" : ""}
                                 onChange={(e) => {
                                     const val = e.target.value;
                                     handleScoreChange(subjectId, comp.id, termId, 'marks', val !== '' ? parseFloat(val) : '');
@@ -306,12 +329,15 @@ export default function ScholasticEntryPage() {
                                             {seaComp ? TERMS.map(t => {
                                                 const key = `${subject.id}-${seaComp.id}-${t.id}`;
                                                 const score = scores[key] || {};
+                                                const isLocked = lockedByTerm[t.id]?.includes(seaComp.id);
                                                 return (
                                                     <td key={key} className="px-2 py-2 border-r min-w-[110px] text-center">
                                                         <select
                                                             value={score.grade || ''}
                                                             onChange={e => handleScoreChange(subject.id, seaComp.id, t.id, 'grade', e.target.value)}
-                                                            className="block w-[90px] text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center bg-white"
+                                                            disabled={isLocked}
+                                                            title={isLocked ? "Locked by Administrator" : ""}
+                                                            className={`block w-[90px] text-sm border border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'bg-white focus:ring-blue-500 focus:border-blue-500'}`}
                                                         >
                                                             <option value="">—</option>
                                                             {['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
@@ -377,14 +403,17 @@ export default function ScholasticEntryPage() {
                                                 const key = `${subject.id}-${comp.id}-${term.id}`;
                                                 const score = scores[key] || {};
                                                 const maxMarks = getDynamicMaxMarks(subject.id, comp.id);
+                                                const isLocked = lockedByTerm[term.id]?.includes(comp.id);
 
                                                 // Class X SEA → grade select
                                                 if (isClassX && comp.id === SEA_ID) {
                                                     return (
                                                         <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                             <select
-                                                                className="block w-20 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
+                                                                className={`block w-20 text-sm border border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                                                 value={score.grade !== undefined && score.grade !== null ? score.grade : ''}
+                                                                disabled={isLocked}
+                                                                title={isLocked ? "Locked by Administrator" : ""}
                                                                 onChange={(e) => {
                                                                     handleScoreChange(subject.id, comp.id, term.id, 'grade', e.target.value);
                                                                 }}
@@ -408,9 +437,10 @@ export default function ScholasticEntryPage() {
                                                         <input
                                                             type="number"
                                                             placeholder={maxMarks === 0 ? 'N/A' : ''}
-                                                            className={`block w-20 text-sm border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center ${maxMarks === 0 ? 'bg-gray-100 cursor-not-allowed' : ''}`}
+                                                            className={`block w-20 text-sm border-gray-300 rounded-md p-1 mx-auto text-center ${(maxMarks === 0 || isLocked) ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                                             value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
-                                                            disabled={maxMarks === 0}
+                                                            disabled={maxMarks === 0 || isLocked}
+                                                            title={isLocked ? "Locked by Administrator" : ""}
                                                             onChange={(e) => {
                                                                 const val = e.target.value;
                                                                 let numVal: number | string = '';

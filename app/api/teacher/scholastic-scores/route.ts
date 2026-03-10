@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { db } from '@/app/lib/db';
 import { verifyAuth, UserRole, extractToken } from '@/app/lib/auth';
 import { z } from 'zod';
+import { checkAssessmentLock, getStudentClass } from '@/app/lib/assessment-lock-utils';
 
 const scoreSchema = z.object({
     student_id: z.number().int().positive(),
@@ -50,6 +51,18 @@ export async function POST(request: Request) {
         }
 
         const { student_id, subject_id, component_id, term_id, marks, grade, academic_year_id } = result.data;
+
+        // Check Assessment Lock
+        const classId = await getStudentClass(student_id, academic_year_id);
+        if (classId) {
+            const isLocked = await checkAssessmentLock(academic_year_id, classId, term_id, component_id);
+            if (isLocked) {
+                return NextResponse.json(
+                    { success: false, error_code: 'ASSESSMENT_LOCKED', message: "This assessment has been locked by the administrator. Marks cannot be modified." },
+                    { status: 403 }
+                );
+            }
+        }
 
         // Strategy: Try saving WITHOUT grade first (assuming schema is fixed).
         // If grade is explicitly provided (e.g. for SEA in Class X), save it directly.

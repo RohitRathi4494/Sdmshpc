@@ -91,6 +91,13 @@ export default function ReportTemplate_X({ reportData }: { reportData: ReportDat
         return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.marks ?? ''}</td>;
     };
 
+    // For SEA in Class X: stored as grade string (A1, B2…)
+    const renderGradeCell = (subInfo: any, component: string, term: string) => {
+        const subject = subInfo.subject_name;
+        const score = getScholasticScore(subject, component, term);
+        return <td className="input-cell" key={`${subject}-${component}-${term}`}>{score?.grade ?? ''}</td>;
+    };
+
     const months = ['Apr', 'May', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
     const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
 
@@ -250,8 +257,8 @@ export default function ReportTemplate_X({ reportData }: { reportData: ReportDat
                                                     <td className="text-left" style={{ paddingLeft: '12px' }}>{subject}</td>
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term I')}
                                                     {renderScoreCell(sub, 'Periodic Assessment', 'Term II')}
-                                                    {renderScoreCell(sub, 'Subject Enrichment Activities', 'Term I')}
-                                                    {renderScoreCell(sub, 'Subject Enrichment Activities', 'Term II')}
+                                                    {renderGradeCell(sub, 'Subject Enrichment Activities', 'Term I')}
+                                                    {renderGradeCell(sub, 'Subject Enrichment Activities', 'Term II')}
                                                     {renderScoreCell(sub, 'Terminal Assessment', 'Term I')}
                                                     {renderScoreCell(sub, 'Terminal Assessment', 'Term II')}
                                                     <td style={{ fontWeight: 700 }}>{displayTotal1}</td>

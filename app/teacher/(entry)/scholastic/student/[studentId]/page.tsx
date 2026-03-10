@@ -314,12 +314,15 @@ export default function ScholasticEntryPage() {
                                 <th rowSpan={2} className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider border-r sticky left-0 bg-gray-50 z-10 w-48">
                                     Subjects
                                 </th>
-                                {visibleComponents.map(comp => (
-                                    <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
-                                        {comp.component_name} <br />
-                                        <span className="text-gray-400 font-normal">({comp.max_marks > 0 ? comp.max_marks : 'varies'} Marks)</span>
-                                    </th>
-                                ))}
+                                {visibleComponents.map(comp => {
+                                    const headerMax = subjects.length > 0 ? getDynamicMaxMarks(subjects[0].id, comp.id) : 0;
+                                    return (
+                                        <th key={comp.id} colSpan={2} className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider border-r border-b">
+                                            {comp.component_name} <br />
+                                            <span className="text-gray-400 font-normal">({headerMax > 0 ? `${headerMax} Marks` : 'Varies Marks'})</span>
+                                        </th>
+                                    );
+                                })}
                             </tr>
                             <tr>
                                 {visibleComponents.map(comp => (

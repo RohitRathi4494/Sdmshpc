@@ -67,12 +67,16 @@ export default function AssessmentLocksPage() {
         setLoading(true);
         try {
             const token = sessionStorage.getItem('hpc_token') || '';
-            const [yearsData, classesData, termsData, compsData] = await Promise.all([
+            const [yearsData, classesData, compsData] = await Promise.all([
                 ApiClient.get<AcademicYear[]>('/admin/academic-years', token),
                 ApiClient.get<ClassData[]>('/admin/classes', token),
-                ApiClient.get<Term[]>('/admin/terms', token),
                 ApiClient.get<{ scholastic: AssessmentComponent[], co_scholastic: AssessmentComponent[] }>('/admin/assessment-components', token),
             ]);
+
+            const termsData: Term[] = [
+                { id: 1, term_name: 'Term I' },
+                { id: 2, term_name: 'Term II' }
+            ];
 
             setYears(yearsData);
             setClasses(classesData);
@@ -290,8 +294,8 @@ export default function AssessmentLocksPage() {
                                                                 onClick={() => handleToggleLock(c.id, term.id, comp.id, isLocked, true)}
                                                                 disabled={processing}
                                                                 className={`flex items-center justify-center gap-1.5 w-full py-1.5 rounded border transition-all ${isLocked
-                                                                        ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
-                                                                        : 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
+                                                                    ? 'bg-red-50 border-red-200 text-red-700 hover:bg-red-100'
+                                                                    : 'bg-green-50 border-green-200 text-green-700 hover:bg-green-100'
                                                                     } disabled:opacity-50`}
                                                                 title={lockRecord?.locked_at ? `Locked by ${lockRecord.locked_by_name || 'Admin'} at ${new Date(lockRecord.locked_at).toLocaleString()}` : ''}
                                                             >

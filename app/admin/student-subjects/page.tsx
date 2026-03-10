@@ -33,21 +33,26 @@ export default function BulkSubjectAssignmentPage() {
     // Load masters on mount
     useEffect(() => {
         const init = async () => {
-            const token = sessionStorage.getItem('hpc_token') || '';
-            const [cls, yrs, secs] = await Promise.all([
-                ApiClient.get<any[]>('/admin/classes', token),
-                ApiClient.get<any[]>('/admin/academic-years', token),
-                ApiClient.get<any[]>('/admin/sections', token),
-            ]);
-            // Only XI / XII classes
-            const highClasses = cls.filter(c => {
-                const n = c.class_name.toUpperCase();
-                return n.includes('XI') || n.includes('XII') || n === '11' || n === '12';
-            });
-            setClasses(highClasses);
-            setAllSections(secs);
-            const active = yrs.find(y => y.is_active);
-            if (active) setAcademicYear(active);
+            try {
+                const token = sessionStorage.getItem('hpc_token') || '';
+                const [cls, yrs, secs] = await Promise.all([
+                    ApiClient.get<any[]>('/admin/classes', token),
+                    ApiClient.get<any[]>('/admin/academic-years', token),
+                    ApiClient.get<any[]>('/admin/sections', token),
+                ]);
+                // Only XI / XII classes
+                const highClasses = cls.filter((c: any) => {
+                    const n = c.class_name.toUpperCase();
+                    return n === 'XI' || n === 'XII' || n === '11' || n === '12';
+                });
+                setClasses(highClasses);
+                setAllSections(secs);
+                const active = yrs.find((y: any) => y.is_active);
+                if (active) setAcademicYear(active);
+            } catch (err: any) {
+                console.error('Failed to load class data:', err);
+                alert('Failed to load class list: ' + (err.message || 'Unknown error'));
+            }
         };
         init();
     }, []);

@@ -11,6 +11,8 @@ import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
 import ReportTemplate_X from '@/app/components/reports/ReportTemplate_X';
+import ReportTemplate_X_Periodic from '@/app/components/reports/ReportTemplate_X_Periodic';
+import ReportTemplate_X_Terminal from '@/app/components/reports/ReportTemplate_X_Terminal';
 import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
 import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
 import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
@@ -91,13 +93,20 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
             </html>
         );
     } else if (template === ReportTemplate.X) {
+        let TemplateComponent = <ReportTemplate_X reportData={reportData} />;
+        if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
+            TemplateComponent = <ReportTemplate_X_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
+        } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
+            TemplateComponent = <ReportTemplate_X_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
+        }
+
         return (
             <html>
                 <head>
                     <style dangerouslySetInnerHTML={{ __html: PRINT_STYLES }} />
                 </head>
                 <body className="print-mode bg-white">
-                    <ReportTemplate_X reportData={reportData} />
+                    {TemplateComponent}
                 </body>
             </html>
         );

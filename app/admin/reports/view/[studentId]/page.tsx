@@ -12,6 +12,8 @@ import ReportTemplate_IX from '@/app/components/reports/ReportTemplate_IX';
 import ReportTemplate_IX_Periodic from '@/app/components/reports/ReportTemplate_IX_Periodic';
 import ReportTemplate_IX_Terminal from '@/app/components/reports/ReportTemplate_IX_Terminal';
 import ReportTemplate_X from '@/app/components/reports/ReportTemplate_X';
+import ReportTemplate_X_Periodic from '@/app/components/reports/ReportTemplate_X_Periodic';
+import ReportTemplate_X_Terminal from '@/app/components/reports/ReportTemplate_X_Terminal';
 import ReportTemplate_XI from '@/app/components/reports/ReportTemplate_XI';
 import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_XI_Periodic';
 import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
@@ -159,6 +161,11 @@ export default function AdminReportViewPage() {
                         }
                         return <ReportTemplate_IX reportData={reportData} />;
                     } else if (template === ReportTemplate.X) {
+                        if (reportType === 'PA1' || reportType === 'PA2') {
+                            return <ReportTemplate_X_Periodic reportData={reportData} reportType={reportType as any} />;
+                        } else if (reportType === 'TA1' || reportType === 'TA2') {
+                            return <ReportTemplate_X_Terminal reportData={reportData} reportType={reportType as any} />;
+                        }
                         return <ReportTemplate_X reportData={reportData} />;
                     } else if (template === ReportTemplate.XI) {
                         if (reportType === 'PA1' || reportType === 'PA2') {

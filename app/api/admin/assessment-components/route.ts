@@ -18,7 +18,7 @@ export async function GET(request: Request) {
 
         // Return scholastic components
         const cmpQuery = `
-            SELECT id, name, display_name 
+            SELECT id, component_name as name, component_name as display_name 
             FROM assessment_components 
             ORDER BY id ASC
         `;
@@ -26,7 +26,7 @@ export async function GET(request: Request) {
 
         // Also return co-scholastic sub_skills to lock co-scholastic
         const coSchoQuery = `
-            SELECT id, name, type 
+            SELECT id, sub_skill_name as name 
             FROM sub_skills 
             ORDER BY id ASC
         `;

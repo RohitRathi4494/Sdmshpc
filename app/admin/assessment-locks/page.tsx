@@ -90,9 +90,9 @@ export default function AssessmentLocksPage() {
                 setSelectedYearId(yearsData[0].id);
             }
 
-        } catch (error) {
+        } catch (error: any) {
             console.error(error);
-            alert('Failed to load initial data');
+            alert('Failed to load initial data: ' + (error?.message || 'Unknown network/server error'));
         } finally {
             setLoading(false);
         }

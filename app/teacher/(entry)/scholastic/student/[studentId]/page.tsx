@@ -22,7 +22,7 @@ interface ScholasticScore {
     subject_id: number;
     component_id: number;
     term_id: number;
-    // grade removed
+    grade?: string | null;
     marks?: number | null;
     academic_year_id: number;
 }
@@ -360,9 +360,9 @@ export default function ScholasticEntryPage() {
                                                         <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                             <select
                                                                 className="block w-20 text-sm border border-gray-300 rounded-md focus:ring-blue-500 focus:border-blue-500 p-1 mx-auto text-center"
-                                                                value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
+                                                                value={score.grade !== undefined && score.grade !== null ? score.grade : ''}
                                                                 onChange={(e) => {
-                                                                    handleScoreChange(subject.id, comp.id, term.id, 'marks', e.target.value);
+                                                                    handleScoreChange(subject.id, comp.id, term.id, 'grade', e.target.value);
                                                                 }}
                                                             >
                                                                 <option value="">—</option>

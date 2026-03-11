@@ -173,7 +173,7 @@ export default function CoScholasticEntryPage() {
                                 {domain.name}
                             </h3>
                         </div>
-                        <div className="p-0">
+                        <div className="p-0 overflow-x-auto">
                             <table className="min-w-full">
                                 <thead>
                                     <tr className="bg-gray-50/50">
@@ -216,7 +216,7 @@ export default function CoScholasticEntryPage() {
                                                                     disabled={isLocked}
                                                                     title={isLocked ? "Locked by Administrator" : ""}
                                                                     className={`
-                                                                        w-10 h-10 rounded-[10px] text-base font-extrabold transition-all duration-200 flex items-center justify-center
+                                                                        w-14 h-14 rounded-[12px] text-lg font-extrabold transition-all duration-200 flex items-center justify-center
                                                                         ${colorClasses}
                                                                         ${isSelected && !isLocked ? 'transform scale-105' : (!isLocked ? 'hover:scale-105 opacity-80 hover:opacity-100' : '')}
                                                                     `}

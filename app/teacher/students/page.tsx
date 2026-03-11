@@ -360,14 +360,14 @@ function StudentSelectionContent() {
                                                 <>
                                                     <button
                                                         onClick={() => router.push(`/teacher/foundational/student/${student.id}?academic_year_id=1`)}
-                                                        className="px-3 py-1 bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
+                                                        className="px-4 py-2 w-full sm:w-auto bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
                                                         title="HPC Entry"
                                                     >
                                                         🌟 HPC Entry
                                                     </button>
                                                     <button
                                                         onClick={() => router.push(`/teacher/preview/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                                                        className="px-4 py-2 w-full sm:w-auto bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
                                                         title="Preview HPC Card"
                                                     >
                                                         Preview
@@ -378,14 +378,14 @@ function StudentSelectionContent() {
                                                 <>
                                                     <button
                                                         onClick={() => router.push(`/teacher/scholastic/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
+                                                        className="px-4 py-2 w-full sm:w-auto bg-amber-100 text-amber-700 rounded hover:bg-amber-200 transition font-semibold"
                                                         title="HPC Entry"
                                                     >
                                                         🌟 HPC Entry
                                                     </button>
                                                     <button
                                                         onClick={() => router.push(`/teacher/preview/student/${student.id}`)}
-                                                        className="px-3 py-1 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
+                                                        className="px-4 py-2 w-full sm:w-auto bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition"
                                                         title="Preview Report"
                                                     >
                                                         Preview

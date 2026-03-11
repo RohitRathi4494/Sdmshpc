@@ -263,7 +263,7 @@ export default function ScholasticEntryPage() {
                         <td key={key} className="px-2 py-2 border-r min-w-[100px] text-center">
                             <input
                                 type="number"
-                                className={`block w-20 text-sm border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
+                                className={`block w-24 text-base border-gray-300 rounded-md p-2 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                 value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
                                 max={maxMarks} min={0}
                                 disabled={isLocked}
@@ -337,7 +337,7 @@ export default function ScholasticEntryPage() {
                                                             onChange={e => handleScoreChange(subject.id, seaComp.id, t.id, 'grade', e.target.value)}
                                                             disabled={isLocked}
                                                             title={isLocked ? "Locked by Administrator" : ""}
-                                                            className={`block w-[90px] text-sm border border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'bg-white focus:ring-blue-500 focus:border-blue-500'}`}
+                                                            className={`block w-24 text-base border border-gray-300 rounded-md p-2 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'bg-white focus:ring-blue-500 focus:border-blue-500'}`}
                                                         >
                                                             <option value="">—</option>
                                                             {['A1', 'A2', 'B1', 'B2', 'C1', 'C2', 'D', 'E'].map(g => <option key={g} value={g}>{g}</option>)}
@@ -410,7 +410,7 @@ export default function ScholasticEntryPage() {
                                                     return (
                                                         <td key={term.id} className="px-2 py-2 border-r min-w-[100px] text-center">
                                                             <select
-                                                                className={`block w-20 text-sm border border-gray-300 rounded-md p-1 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
+                                                                className={`block w-24 text-base border border-gray-300 rounded-md p-2 mx-auto text-center ${isLocked ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                                                 value={score.grade !== undefined && score.grade !== null ? score.grade : ''}
                                                                 disabled={isLocked}
                                                                 title={isLocked ? "Locked by Administrator" : ""}
@@ -437,7 +437,7 @@ export default function ScholasticEntryPage() {
                                                         <input
                                                             type="number"
                                                             placeholder={maxMarks === 0 ? 'N/A' : ''}
-                                                            className={`block w-20 text-sm border-gray-300 rounded-md p-1 mx-auto text-center ${(maxMarks === 0 || isLocked) ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
+                                                            className={`block w-24 text-base border-gray-300 rounded-md p-2 mx-auto text-center ${(maxMarks === 0 || isLocked) ? 'bg-gray-100 cursor-not-allowed' : 'focus:ring-blue-500 focus:border-blue-500'}`}
                                                             value={score.marks !== undefined && score.marks !== null ? score.marks : ''}
                                                             disabled={maxMarks === 0 || isLocked}
                                                             title={isLocked ? "Locked by Administrator" : ""}

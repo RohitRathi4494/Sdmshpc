@@ -28,7 +28,7 @@ export default function AnalyticsDashboard() {
 
     const [classes, setClasses] = useState<ClassData[]>([]);
     const [terms, setTerms] = useState<TermData[]>([]);
-    const [yearId, setYearId] = useState<string>('');
+    const [yearData, setYearData] = useState<{ id: string; name: string } | null>(null);
 
     const [selectedClass, setSelectedClass] = useState<string>('');
     const [selectedSection, setSelectedSection] = useState<string>('');
@@ -51,7 +51,9 @@ export default function AnalyticsDashboard() {
                     ApiClient.get<TermData[]>('/admin/terms', token).catch(() => [{ id: 1, term_name: 'Term I' }, { id: 2, term_name: 'Term II' }]) // Fallback if API doesn't exist yet
                 ]);
 
-                if (activeYear && activeYear.id) setYearId(activeYear.id.toString());
+                if (activeYear && activeYear.id) {
+                    setYearData({ id: activeYear.id.toString(), name: activeYear.name || 'Current Year' });
+                }
                 setClasses(classData);
                 setTerms(termData);
 
@@ -70,13 +72,13 @@ export default function AnalyticsDashboard() {
 
     useEffect(() => {
         const fetchAnalytics = async () => {
-            if (!yearId || !selectedClass) return;
+            if (!yearData || !yearData.id || !selectedClass) return;
 
             setLoadingData(true);
             try {
                 const token = sessionStorage.getItem('hpc_token') || undefined;
 
-                let baseQuery = `?academic_year_id=${yearId}&class_id=${selectedClass}`;
+                let baseQuery = `?academic_year_id=${yearData.id}&class_id=${selectedClass}`;
                 if (selectedSection) baseQuery += `&section_id=${selectedSection}`;
                 if (selectedTerm) baseQuery += `&term=${encodeURIComponent(selectedTerm)}`;
 
@@ -100,7 +102,7 @@ export default function AnalyticsDashboard() {
         };
 
         fetchAnalytics();
-    }, [yearId, selectedClass, selectedSection, selectedTerm]);
+    }, [yearData, selectedClass, selectedSection, selectedTerm]);
 
     const activeClassData = classes.find(c => c.id.toString() === selectedClass);
 
@@ -117,12 +119,12 @@ export default function AnalyticsDashboard() {
                         <div className="w-full sm:w-auto">
                             <label className="block text-xs font-semibold text-gray-500 uppercase mb-1">Academic Year</label>
                             <select
-                                value={yearId}
-                                onChange={(e) => setYearId(e.target.value)}
-                                className="block w-full border border-gray-300 rounded-md p-2 bg-gray-50"
+                                value={yearData?.id || ''}
+                                onChange={() => { }} // Disabled so no handler needed
+                                className="block w-full border border-gray-300 rounded-md p-2 bg-gray-50 focus:outline-none"
                                 disabled // Keep fixed to active year for now, can be unlocked if history is needed
                             >
-                                <option value={yearId}>2024-25</option>
+                                <option value={yearData?.id || ''}>{yearData?.name || 'Loading...'}</option>
                             </select>
                         </div>
 

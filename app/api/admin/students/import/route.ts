@@ -122,39 +122,76 @@ export async function POST(request: Request) {
 
         const errors: any[] = [];
         const validData: any[] = [];
+        const seenAdmissionNos = new Set<string>(); // To check for duplicates within the uploaded file
 
         // 2. Validation Logic 
         for (let i = 0; i < data.length; i++) {
             const row = data[i];
-            let rowError: string | null = null;
+            const rowNumber = i + 2; // +1 for 0-index, +1 for header row
+            let rowErrors: string[] = [];
 
-            // 1. Validate Date
-            if (!/^\d{4}-\d{2}-\d{2}$/.test(row.dob)) {
-                rowError = 'Invalid DOB Format (YYYY-MM-DD)';
+            // 1. Mandatory Fields
+            if (!row.admission_no || row.admission_no.toString().trim() === '') rowErrors.push("Missing admission number");
+            if (!row.student_name || row.student_name.toString().trim() === '') rowErrors.push("Missing student name");
+            if (!row.class_name || row.class_name.toString().trim() === '') rowErrors.push("Missing class");
+            if (!row.section_name || row.section_name.toString().trim() === '') rowErrors.push("Missing section");
+            if (!row.dob || row.dob.toString().trim() === '') rowErrors.push("Missing DOB");
+
+            // 2. Validate Date Format (Allows YYYY-MM-DD or DD/MM/YYYY)
+            const isoRegex = /^\d{4}-\d{2}-\d{2}$/;
+            const dmyRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+            if (row.dob && !isoRegex.test(row.dob) && !dmyRegex.test(row.dob)) {
+                rowErrors.push('Invalid DOB Format (Must be YYYY-MM-DD or DD/MM/YYYY)');
+            }
+            if (row.admission_date && !isoRegex.test(row.admission_date) && !dmyRegex.test(row.admission_date)) {
+                rowErrors.push('Invalid Admission Date Format (Must be YYYY-MM-DD or DD/MM/YYYY)');
             }
 
-            // 2. Validate Class & Section
-            const classId = classMap.get(row.class_name.toLowerCase());
+            // Normalize DD/MM/YYYY to YYYY-MM-DD for database compatibility
+            if (row.dob && dmyRegex.test(row.dob)) {
+                const parts = row.dob.split('/');
+                row.dob = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            if (row.admission_date && dmyRegex.test(row.admission_date)) {
+                const parts = row.admission_date.split('/');
+                row.admission_date = `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+
+            // 3. Validate Class & Section
+            const classId = classMap.get(row.class_name?.toString().toLowerCase());
             if (!classId) {
-                rowError = rowError || `Class '${row.class_name}' not found`;
+                rowErrors.push(`Invalid class: '${row.class_name}'`);
             }
 
             let sectionId = null;
             if (classId) {
-                sectionId = sectionMap.get(`${classId}_${row.section_name.toLowerCase()}`);
+                sectionId = sectionMap.get(`${classId}_${row.section_name?.toString().toLowerCase()}`);
                 if (!sectionId) {
-                    rowError = rowError || `Section '${row.section_name}' not found in Class '${row.class_name}'`;
+                    rowErrors.push(`Invalid section: '${row.section_name}' for class '${row.class_name}'`);
                 }
             }
 
-            // 3. Duplicate Check
-            const dupCheck = await db.query('SELECT id FROM students WHERE admission_no = $1', [row.admission_no]);
-            if (dupCheck.rows.length > 0) {
-                rowError = 'Admission number already exists';
+            // 4. Duplicate Check - Internal File Check
+            if (row.admission_no && seenAdmissionNos.has(row.admission_no.toString().trim())) {
+                rowErrors.push(`Duplicate admission number in uploaded file: ${row.admission_no}`);
+            } else if (row.admission_no) {
+                seenAdmissionNos.add(row.admission_no.toString().trim());
             }
 
-            if (rowError) {
-                errors.push({ index: i, admission_no: row.admission_no, error: rowError });
+            // 5. Duplicate Check - Database Check
+            if (row.admission_no && rowErrors.length === 0 || (!rowErrors.find(e => e.includes('Duplicate admission number')))) {
+                const dupCheck = await db.query('SELECT id FROM students WHERE admission_no = $1', [row.admission_no.toString().trim()]);
+                if (dupCheck.rows.length > 0) {
+                    rowErrors.push(`Admission number already exists in system: ${row.admission_no}`);
+                }
+            }
+
+            if (rowErrors.length > 0) {
+                // If there are multiple errors for a row, we push them individually or join them
+                // The requirements asked for { row: 4, error: "Duplicate admission number" }
+                // So we will join multiple errors for the same row to keep the UI clean
+                errors.push({ row: rowNumber, admission_no: row.admission_no, error: rowErrors.join(', ') });
             } else {
                 // Attach resolved IDs to the object for confirmed insert
                 validData.push({ ...row, class_id: classId, section_id: sectionId });
@@ -223,6 +260,7 @@ export async function POST(request: Request) {
                     const studentId = studentRes.rows[0].id;
 
                     // 2. Enroll Student
+                    // Note: roll_no is intentionally omitted here to allow for auto-assignment later section-wise
                     await client.query(
                         'INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id) VALUES ($1, $2, $3, $4)',
                         [studentId, row.class_id, row.section_id, activeYearId]

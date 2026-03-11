@@ -240,7 +240,8 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
 
                                 let msg = res.message || 'Import successful';
                                 if (res.errors && res.errors.length > 0) {
-                                    msg += `\n\n${res.errors.length} records skipped:\n` + res.errors.map((e: any) => `- Row ${e.index + 1}: ${e.error}`).join('\n');
+                                    msg += `\n\n${res.errors.length} records skipped due to errors:\n` +
+                                        res.errors.map((e: any) => `- Row ${e.row}: ${e.error}`).join('\n');
                                 }
                                 alert(msg);
                                 setFile(null);
@@ -248,7 +249,8 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
                             } catch (e: any) {
                                 let msg = e.message || 'Import failed';
                                 if (e.details && e.details.errors && e.details.errors.length > 0) {
-                                    msg += `\n\n${e.details.errors.length} records failed:\n` + e.details.errors.map((err: any) => `- Row ${err.index + 1}: ${err.error}`).join('\n');
+                                    msg += `\n\n${e.details.errors.length} records failed:\n` +
+                                        e.details.errors.map((err: any) => `- Row ${err.row}: ${err.error}`).join('\n');
                                 }
                                 alert(msg);
                             } finally {
@@ -273,10 +275,13 @@ export default function StudentImporter({ onImportSuccess }: { onImportSuccess: 
 
                     {errors.length > 0 && (
                         <div className="mb-4 max-h-40 overflow-auto bg-red-50 p-3 rounded text-xs text-red-700">
-                            <strong>Errors:</strong>
-                            <ul>
+                            <strong>Errors found in {errors.length} row(s):</strong>
+                            <ul className="mt-2 space-y-1">
                                 {errors.map((e: any, i) => (
-                                    <li key={i}>Row {e.index + 1}: {e.error} (Adm: {e.admission_no})</li>
+                                    <li key={i} className="flex gap-2">
+                                        <span className="font-semibold w-14">Row {e.row}:</span>
+                                        <span>{e.error} {e.admission_no ? `(Adm No: ${e.admission_no})` : ''}</span>
+                                    </li>
                                 ))}
                             </ul>
                         </div>

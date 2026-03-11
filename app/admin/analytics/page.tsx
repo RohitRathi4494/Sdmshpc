@@ -184,7 +184,7 @@ export default function AnalyticsDashboard() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {/* Subject Performance */}
                         <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-                            <h2 className="text-lg font-bold text-gray-800 mb-4">Subject Performance (Average Marks)</h2>
+                            <h2 className="text-lg font-bold text-gray-800 mb-4">Subject Performance (Percentage)</h2>
                             {subjectPerformance.length > 0 ? (
                                 <div className="h-72">
                                     <ResponsiveContainer width="100%" height="100%">
@@ -214,7 +214,7 @@ export default function AnalyticsDashboard() {
                                             <tr className="border-b bg-gray-50">
                                                 <th className="py-2 px-4 text-left font-semibold text-gray-600">Rank</th>
                                                 <th className="py-2 px-4 text-left font-semibold text-gray-600">Student Name</th>
-                                                <th className="py-2 px-4 text-right font-semibold text-gray-600">Avg. Score</th>
+                                                <th className="py-2 px-4 text-right font-semibold text-gray-600">Percentage</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -227,7 +227,7 @@ export default function AnalyticsDashboard() {
                                                         {s.rank > 3 && <span className="text-gray-500 font-medium pl-2">{s.rank}</span>}
                                                     </td>
                                                     <td className="py-3 px-4 font-medium text-gray-900">{s.student}</td>
-                                                    <td className="py-3 px-4 text-right font-bold text-blue-600">{s.score}</td>
+                                                    <td className="py-3 px-4 text-right font-bold text-blue-600">{s.score}%</td>
                                                 </tr>
                                             ))}
                                         </tbody>

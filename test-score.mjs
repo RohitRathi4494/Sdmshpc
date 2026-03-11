@@ -11,27 +11,27 @@ async function test() {
         console.log("Active Year:", yearRes.rows);
 
         const classRes = await pool.query('SELECT * FROM classes WHERE class_name = \'III\'');
-        console.log("Class III:", classRes.rows);
-        const classId = classRes.rows[0].id;
-
         const query = `
             SELECT
-                s.subject_name,
-                AVG(sc.marks) AS avg_marks
+                st.student_name,
+                SUM(sc.marks) AS total_obtained,
+                SUM(COALESCE((cs.assessment_max_marks->>sc.component_id::text)::numeric, cs.max_marks, 100)) AS total_max,
+                (SUM(sc.marks) / NULLIF(SUM(COALESCE((cs.assessment_max_marks->>sc.component_id::text)::numeric, cs.max_marks, 100)), 0) * 100) AS percentage
             FROM scholastic_scores sc
-            JOIN subjects s ON s.id = sc.subject_id
-            JOIN student_enrollments se ON se.student_id = sc.student_id
+            JOIN students st ON st.id = sc.student_id
+            JOIN student_enrollments se ON se.student_id = st.id AND se.academic_year_id = sc.academic_year_id
+            JOIN class_subjects cs ON cs.subject_id = sc.subject_id AND cs.class_id = se.class_id AND cs.academic_year_id = sc.academic_year_id
             WHERE se.class_id = $1
               AND se.academic_year_id = $2
               AND sc.academic_year_id = $2
-              AND se.section_id = $3
               AND sc.marks IS NOT NULL
-            GROUP BY s.subject_name 
-            ORDER BY avg_marks DESC;
+            GROUP BY st.student_name 
+            ORDER BY percentage DESC
+            LIMIT 10;
         `;
-        const params = [1, 1, 1]; // classId=1, yearId=1, sectionId=1
+        const params = [1, 1]; // classId=1, yearId=1
         const res = await pool.query(query, params);
-        console.log("Subject Performance:", res.rows);
+        console.log("Top Students:", res.rows);
 
     } catch (e) {
         console.error(e);

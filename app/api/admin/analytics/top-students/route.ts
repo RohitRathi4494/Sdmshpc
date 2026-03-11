@@ -23,10 +23,11 @@ export async function GET(request: Request) {
         let query = `
             SELECT
                 st.student_name,
-                AVG(sc.marks) AS avg_score
+                (SUM(sc.marks) / NULLIF(SUM(COALESCE((cs.assessment_max_marks->>sc.component_id::text)::numeric, cs.max_marks, 100)), 0) * 100) AS avg_score
             FROM scholastic_scores sc
             JOIN students st ON st.id = sc.student_id
-            JOIN student_enrollments se ON se.student_id = st.id
+            JOIN student_enrollments se ON se.student_id = st.id AND se.academic_year_id = sc.academic_year_id
+            JOIN class_subjects cs ON cs.subject_id = sc.subject_id AND cs.class_id = se.class_id AND cs.academic_year_id = sc.academic_year_id
             WHERE se.class_id = $1
               AND se.academic_year_id = $2
               AND sc.academic_year_id = $2

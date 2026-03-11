@@ -24,6 +24,7 @@ export default async function AdminDashboard() {
     const stats = await getDashboardStats();
 
     const cards = [
+        { title: 'Academic Analytics', href: '/admin/analytics', icon: '📈', desc: 'View class performance and attendance trends', color: 'bg-rose-500' },
         { title: 'Academic Years', href: '/admin/academic-years', icon: '📅', desc: 'Manage sessions and activate current year', color: 'bg-blue-500' },
         { title: 'Classes & Sections', href: '/admin/classes', icon: '🏫', desc: 'Configure class structure and sections', color: 'bg-green-500' },
         { title: 'Subject Mapping', href: '/admin/subjects', icon: '📚', desc: 'Assign subjects to classes for report cards', color: 'bg-purple-500' },

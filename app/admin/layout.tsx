@@ -32,6 +32,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
 
     const navItems = [
         { label: 'Dashboard', href: '/admin', icon: '📊' },
+        { label: 'Academic Analytics', href: '/admin/analytics', icon: '📈' },
         { label: 'Academic Years', href: '/admin/academic-years', icon: '📅' },
         { label: 'Classes & Sections', href: '/admin/classes', icon: '🏫' },
         { label: 'Subject Mapping', href: '/admin/subjects', icon: '📚' },

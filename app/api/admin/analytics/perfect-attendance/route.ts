@@ -50,7 +50,7 @@ export async function GET(request: Request) {
             student: row.student_name
         }));
 
-        return NextResponse.json(formatted);
+        return NextResponse.json({ success: true, data: formatted });
 
     } catch (error) {
         console.error('Failed to get perfect attendance:', error);

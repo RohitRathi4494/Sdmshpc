@@ -54,7 +54,7 @@ export async function GET(request: Request) {
             score: parseFloat(row.avg_score).toFixed(1)
         }));
 
-        return NextResponse.json(formatted);
+        return NextResponse.json({ success: true, data: formatted });
 
     } catch (error) {
         console.error('Failed to get top students:', error);

@@ -47,7 +47,7 @@ export async function GET(request: Request) {
             percentage: parseFloat(row.attendance_percentage).toFixed(1)
         }));
 
-        return NextResponse.json(formatted);
+        return NextResponse.json({ success: true, data: formatted });
 
     } catch (error) {
         console.error('Failed to get attendance trend:', error);

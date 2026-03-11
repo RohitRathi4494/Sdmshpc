@@ -54,7 +54,7 @@ export async function GET(request: Request) {
             average: parseFloat(row.avg_marks).toFixed(1)
         }));
 
-        return NextResponse.json(formatted);
+        return NextResponse.json({ success: true, data: formatted });
 
     } catch (error) {
         console.error('Failed to get subject performance:', error);

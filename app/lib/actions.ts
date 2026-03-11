@@ -5,7 +5,7 @@ import { db } from './db';
 export async function getActiveAcademicYear() {
     try {
         const result = await db.query(
-            'SELECT year_name FROM academic_years WHERE is_active = true LIMIT 1'
+            'SELECT id, year_name FROM academic_years WHERE is_active = true LIMIT 1'
         );
 
         if (result.rows.length > 0) {

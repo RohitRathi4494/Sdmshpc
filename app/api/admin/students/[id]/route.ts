@@ -102,3 +102,63 @@ export async function PUT(
         );
     }
 }
+
+export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+    try {
+        const token = extractToken(request.headers.get('Authorization'));
+        const user = await verifyAuth(token);
+
+        // Only ADMIN can delete students
+        if (!user || user.role !== UserRole.ADMIN) {
+            return NextResponse.json(
+                { success: false, error_code: 'FORBIDDEN', message: 'Only Admins can delete students' },
+                { status: 403 }
+            );
+        }
+
+        const studentId = parseInt(params.id);
+        if (isNaN(studentId)) {
+            return NextResponse.json(
+                { success: false, error_code: 'INVALID_REQUEST', message: 'Invalid student ID' },
+                { status: 400 }
+            );
+        }
+
+        const client = await db.pool.connect();
+        try {
+            await client.query('BEGIN');
+
+            // Hard delete from students table. 
+            // Postgres ON DELETE CASCADE shouldn't leave orphan records in enrollments, fees, attendance, scores etc.
+            const result = await client.query('DELETE FROM students WHERE id = $1 RETURNING id', [studentId]);
+
+            if (result.rowCount === 0) {
+                await client.query('ROLLBACK');
+                return NextResponse.json(
+                    { success: false, error_code: 'NOT_FOUND', message: 'Student not found' },
+                    { status: 404 }
+                );
+            }
+
+            await client.query('COMMIT');
+
+            return NextResponse.json({
+                success: true,
+                message: 'Student completely removed from the database'
+            });
+
+        } catch (e: any) {
+            await client.query('ROLLBACK');
+            throw e;
+        } finally {
+            client.release();
+        }
+
+    } catch (error: any) {
+        console.error('Delete student error:', error);
+        return NextResponse.json(
+            { success: false, error_code: 'SERVER_ERROR', message: error.message },
+            { status: 500 }
+        );
+    }
+}

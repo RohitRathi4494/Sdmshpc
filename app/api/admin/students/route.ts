@@ -19,6 +19,7 @@ export async function GET(request: Request) {
         const status = searchParams.get('status'); // 'enrolled' | 'unenrolled' | 'all'
         const class_id = searchParams.get('class_id');
         const section_id = searchParams.get('section_id');
+        const visibility_status = searchParams.get('visibility_status'); // 'ACTIVE', 'WITHDRAWN', or null (all)
 
         let query = '';
         const values: any[] = [];
@@ -47,11 +48,12 @@ export async function GET(request: Request) {
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE se.class_id = $1 AND se.academic_year_id = $2 ${sectionClause}
+                WHERE se.class_id = $1 AND se.academic_year_id = $2 ${sectionClause} ${visibility_status ? `AND s.status = $${section_id ? 4 : 3}` : ''}
                 ORDER BY se.roll_no ASC, s.student_name ASC
             `;
             values.push(parseInt(class_id), parseInt(academic_year_id));
             if (section_id) values.push(parseInt(section_id));
+            if (visibility_status) values.push(visibility_status);
 
         } else if (academic_year_id) {
             // [NEW] Find ALL students enrolled in the academic year (regardless of class)
@@ -61,14 +63,20 @@ export async function GET(request: Request) {
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE se.academic_year_id = $1
+                WHERE se.academic_year_id = $1 ${visibility_status ? `AND s.status = $2` : ''}
                 ORDER BY c.display_order ASC, s.student_name ASC
             `;
             values.push(parseInt(academic_year_id));
+            if (visibility_status) values.push(visibility_status);
 
         } else {
             // Default: List all students (maybe limit?)
-            query = 'SELECT * FROM students ORDER BY id DESC LIMIT 100';
+            if (visibility_status) {
+                query = 'SELECT * FROM students WHERE status = $1 ORDER BY id DESC LIMIT 100';
+                values.push(visibility_status);
+            } else {
+                query = 'SELECT * FROM students ORDER BY id DESC LIMIT 100';
+            }
         }
 
         const { rows } = await db.query(query, values);

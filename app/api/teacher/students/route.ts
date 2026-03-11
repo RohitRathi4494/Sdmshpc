@@ -45,7 +45,7 @@ export async function GET(request: Request) {
             query += ` JOIN student_subjects ss ON ss.student_id = s.id AND ss.academic_year_id = se.academic_year_id AND ss.subject_id = $4 `;
         }
 
-        query += ` WHERE se.class_id = $1 AND se.academic_year_id = $2 `;
+        query += ` WHERE se.class_id = $1 AND se.academic_year_id = $2 AND (s.status IS NULL OR s.status = 'ACTIVE') `;
         const params: any[] = [class_id, academic_year_id];
 
         if (section_id) {

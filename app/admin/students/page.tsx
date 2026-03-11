@@ -16,6 +16,7 @@ interface Student {
     father_name: string;
     mother_name?: string;
     dob?: string;
+    status?: string; // 'ACTIVE' or 'WITHDRAWN'
     // ... other fields are optional in list view
 }
 
@@ -57,6 +58,7 @@ export default function StudentsPage() {
     // List View State
     const [filterClassId, setFilterClassId] = useState<number | null>(null);
     const [filterSectionId, setFilterSectionId] = useState<number | null>(null);
+    const [filterStatus, setFilterStatus] = useState<string>('ACTIVE'); // 'ACTIVE', 'WITHDRAWN', or '' (All)
 
     // Load Masters
     useEffect(() => {
@@ -99,6 +101,7 @@ export default function StudentsPage() {
             const token = sessionStorage.getItem('hpc_token') || '';
             let url = `/admin/students?class_id=${filterClassId}&academic_year_id=${academicYear.id}`;
             if (filterSectionId) url += `&section_id=${filterSectionId}`;
+            if (filterStatus) url += `&visibility_status=${filterStatus}`;
 
             const data = await ApiClient.get<any[]>(url, token);
             setEnrolledStudents(data);
@@ -121,7 +124,7 @@ export default function StudentsPage() {
         } else if (activeTab === 'list') {
             setEnrolledStudents([]);
         }
-    }, [activeTab, filterClassId, filterSectionId, academicYear]);
+    }, [activeTab, filterClassId, filterSectionId, filterStatus, academicYear]);
 
     const handleEnroll = async () => {
         if (!selectedClassId || !selectedSectionId || selectedStudents.length === 0 || !academicYear) {
@@ -176,6 +179,38 @@ export default function StudentsPage() {
             if (activeTab === 'list' && filterClassId) fetchEnrolled();
         } catch (error: any) {
             alert('Failed to add student: ' + error.message);
+        }
+    };
+
+    const handleToggleStatus = async (studentId: number, currentStatus: string) => {
+        const newStatus = currentStatus === 'WITHDRAWN' ? 'ACTIVE' : 'WITHDRAWN';
+        const actionText = currentStatus === 'WITHDRAWN' ? 're-activate' : 'withdraw';
+
+        if (!confirm(`Are you sure you want to ${actionText} this student? ${currentStatus !== 'WITHDRAWN' ? 'They will be hidden from active class lists.' : ''}`)) return;
+
+        try {
+            const token = sessionStorage.getItem('hpc_token') || '';
+            await ApiClient.patch(`/admin/students/${studentId}/status`, { status: newStatus }, token);
+            alert(`Student marked as ${newStatus}`);
+            fetchEnrolled();
+        } catch (error: any) {
+            alert('Failed to update status: ' + error.message);
+        }
+    };
+
+    const handleDeleteStudent = async (studentId: number) => {
+        if (!confirm('DANGER: Are you absolutely sure you want to permanently delete this student? ALL associated attendance, marks, and fee records will be fully erased. This action cannot be undone.')) return;
+
+        // Double confirm for safety
+        if (!confirm('FINAL WARNING: This will cascade delete everything associated with this student. Proceed?')) return;
+
+        try {
+            const token = sessionStorage.getItem('hpc_token') || '';
+            await ApiClient.request(`/admin/students/${studentId}`, { method: 'DELETE', token });
+            alert('Student permanently deleted.');
+            fetchEnrolled();
+        } catch (error: any) {
+            alert('Failed to delete student: ' + error.message);
         }
     };
 
@@ -255,6 +290,18 @@ export default function StudentsPage() {
                                 }
                             </select>
                         </div>
+                        <div className="flex flex-col gap-1 ml-auto">
+                            <label className="text-sm font-medium text-gray-700">Status:</label>
+                            <select
+                                value={filterStatus}
+                                onChange={e => setFilterStatus(e.target.value)}
+                                className="border border-gray-300 rounded px-3 py-2 text-sm w-40"
+                            >
+                                <option value="ACTIVE">Active Only</option>
+                                <option value="WITHDRAWN">Withdrawn Only</option>
+                                <option value="">All Students</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div className="bg-white rounded shadow border border-gray-100 overflow-hidden">
@@ -306,6 +353,7 @@ export default function StudentsPage() {
                                             <th className="px-6 py-3 whitespace-nowrap">Mother Name</th>
                                             <th className="px-6 py-3 whitespace-nowrap">DOB</th>
                                             <th className="px-6 py-3 whitespace-nowrap">Section</th>
+                                            <th className="px-6 py-3 whitespace-nowrap">Status</th>
                                             <th className="px-6 py-3 whitespace-nowrap">Actions</th>
                                         </tr>
                                     </thead>
@@ -322,6 +370,13 @@ export default function StudentsPage() {
                                                     <td className="px-6 py-3 text-gray-500 whitespace-nowrap">{student.dob ? new Date(student.dob).toLocaleDateString() : '-'}</td>
                                                     <td className="px-6 py-3 text-gray-500 whitespace-nowrap">
                                                         {sec ? <span className="px-2 py-0.5 bg-blue-50 text-blue-700 rounded text-xs font-medium">{sec.section_name}</span> : '-'}
+                                                    </td>
+                                                    <td className="px-6 py-3 text-gray-500 whitespace-nowrap">
+                                                        {student.status === 'WITHDRAWN' ? (
+                                                            <span className="px-2 py-0.5 bg-red-50 text-red-700 rounded text-xs font-medium">Withdrawn</span>
+                                                        ) : (
+                                                            <span className="px-2 py-0.5 bg-green-50 text-green-700 rounded text-xs font-medium">Active</span>
+                                                        )}
                                                     </td>
                                                     <td className="px-6 py-3 whitespace-nowrap flex items-center gap-2">
                                                         <button
@@ -343,6 +398,22 @@ export default function StudentsPage() {
                                                                 </button>
                                                             ) : null;
                                                         })()}
+                                                        <button
+                                                            onClick={() => handleToggleStatus(student.id, student.status || 'ACTIVE')}
+                                                            className={`font-medium text-xs border px-3 py-1 rounded transition-colors ${student.status === 'WITHDRAWN'
+                                                                    ? 'text-green-600 border-green-200 hover:bg-green-50'
+                                                                    : 'text-orange-600 border-orange-200 hover:bg-orange-50'
+                                                                }`}
+                                                        >
+                                                            {student.status === 'WITHDRAWN' ? 'Re-activate' : 'Withdraw'}
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDeleteStudent(student.id)}
+                                                            className="text-red-600 hover:text-red-900 font-medium text-xs border border-red-200 px-3 py-1 rounded hover:bg-red-50"
+                                                            title="Permanently Delete Student"
+                                                        >
+                                                            Delete
+                                                        </button>
                                                     </td>
 
                                                 </tr>

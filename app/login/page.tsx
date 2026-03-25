@@ -9,6 +9,7 @@ function LoginForm() {
     const searchParams = useSearchParams();
     const roleParam = searchParams.get('role');
 
+    const [schoolCode, setSchoolCode] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
@@ -50,7 +51,7 @@ function LoginForm() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ username, password }),
+                body: JSON.stringify({ school_code: schoolCode.toUpperCase(), username, password }),
             });
 
             const data = await res.json();
@@ -107,6 +108,20 @@ function LoginForm() {
             )}
 
             <form onSubmit={handleLogin} className="space-y-6">
+                <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                        School Code
+                    </label>
+                    <input
+                        type="text"
+                        required
+                        value={schoolCode}
+                        onChange={(e) => setSchoolCode(e.target.value)}
+                        className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 uppercase"
+                        placeholder="e.g. SDMS"
+                    />
+                </div>
+
                 <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
                         Username

@@ -12,6 +12,7 @@ const OFFICE_PORTAL_ENABLED = false;
 // ─────────────────────────────────────────────────────────────────────────────
 
 const loginSchema = z.object({
+    school_code: z.string().min(1),
     username: z.string().min(1),
     password: z.string().min(1),
 });
@@ -28,11 +29,31 @@ export async function POST(request: Request) {
             );
         }
 
-        const { username, password } = result.data;
+        const { school_code, username, password } = result.data;
 
-        // Query user from DB
-        const query = 'SELECT id, username, password_hash, role, full_name, is_active FROM users WHERE username = $1';
-        const { rows } = await db.query(query, [username]);
+        // 1. Query Tenant
+        const tenantQuery = 'SELECT id, is_active FROM tenants WHERE school_code = $1';
+        const { rows: tenantRows } = await db.query(tenantQuery, [school_code]);
+        const tenant = tenantRows[0];
+
+        if (!tenant) {
+            return NextResponse.json(
+                { success: false, error_code: 'AUTH_FAILED', message: 'Invalid School Code' },
+                { status: 401 }
+            );
+        }
+
+        // If you implement tenant deactivation later
+        if (tenant.is_active === false) {
+            return NextResponse.json(
+                { success: false, error_code: 'TENANT_INACTIVE', message: 'School account is inactive' },
+                { status: 403 }
+            );
+        }
+
+        // 2. Query user from DB within that tenant
+        const query = 'SELECT id, username, password_hash, role, full_name, is_active, tenant_id FROM users WHERE username = $1 AND tenant_id = $2';
+        const { rows } = await db.query(query, [username, tenant.id]);
         const user = rows[0];
 
         if (!user) {
@@ -68,7 +89,11 @@ export async function POST(request: Request) {
         }
 
         // Create JWT
-        const token = await new SignJWT({ user_id: user.id.toString(), role: user.role })
+        const token = await new SignJWT({
+            user_id: user.id.toString(),
+            role: user.role,
+            tenant_id: user.tenant_id
+        })
             .setProtectedHeader({ alg: 'HS256' })
             .setIssuedAt()
             .setExpirationTime('24h')
@@ -79,6 +104,7 @@ export async function POST(request: Request) {
             token,
             role: user.role,
             user_id: user.id,
+            tenant_id: user.tenant_id,
             full_name: user.full_name
         });
 

@@ -42,10 +42,11 @@ export async function generatePagePdf(targetUrl: string): Promise<Buffer> {
     }
 }
 
-export async function generatePdf(studentId: number, academicYearId: number, reportType?: string): Promise<Buffer> {
+export async function generatePdf(studentId: number, academicYearId: number, reportType?: string, tenantId?: number): Promise<Buffer> {
     const token = process.env.PDF_INTERNAL_TOKEN || 'default_secret';
     const baseUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
     let url = `${baseUrl}/print/student/${studentId}?token=${token}&academic_year_id=${academicYearId}`;
+    if (tenantId) url += `&tenant_id=${tenantId}`;
     if (reportType && reportType !== 'FULL_HPC') {
         url += `&report_type=${reportType}`;
     }

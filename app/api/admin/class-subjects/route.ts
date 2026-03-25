@@ -46,20 +46,20 @@ export async function POST(request: Request) {
             // Clear existing for this class+section+year combination
             if (section_id) {
                 await client.query(
-                    `DELETE FROM class_subjects WHERE class_id = $1 AND academic_year_id = $2 AND section_id = $3`,
-                    [class_id, academic_year_id, section_id]
+                    `DELETE FROM class_subjects WHERE class_id = $1 AND academic_year_id = $2 AND section_id = $3 AND tenant_id = $4`,
+                    [class_id, academic_year_id, section_id, user.tenant_id]
                 );
             } else {
                 // Clear class-level (section_id IS NULL)
                 await client.query(
-                    `DELETE FROM class_subjects WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL`,
-                    [class_id, academic_year_id]
+                    `DELETE FROM class_subjects WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL AND tenant_id = $3`,
+                    [class_id, academic_year_id, user.tenant_id]
                 );
             }
 
             const insertQuery = `
-                INSERT INTO class_subjects (class_id, section_id, academic_year_id, subject_id, max_marks, assessment_max_marks, display_order, is_active)
-                VALUES ($1, $2, $3, $4, $5, $6, $7, true)
+                INSERT INTO class_subjects (class_id, section_id, academic_year_id, subject_id, max_marks, assessment_max_marks, display_order, is_active, tenant_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, true, $8)
             `;
 
             for (const sub of subjects) {
@@ -70,7 +70,8 @@ export async function POST(request: Request) {
                     sub.subject_id,
                     sub.max_marks,
                     JSON.stringify(sub.assessment_max_marks || {}),
-                    sub.display_order || 0
+                    sub.display_order || 0,
+                    user.tenant_id
                 ]);
             }
 
@@ -124,9 +125,9 @@ export async function GET(request: Request) {
             query = `
                 SELECT subject_id, max_marks, assessment_max_marks, display_order, section_id
                 FROM class_subjects 
-                WHERE class_id = $1 AND academic_year_id = $2 AND section_id = $3
+                WHERE class_id = $1 AND academic_year_id = $2 AND section_id = $3 AND tenant_id = $4
             `;
-            params = [parseInt(class_id), parseInt(academic_year_id), parseInt(section_id)];
+            params = [parseInt(class_id), parseInt(academic_year_id), parseInt(section_id), user.tenant_id];
             const { rows } = await db.query(query, params);
 
             if (rows.length > 0) {
@@ -137,17 +138,17 @@ export async function GET(request: Request) {
             query = `
                 SELECT subject_id, max_marks, assessment_max_marks, display_order, section_id
                 FROM class_subjects 
-                WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL
+                WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL AND tenant_id = $3
             `;
-            params = [parseInt(class_id), parseInt(academic_year_id)];
+            params = [parseInt(class_id), parseInt(academic_year_id), user.tenant_id];
         } else {
             // Return class-level subjects (section_id IS NULL) for mapping page
             query = `
                 SELECT subject_id, max_marks, assessment_max_marks, display_order, section_id
                 FROM class_subjects 
-                WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL
+                WHERE class_id = $1 AND academic_year_id = $2 AND section_id IS NULL AND tenant_id = $3
             `;
-            params = [parseInt(class_id), parseInt(academic_year_id)];
+            params = [parseInt(class_id), parseInt(academic_year_id), user.tenant_id];
         }
 
         const { rows } = await db.query(query, params);

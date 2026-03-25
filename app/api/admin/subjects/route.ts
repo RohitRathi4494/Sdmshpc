@@ -19,8 +19,8 @@ export async function GET(request: Request) {
             );
         }
 
-        const query = 'SELECT * FROM subjects ORDER BY subject_name ASC';
-        const { rows } = await db.query(query);
+        const query = 'SELECT * FROM subjects WHERE tenant_id = $1 ORDER BY subject_name ASC';
+        const { rows } = await db.query(query, [user.tenant_id]);
 
         return NextResponse.json({
             success: true,
@@ -54,14 +54,14 @@ export async function POST(request: Request) {
         const { subject_name } = result.data;
 
         // Check duplicate
-        const check = await db.query('SELECT id FROM subjects WHERE subject_name = $1', [subject_name]);
+        const check = await db.query('SELECT id FROM subjects WHERE subject_name = $1 AND tenant_id = $2', [subject_name, user.tenant_id]);
         if (check.rows.length > 0) {
             return NextResponse.json({ success: false, error_code: 'DUPLICATE', message: 'Subject already exists' }, { status: 400 });
         }
 
         const { rows } = await db.query(
-            'INSERT INTO subjects (subject_name) VALUES ($1) RETURNING *',
-            [subject_name]
+            'INSERT INTO subjects (subject_name, tenant_id) VALUES ($1, $2) RETURNING *',
+            [subject_name, user.tenant_id]
         );
 
         return NextResponse.json({ success: true, data: rows[0] });
@@ -85,8 +85,8 @@ export async function PUT(request: Request) {
         }
 
         const { rows } = await db.query(
-            'UPDATE subjects SET subject_name = $1 WHERE id = $2 RETURNING *',
-            [subject_name, id]
+            'UPDATE subjects SET subject_name = $1 WHERE id = $2 AND tenant_id = $3 RETURNING *',
+            [subject_name, id, user.tenant_id]
         );
 
         if (rows.length === 0) {
@@ -112,12 +112,12 @@ export async function DELETE(request: Request) {
         if (!id) return NextResponse.json({ success: false, error_code: 'VALIDATION_ERROR', message: 'ID required' }, { status: 400 });
 
         // Check dependencies
-        const check = await db.query('SELECT id FROM class_subjects WHERE subject_id = $1 LIMIT 1', [id]);
+        const check = await db.query('SELECT id FROM class_subjects WHERE subject_id = $1 AND tenant_id = $2 LIMIT 1', [id, user.tenant_id]);
         if (check.rows.length > 0) {
             return NextResponse.json({ success: false, error_code: 'DEPENDENCY', message: 'Cannot delete subject assigned to a class' }, { status: 400 });
         }
 
-        await db.query('DELETE FROM subjects WHERE id = $1', [id]);
+        await db.query('DELETE FROM subjects WHERE id = $1 AND tenant_id = $2', [id, user.tenant_id]);
 
         return NextResponse.json({ success: true, message: 'Subject deleted' });
 

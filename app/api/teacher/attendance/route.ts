@@ -37,14 +37,14 @@ export async function POST(request: Request) {
         const { student_id, month_id, working_days, days_present, academic_year_id } = result.data;
 
         const query = `
-      INSERT INTO attendance_records (student_id, month_id, working_days, days_present, academic_year_id)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO attendance_records (student_id, month_id, working_days, days_present, academic_year_id, tenant_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       ON CONFLICT (student_id, month_id, academic_year_id)
       DO UPDATE SET working_days = EXCLUDED.working_days, days_present = EXCLUDED.days_present
       RETURNING id
     `;
 
-        const { rows } = await db.query(query, [student_id, month_id, working_days, days_present, academic_year_id]);
+        const { rows } = await db.query(query, [student_id, month_id, working_days, days_present, academic_year_id, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

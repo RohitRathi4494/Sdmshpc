@@ -58,8 +58,8 @@ export async function POST(request: Request) {
             await client.query('BEGIN');
 
             const query = `
-        INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, academic_year_id)
-        VALUES ($1, $2, $3, $4, $5, $6)
+        INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, academic_year_id, tenant_id)
+        VALUES ($1, $2, $3, $4, $5, $6, $7)
         ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
         DO UPDATE SET marks = EXCLUDED.marks
       `;
@@ -71,7 +71,8 @@ export async function POST(request: Request) {
                     score.component_id,
                     score.term_id,
                     score.marks ?? null,
-                    score.academic_year_id
+                    score.academic_year_id,
+                    user.tenant_id
                 ]);
             }
 

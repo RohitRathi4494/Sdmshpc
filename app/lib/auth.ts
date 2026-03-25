@@ -4,6 +4,7 @@ const SECRET_KEY = new TextEncoder().encode(process.env.JWT_SECRET || 'default-s
 
 export enum UserRole {
     ADMIN = 'ADMIN',
+    SUPER_ADMIN = 'SUPER_ADMIN',
     TEACHER = 'TEACHER',
     PARENT = 'PARENT',
     VIEW_ONLY = 'VIEW_ONLY',
@@ -13,6 +14,7 @@ export enum UserRole {
 export interface AuthUser {
     user_id: string; // From JWT
     role: UserRole;
+    tenant_id: number;
 }
 
 export async function verifyAuth(token: string | undefined): Promise<AuthUser | null> {
@@ -22,7 +24,7 @@ export async function verifyAuth(token: string | undefined): Promise<AuthUser | 
         const { payload } = await jwtVerify(token, SECRET_KEY);
 
         // Validate payload has required fields
-        if (!payload.user_id || !payload.role) {
+        if (!payload.user_id || !payload.role || payload.tenant_id === undefined) {
             return null;
         }
 
@@ -35,6 +37,7 @@ export async function verifyAuth(token: string | undefined): Promise<AuthUser | 
         return {
             user_id: payload.user_id as string,
             role: role as UserRole,
+            tenant_id: Number(payload.tenant_id),
         };
     } catch (error) {
         return null;

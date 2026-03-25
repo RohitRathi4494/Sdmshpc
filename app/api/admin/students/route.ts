@@ -22,16 +22,16 @@ export async function GET(request: Request) {
         const visibility_status = searchParams.get('visibility_status'); // 'ACTIVE', 'WITHDRAWN', or null (all)
 
         let query = '';
-        const values: any[] = [];
+        const values: any[] = [user.tenant_id];
 
         if (status === 'unenrolled' && academic_year_id) {
             // Find students NOT in student_enrollments for this year
             query = `
                 SELECT s.* 
                 FROM students s
-                WHERE NOT EXISTS (
+                WHERE s.tenant_id = $1 AND NOT EXISTS (
                     SELECT 1 FROM student_enrollments se 
-                    WHERE se.student_id = s.id AND se.academic_year_id = $1
+                    WHERE se.student_id = s.id AND se.academic_year_id = $2 AND se.tenant_id = $1
                 )
                 ORDER BY s.student_name ASC
             `;
@@ -40,7 +40,7 @@ export async function GET(request: Request) {
             // Find students in specific class/year
             let sectionClause = '';
             if (section_id) {
-                sectionClause = `AND se.section_id = $3`;
+                sectionClause = `AND se.section_id = $4`;
             }
 
             query = `
@@ -48,7 +48,7 @@ export async function GET(request: Request) {
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE se.class_id = $1 AND se.academic_year_id = $2 ${sectionClause} ${visibility_status ? `AND s.status = $${section_id ? 4 : 3}` : ''}
+                WHERE s.tenant_id = $1 AND se.class_id = $2 AND se.academic_year_id = $3 ${sectionClause} ${visibility_status ? `AND s.status = $${section_id ? 5 : 4}` : ''}
                 ORDER BY se.roll_no ASC, s.student_name ASC
             `;
             values.push(parseInt(class_id), parseInt(academic_year_id));
@@ -63,7 +63,7 @@ export async function GET(request: Request) {
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE se.academic_year_id = $1 ${visibility_status ? `AND s.status = $2` : ''}
+                WHERE s.tenant_id = $1 AND se.academic_year_id = $2 ${visibility_status ? `AND s.status = $3` : ''}
                 ORDER BY c.display_order ASC, s.student_name ASC
             `;
             values.push(parseInt(academic_year_id));
@@ -72,10 +72,10 @@ export async function GET(request: Request) {
         } else {
             // Default: List all students (maybe limit?)
             if (visibility_status) {
-                query = 'SELECT * FROM students WHERE status = $1 ORDER BY id DESC LIMIT 100';
+                query = 'SELECT * FROM students WHERE tenant_id = $1 AND status = $2 ORDER BY id DESC LIMIT 100';
                 values.push(visibility_status);
             } else {
-                query = 'SELECT * FROM students ORDER BY id DESC LIMIT 100';
+                query = 'SELECT * FROM students WHERE tenant_id = $1 ORDER BY id DESC LIMIT 100';
             }
         }
 
@@ -154,7 +154,7 @@ export async function POST(request: Request) {
             // Let's stick to INSERT and return error if exists, safest for "Add New".
 
             // Check if admission_no exists
-            const existingCheck = await client.query('SELECT id FROM students WHERE admission_no = $1', [admission_no]);
+            const existingCheck = await client.query('SELECT id FROM students WHERE admission_no = $1 AND tenant_id = $2', [admission_no, user.tenant_id]);
             if (existingCheck.rows.length > 0) {
                 await client.query('ROLLBACK');
                 return NextResponse.json(
@@ -168,9 +168,9 @@ export async function POST(request: Request) {
                     admission_no, student_code, student_name, father_name, mother_name, dob, admission_date,
                     gender, blood_group, category, address, phone_no, emergency_no,
                     aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no,
-                    stream, subject_count, is_new_student
+                    stream, subject_count, is_new_student, tenant_id
                 )
-                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24)
                 RETURNING id;
             `;
 
@@ -181,7 +181,7 @@ export async function POST(request: Request) {
                 address || '', phone_no || '', emergency_no || '',
                 aadhar_no || '', ppp_id || '', apaar_id || '', srn_no || '',
                 board_roll_x || '', board_roll_xii || '', education_reg_no || '',
-                stream || null, subject_count || 5, is_new_student === true
+                stream || null, subject_count || 5, is_new_student === true, user.tenant_id
             ]);
 
             const studentId = studentRes.rows[0].id;
@@ -189,9 +189,9 @@ export async function POST(request: Request) {
             // 2. Enroll if class/section provided
             if (class_id && section_id && academic_year_id) {
                 await client.query(`
-                    INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id)
-                    VALUES ($1, $2, $3, $4)
-                `, [studentId, class_id, section_id, academic_year_id]);
+                    INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, tenant_id)
+                    VALUES ($1, $2, $3, $4, $5)
+                `, [studentId, class_id, section_id, academic_year_id, user.tenant_id]);
             }
 
             await client.query('COMMIT');

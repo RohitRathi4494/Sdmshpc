@@ -46,8 +46,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
 
         query = query.slice(0, -2);
-        query += ` WHERE id = $${valueIndex} RETURNING id, section_name, class_teacher_id`;
-        values.push(sectionId);
+        query += ` WHERE id = $${valueIndex} AND tenant_id = $${valueIndex + 1} RETURNING id, section_name, class_teacher_id`;
+        values.push(sectionId, user.tenant_id);
 
         const { rows } = await db.query(query, values);
 
@@ -89,7 +89,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
         // Check for dependencies (students, class_subjects?)
         // Assuming strict constraints, DB will throw error if dependencies exist.
 
-        await db.query('DELETE FROM sections WHERE id = $1', [sectionId]);
+        await db.query('DELETE FROM sections WHERE id = $1 AND tenant_id = $2', [sectionId, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

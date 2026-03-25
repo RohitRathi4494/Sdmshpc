@@ -70,13 +70,13 @@ export async function POST(request: Request) {
 
         try {
             const queryNoGrade = `
-                INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id)
-                VALUES ($1, $2, $3, $4, $5, $6, $7)
+                INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id, tenant_id)
+                VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                 ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
                 DO UPDATE SET marks = EXCLUDED.marks, grade = EXCLUDED.grade
                 RETURNING id
             `;
-            const { rows } = await db.query(queryNoGrade, [student_id, subject_id, component_id, term_id, marks ?? null, grade ?? null, academic_year_id]);
+            const { rows } = await db.query(queryNoGrade, [student_id, subject_id, component_id, term_id, marks ?? null, grade ?? null, academic_year_id, user.tenant_id]);
             return NextResponse.json({ success: true, data: rows[0] });
 
         } catch (err: any) {
@@ -88,12 +88,12 @@ export async function POST(request: Request) {
                 let grade = 'NA'; // Default safe value
                 if (marks !== null && marks !== undefined) {
                     try {
-                        const enrollRes = await db.query('SELECT class_id FROM student_enrollments WHERE student_id = $1 AND academic_year_id = $2', [student_id, academic_year_id]);
+                        const enrollRes = await db.query('SELECT class_id FROM student_enrollments WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3', [student_id, academic_year_id, user.tenant_id]);
                         const classId = enrollRes.rows[0]?.class_id;
 
                         let maxMarks = 100;
                         if (classId) {
-                            const csRes = await db.query('SELECT assessment_max_marks, max_marks FROM class_subjects WHERE class_id = $1 AND subject_id = $2 AND academic_year_id = $3', [classId, subject_id, academic_year_id]);
+                            const csRes = await db.query('SELECT assessment_max_marks, max_marks FROM class_subjects WHERE class_id = $1 AND subject_id = $2 AND academic_year_id = $3 AND tenant_id = $4', [classId, subject_id, academic_year_id, user.tenant_id]);
                             const csRow = csRes.rows[0];
                             if (csRow) {
                                 const componentIdStr = component_id.toString();
@@ -120,13 +120,13 @@ export async function POST(request: Request) {
                 }
 
                 const queryWithGrade = `
-                    INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id)
-                    VALUES ($1, $2, $3, $4, $5, $6, $7)
+                    INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id, tenant_id)
+                    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
                     ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
                     DO UPDATE SET marks = EXCLUDED.marks, grade = EXCLUDED.grade
                     RETURNING id
                 `;
-                const { rows } = await db.query(queryWithGrade, [student_id, subject_id, component_id, term_id, marks ?? null, grade, academic_year_id]);
+                const { rows } = await db.query(queryWithGrade, [student_id, subject_id, component_id, term_id, marks ?? null, grade, academic_year_id, user.tenant_id]);
                 return NextResponse.json({ success: true, data: rows[0] });
             } else {
                 throw err; // Re-throw real errors

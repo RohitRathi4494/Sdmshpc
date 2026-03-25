@@ -25,8 +25,8 @@ export async function GET(request: Request) {
         const { rows } = await db.query(`
             SELECT term, domain, skill_key, rating
             FROM foundational_skill_ratings
-            WHERE student_id = $1 AND academic_year_id = $2
-        `, [student_id, academic_year_id]);
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
+        `, [student_id, academic_year_id, user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows });
     } catch (err: any) {
@@ -54,12 +54,12 @@ export async function POST(request: Request) {
         }
 
         const { rows } = await db.query(`
-            INSERT INTO foundational_skill_ratings (student_id, academic_year_id, term, domain, skill_key, rating, updated_at)
-            VALUES ($1, $2, $3, $4, $5, $6, NOW())
+            INSERT INTO foundational_skill_ratings (student_id, academic_year_id, term, domain, skill_key, rating, updated_at, tenant_id)
+            VALUES ($1, $2, $3, $4, $5, $6, NOW(), $7)
             ON CONFLICT (student_id, academic_year_id, term, domain, skill_key)
             DO UPDATE SET rating = EXCLUDED.rating, updated_at = NOW()
             RETURNING id, rating
-        `, [student_id, academic_year_id, term, domain, skill_key, rating || null]);
+        `, [student_id, academic_year_id, term, domain, skill_key, rating || null, user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows[0] });
     } catch (err: any) {

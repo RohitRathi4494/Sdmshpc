@@ -35,11 +35,11 @@ export async function POST(request: Request) {
         const { year_name, is_active } = result.data;
 
         const query = `
-      INSERT INTO academic_years (year_name, is_active)
-      VALUES ($1, $2)
+      INSERT INTO academic_years (year_name, is_active, tenant_id)
+      VALUES ($1, $2, $3)
       RETURNING id, year_name, is_active
     `;
-        const values = [year_name, is_active ?? false];
+        const values = [year_name, is_active ?? false, user.tenant_id];
 
         const { rows } = await db.query(query, values);
 
@@ -69,8 +69,8 @@ export async function GET(request: Request) {
             );
         }
 
-        const query = 'SELECT * FROM academic_years ORDER BY id DESC';
-        const { rows } = await db.query(query);
+        const query = 'SELECT * FROM academic_years WHERE tenant_id = $1 ORDER BY id DESC';
+        const { rows } = await db.query(query, [user.tenant_id]);
 
         return NextResponse.json({
             success: true,

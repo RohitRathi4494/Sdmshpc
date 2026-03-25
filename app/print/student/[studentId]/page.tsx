@@ -27,6 +27,7 @@ interface PrintPageProps {
         token?: string;
         academic_year_id?: string;
         report_type?: string;
+        tenant_id?: string;
     };
 }
 
@@ -46,8 +47,9 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
 
     const studentId = parseInt(params.studentId, 10);
     const academicYearId = searchParams.academic_year_id ? parseInt(searchParams.academic_year_id, 10) : 1;
+    const tenantId = searchParams.tenant_id ? parseInt(searchParams.tenant_id, 10) : 1;
 
-    const reportData = await getStudentReportData(studentId, academicYearId);
+    const reportData = await getStudentReportData(studentId, academicYearId, tenantId);
 
     if (!reportData) {
         return notFound();

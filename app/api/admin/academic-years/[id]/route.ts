@@ -48,7 +48,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
 
             // If setting to active, deactivate all others
             if (is_active === true) {
-                await client.query('UPDATE academic_years SET is_active = false WHERE id != $1', [id]);
+                await client.query('UPDATE academic_years SET is_active = false WHERE id != $1 AND tenant_id = $2', [id, user.tenant_id]);
             }
 
             const updates = [];
@@ -65,11 +65,11 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
             }
 
             if (updates.length > 0) {
-                values.push(id);
+                values.push(id, user.tenant_id);
                 const query = `
                     UPDATE academic_years 
                     SET ${updates.join(', ')} 
-                    WHERE id = $${paramIndex}
+                    WHERE id = $${paramIndex} AND tenant_id = $${paramIndex + 1}
                     RETURNING *
                 `;
                 const { rows } = await client.query(query, values);

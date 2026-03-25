@@ -53,8 +53,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
 
         query = query.slice(0, -2);
-        query += ` WHERE id = $${valueIndex} AND role = 'TEACHER' RETURNING id, username, full_name, is_active`;
-        values.push(teacherId);
+        query += ` WHERE id = $${valueIndex} AND role = 'TEACHER' AND tenant_id = $${valueIndex + 1} RETURNING id, username, full_name, is_active`;
+        values.push(teacherId, user.tenant_id);
 
         const { rows } = await db.query(query, values);
 

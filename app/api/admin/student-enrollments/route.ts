@@ -38,9 +38,9 @@ export async function POST(request: Request) {
         // Check if already enrolled in this year?
         const checkQuery = `
       SELECT id FROM student_enrollments 
-      WHERE student_id = $1 AND academic_year_id = $2
+      WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
     `;
-        const checkResult = await db.query(checkQuery, [student_id, academic_year_id]);
+        const checkResult = await db.query(checkQuery, [student_id, academic_year_id, user.tenant_id]);
 
         if (checkResult.rows.length > 0) {
             return NextResponse.json(
@@ -50,12 +50,12 @@ export async function POST(request: Request) {
         }
 
         const insertQuery = `
-      INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, roll_no)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, roll_no, tenant_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       RETURNING id
     `;
 
-        const { rows } = await db.query(insertQuery, [student_id, class_id, section_id, academic_year_id, roll_no || null]);
+        const { rows } = await db.query(insertQuery, [student_id, class_id, section_id, academic_year_id, roll_no || null, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

@@ -37,10 +37,10 @@ export async function POST(request: Request) {
         const query = `
             UPDATE attendance_records 
             SET reason_for_low_attendance = $1 
-            WHERE student_id = $2 AND academic_year_id = $3
+            WHERE student_id = $2 AND academic_year_id = $3 AND tenant_id = $4
         `;
 
-        await db.query(query, [reason_for_low_attendance, student_id, academic_year_id]);
+        await db.query(query, [reason_for_low_attendance, student_id, academic_year_id, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

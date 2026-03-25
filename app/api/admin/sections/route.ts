@@ -34,11 +34,11 @@ export async function POST(request: Request) {
         const { class_id, section_name, class_teacher_id } = result.data;
 
         const query = `
-      INSERT INTO sections (class_id, section_name, class_teacher_id)
-      VALUES ($1, $2, $3)
+      INSERT INTO sections (class_id, section_name, class_teacher_id, tenant_id)
+      VALUES ($1, $2, $3, $4)
       RETURNING id, class_id, section_name, class_teacher_id
     `;
-        const { rows } = await db.query(query, [class_id, section_name, class_teacher_id || null]);
+        const { rows } = await db.query(query, [class_id, section_name, class_teacher_id || null, user.tenant_id]);
 
         return NextResponse.json({
             success: true,
@@ -71,12 +71,13 @@ export async function GET(request: Request) {
         let query = `
             SELECT s.*, u.full_name as teacher_name 
             FROM sections s
-            LEFT JOIN users u ON s.class_teacher_id = u.id
+            LEFT JOIN users u ON s.class_teacher_id = u.id AND u.tenant_id = $1
+            WHERE s.tenant_id = $1
         `;
-        const values: any[] = [];
+        const values: any[] = [user.tenant_id];
 
         if (class_id) {
-            query += ' WHERE s.class_id = $1';
+            query += ' AND s.class_id = $2';
             values.push(parseInt(class_id, 10));
         }
 

@@ -49,14 +49,14 @@ export async function POST(request: Request) {
         }
 
         const query = `
-      INSERT INTO co_scholastic_scores (student_id, sub_skill_id, term_id, grade, academic_year_id)
-      VALUES ($1, $2, $3, $4, $5)
+      INSERT INTO co_scholastic_scores (student_id, sub_skill_id, term_id, grade, academic_year_id, tenant_id)
+      VALUES ($1, $2, $3, $4, $5, $6)
       ON CONFLICT (student_id, sub_skill_id, term_id, academic_year_id)
       DO UPDATE SET grade = EXCLUDED.grade
       RETURNING id
     `;
 
-        const { rows } = await db.query(query, [student_id, sub_skill_id, term_id, grade, academic_year_id]);
+        const { rows } = await db.query(query, [student_id, sub_skill_id, term_id, grade, academic_year_id, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

@@ -16,8 +16,8 @@ export async function GET(request: Request) {
             );
         }
 
-        const query = 'SELECT * FROM classes ORDER BY display_order ASC';
-        const { rows } = await db.query(query);
+        const query = 'SELECT * FROM classes WHERE tenant_id = $1 ORDER BY display_order ASC';
+        const { rows } = await db.query(query, [user.tenant_id]);
 
         return NextResponse.json({
             success: true,
@@ -54,8 +54,8 @@ export async function POST(request: Request) {
             );
         }
 
-        const query = 'INSERT INTO classes (class_name, display_order) VALUES ($1, $2) RETURNING *';
-        const { rows } = await db.query(query, [class_name, display_order || 0]);
+        const query = 'INSERT INTO classes (class_name, display_order, tenant_id) VALUES ($1, $2, $3) RETURNING *';
+        const { rows } = await db.query(query, [class_name, display_order || 0, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

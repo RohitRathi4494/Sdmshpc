@@ -25,8 +25,8 @@ export async function GET(request: Request) {
         const { rows } = await db.query(`
             SELECT term, field_key, field_value
             FROM foundational_text_fields
-            WHERE student_id = $1 AND academic_year_id = $2
-        `, [student_id, academic_year_id]);
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
+        `, [student_id, academic_year_id, user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows });
     } catch (err: any) {
@@ -50,11 +50,11 @@ export async function POST(request: Request) {
         }
 
         await db.query(`
-            INSERT INTO foundational_text_fields (student_id, academic_year_id, term, field_key, field_value, updated_at)
-            VALUES ($1, $2, $3, $4, $5, NOW())
+            INSERT INTO foundational_text_fields (student_id, academic_year_id, term, field_key, field_value, updated_at, tenant_id)
+            VALUES ($1, $2, $3, $4, $5, NOW(), $6)
             ON CONFLICT (student_id, academic_year_id, term, field_key)
             DO UPDATE SET field_value = EXCLUDED.field_value, updated_at = NOW()
-        `, [student_id, academic_year_id, term, field_key, field_value ?? '']);
+        `, [student_id, academic_year_id, term, field_key, field_value ?? '', user.tenant_id]);
 
         return NextResponse.json({ success: true });
     } catch (err: any) {

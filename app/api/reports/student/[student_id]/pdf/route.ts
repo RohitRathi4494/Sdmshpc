@@ -41,10 +41,10 @@ export async function POST(request: Request, context: { params: Promise<{ studen
         const student_id = parseInt(params.student_id, 10);
 
         // Generate PDF
-        const pdfBuffer = await generatePdf(student_id, Number(academic_year_id), report_type);
+        const pdfBuffer = await generatePdf(student_id, Number(academic_year_id), report_type, user.tenant_id);
 
         // Fetch student data for filename
-        const reportData = await getStudentReportData(student_id, Number(academic_year_id));
+        const reportData = await getStudentReportData(student_id, Number(academic_year_id), user.tenant_id);
         let filename = `Report_Card_${student_id}.pdf`;
 
         if (reportData && reportData.student) {

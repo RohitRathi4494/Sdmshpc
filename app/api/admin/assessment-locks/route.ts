@@ -34,14 +34,14 @@ export async function GET(request: Request) {
                 u.name as locked_by_name,
                 al.locked_at
             FROM assessment_locks al
-            JOIN classes c ON al.class_id = c.id
+            JOIN classes c ON al.class_id = c.id AND c.tenant_id = $1
             JOIN terms t ON al.term_id = t.id
             LEFT JOIN users u ON al.locked_by = u.id
         `;
-        const params: any[] = [];
+        const params: any[] = [user.tenant_id];
 
         if (academicYearId) {
-            query += ` WHERE al.academic_year_id = $1`;
+            query += ` WHERE al.academic_year_id = $2`;
             params.push(parseInt(academicYearId));
         }
 
@@ -83,6 +83,13 @@ export async function POST(request: Request) {
                 { success: false, error_code: 'VALIDATION_ERROR', message: 'Missing required fields' },
                 { status: 400 }
             );
+        }
+
+        // Validate class ownership by tenant
+        const classCheckQuery = 'SELECT id FROM classes WHERE id = $1 AND tenant_id = $2';
+        const classCheck = await db.query(classCheckQuery, [class_id, user.tenant_id]);
+        if (classCheck.rows.length === 0) {
+            return NextResponse.json({ success: false, error_code: 'NOT_FOUND', message: 'Class not found or access denied' }, { status: 404 });
         }
 
         // Begin transaction

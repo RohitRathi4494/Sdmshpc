@@ -49,7 +49,7 @@ export async function GET(request: Request, context: { params: Promise<{ student
         }
         // Teachers and Admins can view any (or we could restrict Teachers to their classes, but for now open)
 
-        const reportData = await getStudentReportData(student_id, parseInt(academic_year_id, 10));
+        const reportData = await getStudentReportData(student_id, parseInt(academic_year_id, 10), user.tenant_id);
 
         if (!reportData) {
             return NextResponse.json(

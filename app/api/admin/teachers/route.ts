@@ -19,10 +19,10 @@ export async function GET(request: Request) {
         const query = `
             SELECT id, username, full_name, role, is_active, created_at 
             FROM users 
-            WHERE role = 'TEACHER' 
+            WHERE role = 'TEACHER' AND tenant_id = $1
             ORDER BY created_at DESC
         `;
-        const { rows } = await db.query(query);
+        const { rows } = await db.query(query, [user.tenant_id]);
 
         return NextResponse.json({
             success: true,
@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         }
 
         // Check if username exists
-        const check = await db.query('SELECT id FROM users WHERE username = $1', [username]);
+        const check = await db.query('SELECT id FROM users WHERE username = $1 AND tenant_id = $2', [username, user.tenant_id]);
         if (check.rows.length > 0) {
             return NextResponse.json(
                 { success: false, error_code: 'DUPLICATE_USER', message: 'Username already exists' },
@@ -72,12 +72,12 @@ export async function POST(request: Request) {
         const passwordHash = await bcrypt.hash(password, 10);
 
         const query = `
-            INSERT INTO users (username, password_hash, full_name, role, is_active)
-            VALUES ($1, $2, $3, 'TEACHER', true)
+            INSERT INTO users (username, password_hash, full_name, role, is_active, tenant_id)
+            VALUES ($1, $2, $3, 'TEACHER', true, $4)
             RETURNING id, username, full_name, role, is_active, created_at
         `;
 
-        const { rows } = await db.query(query, [username, passwordHash, full_name]);
+        const { rows } = await db.query(query, [username, passwordHash, full_name, user.tenant_id]);
 
         return NextResponse.json({
             success: true,

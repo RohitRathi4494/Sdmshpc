@@ -48,16 +48,17 @@ export async function POST(request: Request) {
           AND remark_type_id = $2 
           AND academic_year_id = $3
           AND aspect IS NOT DISTINCT FROM $4
+          AND tenant_id = $5
       `;
-            await client.query(deleteQuery, [student_id, remark_type_id, academic_year_id, aspect ?? null]);
+            await client.query(deleteQuery, [student_id, remark_type_id, academic_year_id, aspect ?? null, user.tenant_id]);
 
             // 2. Insert new
             const insertQuery = `
-        INSERT INTO remarks (student_id, remark_type_id, aspect, remark_text, academic_year_id)
-        VALUES ($1, $2, $3, $4, $5)
+        INSERT INTO remarks (student_id, remark_type_id, aspect, remark_text, academic_year_id, tenant_id)
+        VALUES ($1, $2, $3, $4, $5, $6)
         RETURNING id
       `;
-            const { rows } = await client.query(insertQuery, [student_id, remark_type_id, aspect ?? null, remark_text, academic_year_id]);
+            const { rows } = await client.query(insertQuery, [student_id, remark_type_id, aspect ?? null, remark_text, academic_year_id, user.tenant_id]);
 
             await client.query('COMMIT');
 

@@ -38,7 +38,7 @@ function SchoolHeader({ title }: { title: string }) {
                     background: C.white, display: 'flex', alignItems: 'center', justifyContent: 'center',
                     flexShrink: 0, overflow: 'hidden'
                 }}>
-                    <img src="/school_logo.png" alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                    <img src="/sdhps_logo.png" alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
                 </div>
                 <div style={{ flex: 1, textAlign: 'center' }}>
                     <div style={{ fontSize: 19, fontWeight: 800, color: C.white, letterSpacing: 0.4 }}>

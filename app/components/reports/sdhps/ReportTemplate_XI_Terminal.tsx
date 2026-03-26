@@ -1,0 +1,304 @@
+import React from 'react';
+
+interface ReportData {
+    student: any;
+    scholastic: any[];
+    attendance: any[];
+    subjects?: any[];
+    components?: any[];
+}
+
+// ── style tokens matching the Foundational Stage HTML reference ──
+const C = {
+    navy: '#1B3D6F', navyMid: '#244d8a', gold: '#C8922A', goldLight: '#f0c060',
+    paleBg: '#F5F8FF', rowOdd: '#FFFFFF', rowEven: '#EFF4FB', border: '#c9d8ee',
+    subheadBg: '#dbe8fa', tagA: '#1a7a3b', tagB: '#2563EB', tagC: '#d97706',
+    text: '#1a2840', muted: '#4B5563', white: '#FFFFFF',
+};
+
+// ── Section Heading Component ──
+function SectionHeading({ children, mt }: { children: React.ReactNode; mt?: number }) {
+    return (
+        <div style={{ display: 'flex', alignItems: 'center', gap: 8, margin: `${mt ?? 8}px 0 4px` }}>
+            <div style={{ width: 4, height: 18, background: C.gold, borderRadius: 3, flexShrink: 0 }} />
+            <h3 style={{ fontSize: 13, fontWeight: 800, color: C.navy, textTransform: 'uppercase', letterSpacing: 0.5 }}>
+                {children}
+            </h3>
+        </div>
+    );
+}
+
+// ── School Header Component ──
+function SchoolHeader({ title }: { title: string }) {
+    return (
+        <div style={{ WebkitPrintColorAdjust: 'exact', printColorAdjust: 'exact' }}>
+            <div style={{ background: C.navy, display: 'flex', alignItems: 'center', gap: 16, padding: '14px 24px' }}>
+                <div style={{
+                    width: 56, height: 56, borderRadius: '50%', border: `2px solid ${C.goldLight}`,
+                    background: C.white, display: 'flex', alignItems: 'center', justifyContent: 'center',
+                    flexShrink: 0, overflow: 'hidden'
+                }}>
+                    <img src="/school_logo.png" alt="School Logo" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+                </div>
+                <div style={{ flex: 1, textAlign: 'center' }}>
+                    <div style={{ fontSize: 19, fontWeight: 800, color: C.white, letterSpacing: 0.4 }}>
+                        S D HERITAGE PRIDE SCHOOL, GURUGRAM
+                    </div>
+                    <div style={{ fontSize: 12, fontWeight: 600, color: C.goldLight, letterSpacing: 2, textTransform: 'uppercase', marginTop: 2 }}>
+                        {title}
+                    </div>
+                </div>
+            </div>
+            <div style={{ height: 4, background: `linear-gradient(90deg, ${C.gold}, ${C.goldLight}, ${C.gold})` }} />
+        </div>
+    );
+}
+
+export default function ReportTemplate_XI_Terminal_SDHPS({ reportData, reportType }: { reportData: ReportData, reportType: 'TA1' | 'TA2' }) {
+    if (!reportData) return null;
+
+    const termName = reportType === 'TA1' ? 'Term I' : 'Term II';
+    const reportTitle = reportType === 'TA1' ? 'Terminal Assessment 1' : 'Terminal Assessment 2';
+
+    // --- Helpers ---
+    const getScholasticScore = (subjectName: string, componentName: string, termName: string) => {
+        return reportData.scholastic?.find((s: any) =>
+            s.subject_name === subjectName &&
+            s.component_name === componentName &&
+            s.term_name === termName
+        );
+    };
+
+    const months = reportType === 'TA1'
+        ? ['Apr', 'May', 'Jul', 'Aug', 'Sep']
+        : ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'];
+
+    const getAttendance = (month: string) => reportData.attendance?.find((a: any) => a.month_name?.startsWith(month));
+
+    return (
+        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 12, color: C.text, background: C.white, padding: '0' }}>
+            <div className="print-page page-break" style={{
+                width: '100%', maxWidth: '210mm', margin: '0 auto', background: C.white,
+                borderRadius: 4, overflow: 'hidden',
+                boxSizing: 'border-box', position: 'relative'
+            }}>
+                <SchoolHeader title={reportTitle} />
+                <div style={{ padding: '8px 12px' }}>
+
+                    {/* GENERAL INFORMATION */}
+                    <div className="section" style={{ marginTop: 4 }}>
+                        <SectionHeading mt={0}>General Information</SectionHeading>
+                        <table className="foundational-table" style={{ width: '100%', borderCollapse: 'collapse', border: `1px solid ${C.navy}`, fontSize: 12, background: C.white }}>
+                            <tbody>
+                                <tr>
+                                    <td style={{ width: '22%', background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Student Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.student_name}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Roll No.:</td>
+                                    <td style={{ width: '28%', padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.roll_no}</td>
+                                    <td style={{ width: '15%', background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Adm No.:</td>
+                                    <td style={{ width: '35%', padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.admission_no}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Class / Section:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.class_name} {reportData.student?.section_name ? '— ' + reportData.student?.section_name : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Date of Birth:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.dob ? new Date(reportData.student.dob).toLocaleDateString("en-GB") : ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Address:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.address || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Phone:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.phone_no || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Mother/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.mother_name || ''}</td>
+                                </tr>
+                                <tr>
+                                    <td style={{ background: C.rowEven, padding: '4px 6px', fontWeight: 700, color: C.navy, textAlign: 'left' }}>Father/Guardian Name:</td>
+                                    <td colSpan={3} style={{ padding: '4px 6px', color: C.text, textAlign: 'left' }}>{reportData.student?.father_name || ''}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    {/* ATTENDANCE RECORD */}
+                    <div className="section" style={{ marginTop: 8 }}>
+                        <SectionHeading mt={4}>Attendance Record ({termName})</SectionHeading>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table className="attendance-table foundational-attendance" style={{ border: `1px solid ${C.navy}` }}>
+                                <thead>
+                                    <tr>
+                                        <th style={{ width: '20%' }}>Months</th>
+                                        {months.map(m => <th key={m}>{m}</th>)}
+                                        <th style={{ width: '12%' }}>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Working Days</td>
+                                        {months.map(m => <td key={m} className="input-cell" style={{ padding: '2px 4px' }}>{getAttendance(m)?.working_days || ''}</td>)}
+                                        <td className="input-cell" style={{ padding: '2px 4px' }}>
+                                            {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>No. of Days Present</td>
+                                        {months.map(m => <td key={m} className="input-cell" style={{ padding: '2px 4px' }}>{getAttendance(m)?.days_present || ''}</td>)}
+                                        <td className="input-cell" style={{ padding: '2px 4px' }}>
+                                            {months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>% of attendance</td>
+                                        {months.map(m => {
+                                            const att = getAttendance(m);
+                                            return <td key={m} className="input-cell" style={{ padding: '2px 4px' }}>{att && att.working_days ? Math.round((att.days_present / att.working_days) * 100) : ''}</td>;
+                                        })}
+                                        <td className="input-cell" style={{ padding: '2px 4px' }}>
+                                            {(() => {
+                                                const totalW = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.working_days || 0), 0) || 0;
+                                                const totalP = months.reduce((acc: number, m: string) => acc + (getAttendance(m)?.days_present || 0), 0) || 0;
+                                                return totalW ? Math.round((totalP / totalW) * 100) + '%' : '';
+                                            })()}
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td style={{ fontWeight: 600, textAlign: 'left', paddingLeft: '5px' }}>If attendance is low then reason</td>
+                                        <td colSpan={months.length + 1} className="input-cell text-left" style={{ paddingLeft: '12px' }}>
+                                            {reportData.attendance?.find(a => months.some(m => a.month_name?.startsWith(m)) && a.reason_for_low_attendance)?.reason_for_low_attendance || ''}
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    {/* SCHOLASTIC RECORD */}
+                    <div className="section" style={{ marginTop: 8 }}>
+                        <SectionHeading mt={4}>Scholastic Performance ({termName})</SectionHeading>
+                        <div style={{ overflowX: 'auto' }}>
+                            <table className="foundational-table scholastic-table" style={{ width: '100%', border: `1px solid ${C.navy}`, tableLayout: 'fixed' }}>
+                                <colgroup>
+                                    <col style={{ width: '22%' }} />{/* Subjects */}
+                                    <col style={{ width: '11%' }} />{/* PA */}
+                                    <col style={{ width: '11%' }} />{/* SEA */}
+                                    <col style={{ width: '18%' }} />{/* Theory */}
+                                    <col style={{ width: '18%' }} />{/* Practical */}
+                                    <col style={{ width: '20%' }} />{/* Total */}
+                                </colgroup>
+                                <thead>
+                                    <tr>
+                                        <th rowSpan={2} style={{ textAlign: 'left', paddingLeft: 12 }}>Subjects</th>
+                                        <th rowSpan={2}>Periodic Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(20 Marks)</span></th>
+                                        <th rowSpan={2}>Sub. Enrichment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(Grade)</span></th>
+                                        <th colSpan={2} className="gold-bg">Terminal Assessment<br /><span style={{ fontWeight: 'normal', fontStyle: 'italic' }}>(80 Marks)</span></th>
+                                        <th rowSpan={2} className="gold-bg">Total</th>
+                                    </tr>
+                                    <tr>
+                                        <th className="gold-bg">Theory</th>
+                                        <th className="gold-bg">Practical</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {(() => {
+                                        let totalMarksObj = 0;
+                                        let totalMax = 0;
+
+                                        const getComponentMax = (subInfo: any, componentName: string) => {
+                                            const comp = reportData.components?.find((c: any) => c.component_name === componentName);
+                                            if (!comp) return 0;
+                                            const cid = comp.id.toString();
+                                            if (subInfo.assessment_max_marks && subInfo.assessment_max_marks[cid] !== undefined) {
+                                                return Number(subInfo.assessment_max_marks[cid]);
+                                            }
+                                            return comp.max_marks || 0;
+                                        };
+
+                                        const rows = reportData.subjects?.map((sub: any) => {
+                                            const subject = sub.subject_name;
+                                            const isAdditional = sub.subject_type === 'additional_6th';
+
+                                            const maxPA = getComponentMax(sub, 'Periodic Assessment');
+                                            const maxTA = getComponentMax(sub, 'Terminal Assessment');
+                                            const maxLab = getComponentMax(sub, 'Lab Assessment');
+                                            const subMaxTotal = maxPA + maxTA + maxLab;
+
+                                            const paScore = getScholasticScore(subject, 'Periodic Assessment', termName)?.marks || 0;
+                                            const seaGrade = getScholasticScore(subject, 'Subject Enrichment Activities', termName)?.grade || '-';
+                                            const taScore = getScholasticScore(subject, 'Terminal Assessment', termName)?.marks || 0;
+                                            const labScore = getScholasticScore(subject, 'Lab Assessment', termName)?.marks || 0;
+
+                                            const paVal = maxPA === 0 ? 'NA' : (paScore || '-');
+                                            const taVal = maxTA === 0 ? 'NA' : (taScore || '-');
+                                            const labVal = maxLab === 0 ? 'NA' : (labScore || '-');
+
+                                            let totalVal: number | string = '-';
+                                            if (paScore || taScore || labScore) {
+                                                const numericTotal = Number(paScore || 0) + Number(taScore || 0) + Number(labScore || 0);
+                                                totalVal = `${numericTotal}/${subMaxTotal}`;
+                                                if (!isAdditional) {
+                                                    totalMarksObj += numericTotal;
+                                                    totalMax += subMaxTotal;
+                                                }
+                                            }
+
+                                            const rowStyle = isAdditional
+                                                ? { background: '#fff8e1', borderLeft: `4px solid ${C.gold}` }
+                                                : {};
+
+                                            return (
+                                                <tr key={subject} style={rowStyle}>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 600 }}>
+                                                        {subject}
+                                                        {isAdditional && (
+                                                            <span style={{
+                                                                marginLeft: 6, fontSize: 9, fontWeight: 700,
+                                                                background: C.gold, color: '#fff',
+                                                                borderRadius: 3, padding: '1px 5px',
+                                                                verticalAlign: 'middle', letterSpacing: 0.3
+                                                            }}>ADDITIONAL</span>
+                                                        )}
+                                                    </td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{paVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{seaGrade}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{taVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px' }}>{labVal}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 'bold' }}>{totalVal}</td>
+                                                </tr>
+                                            );
+                                        });
+
+                                        const percentage = totalMax > 0 ? ((totalMarksObj / totalMax) * 100).toFixed(2) : '-';
+
+                                        return (
+                                            <>
+                                                {rows}
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700 }}>Total</td>
+                                                    <td colSpan={3} style={{ textAlign: 'center', fontWeight: 700, padding: '2px 4px' }}>{totalMax || ''}</td>
+                                                    <td className="input-cell" style={{ padding: '2px 4px', fontWeight: 700 }}>{totalMarksObj || ''}</td>
+                                                </tr>
+                                                <tr>
+                                                    <td style={{ textAlign: 'left', paddingLeft: 8, fontWeight: 700 }}>Percentage</td>
+                                                    <td colSpan={4} style={{ textAlign: 'center', padding: '2px 4px', fontWeight: 700 }}>{percentage !== '-' ? `${percentage}%` : ''}</td>
+                                                </tr>
+                                            </>
+                                        );
+                                    })()}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    );
+}

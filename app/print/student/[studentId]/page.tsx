@@ -4,6 +4,7 @@ import { getStudentReportData } from '@/app/lib/report-service';
 import { PRINT_STYLES } from '@/app/lib/print-styles';
 import { getTemplateForClass, ReportTemplate } from '@/app/lib/report-mapping';
 
+// SDMS Templates
 import ReportTemplate_III_VIII from '@/app/components/reports/ReportTemplate_III_VIII';
 import ReportTemplate_III_VIII_Periodic from '@/app/components/reports/ReportTemplate_III_VIII_Periodic';
 import ReportTemplate_III_VIII_Terminal from '@/app/components/reports/ReportTemplate_III_VIII_Terminal';
@@ -18,6 +19,22 @@ import ReportTemplate_XI_Periodic from '@/app/components/reports/ReportTemplate_
 import ReportTemplate_XI_Terminal from '@/app/components/reports/ReportTemplate_XI_Terminal';
 import { FoundationalReportContent } from '@/app/components/reports/FoundationalReportContent';
 import { FoundationalReportContent_I_II } from '@/app/components/reports/FoundationalReportContent_I_II';
+
+// SDHPS Templates
+import ReportTemplate_III_VIII_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_III_VIII';
+import ReportTemplate_III_VIII_Periodic_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_III_VIII_Periodic';
+import ReportTemplate_III_VIII_Terminal_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_III_VIII_Terminal';
+import ReportTemplate_IX_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_IX';
+import ReportTemplate_IX_Periodic_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_IX_Periodic';
+import ReportTemplate_IX_Terminal_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_IX_Terminal';
+import ReportTemplate_X_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_X';
+import ReportTemplate_X_Periodic_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_X_Periodic';
+import ReportTemplate_X_Terminal_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_X_Terminal';
+import ReportTemplate_XI_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_XI';
+import ReportTemplate_XI_Periodic_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_XI_Periodic';
+import ReportTemplate_XI_Terminal_SDHPS from '@/app/components/reports/sdhps/ReportTemplate_XI_Terminal';
+import { FoundationalReportContent_SDHPS } from '@/app/components/reports/sdhps/FoundationalReportContent';
+import { FoundationalReportContent_I_II_SDHPS } from '@/app/components/reports/sdhps/FoundationalReportContent_I_II';
 
 interface PrintPageProps {
     params: {
@@ -56,14 +73,15 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
     }
 
     const template = getTemplateForClass(reportData.student?.class_name);
+    const isSDHPS = tenantId === 2;
 
     if (template === ReportTemplate.III_VIII) {
-        let TemplateComponent = <ReportTemplate_III_VIII reportData={reportData} />;
+        let TemplateComponent = isSDHPS ? <ReportTemplate_III_VIII_SDHPS reportData={reportData} /> : <ReportTemplate_III_VIII reportData={reportData} />;
 
         if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
-            TemplateComponent = <ReportTemplate_III_VIII_Periodic reportData={reportData as any} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_III_VIII_Periodic_SDHPS reportData={reportData as any} reportType={searchParams.report_type as any} /> : <ReportTemplate_III_VIII_Periodic reportData={reportData as any} reportType={searchParams.report_type as any} />;
         } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
-            TemplateComponent = <ReportTemplate_III_VIII_Terminal reportData={reportData as any} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_III_VIII_Terminal_SDHPS reportData={reportData as any} reportType={searchParams.report_type as any} /> : <ReportTemplate_III_VIII_Terminal reportData={reportData as any} reportType={searchParams.report_type as any} />;
         }
 
         return (
@@ -77,11 +95,11 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
             </html>
         );
     } else if (template === ReportTemplate.IX) {
-        let TemplateComponent = <ReportTemplate_IX reportData={reportData} />;
+        let TemplateComponent = isSDHPS ? <ReportTemplate_IX_SDHPS reportData={reportData} /> : <ReportTemplate_IX reportData={reportData} />;
         if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
-            TemplateComponent = <ReportTemplate_IX_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_IX_Periodic_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_IX_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
         } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
-            TemplateComponent = <ReportTemplate_IX_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_IX_Terminal_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_IX_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
         }
 
         return (
@@ -95,11 +113,11 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
             </html>
         );
     } else if (template === ReportTemplate.X) {
-        let TemplateComponent = <ReportTemplate_X reportData={reportData} />;
+        let TemplateComponent = isSDHPS ? <ReportTemplate_X_SDHPS reportData={reportData} /> : <ReportTemplate_X reportData={reportData} />;
         if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
-            TemplateComponent = <ReportTemplate_X_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_X_Periodic_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_X_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
         } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
-            TemplateComponent = <ReportTemplate_X_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_X_Terminal_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_X_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
         }
 
         return (
@@ -113,11 +131,11 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
             </html>
         );
     } else if (template === ReportTemplate.XI) {
-        let TemplateComponent = <ReportTemplate_XI reportData={reportData} />;
+        let TemplateComponent = isSDHPS ? <ReportTemplate_XI_SDHPS reportData={reportData} /> : <ReportTemplate_XI reportData={reportData} />;
         if (searchParams.report_type === 'PA1' || searchParams.report_type === 'PA2') {
-            TemplateComponent = <ReportTemplate_XI_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_XI_Periodic_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_XI_Periodic reportData={reportData} reportType={searchParams.report_type as any} />;
         } else if (searchParams.report_type === 'TA1' || searchParams.report_type === 'TA2') {
-            TemplateComponent = <ReportTemplate_XI_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
+            TemplateComponent = isSDHPS ? <ReportTemplate_XI_Terminal_SDHPS reportData={reportData} reportType={searchParams.report_type as any} /> : <ReportTemplate_XI_Terminal reportData={reportData} reportType={searchParams.report_type as any} />;
         }
 
         return (
@@ -138,7 +156,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 </head>
                 <body className="print-mode bg-white">
                     <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
-                        <FoundationalReportContent autoPrint={false} />
+                        {isSDHPS ? <FoundationalReportContent_SDHPS autoPrint={false} /> : <FoundationalReportContent autoPrint={false} />}
                     </div>
                 </body>
             </html>
@@ -151,7 +169,7 @@ export default async function PrintReportPage({ params, searchParams }: PrintPag
                 </head>
                 <body className="print-mode bg-white">
                     <div className="bg-transparent" style={{ marginLeft: '-16px', marginRight: '-16px' }}>
-                        <FoundationalReportContent_I_II autoPrint={false} />
+                        {isSDHPS ? <FoundationalReportContent_I_II_SDHPS autoPrint={false} /> : <FoundationalReportContent_I_II autoPrint={false} />}
                     </div>
                 </body>
             </html>

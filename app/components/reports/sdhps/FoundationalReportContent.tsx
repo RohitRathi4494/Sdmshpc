@@ -10,9 +10,9 @@ import { PRINT_STYLES } from '@/app/lib/print-styles';
 
 // ── style tokens matching the HTML reference ──────────────────────────────────
 const C = {
-    navy: '#1B3D6F', navyMid: '#244d8a', gold: '#C8922A', goldLight: '#f0c060',
-    paleBg: '#F5F8FF', rowOdd: '#FFFFFF', rowEven: '#EFF4FB', border: '#c9d8ee',
-    subheadBg: '#dbe8fa', tagA: '#1a7a3b', tagB: '#2563EB', tagC: '#d97706',
+    navy: '#369e87', navyMid: '#2c826f', gold: '#C8922A', goldLight: '#f0c060',
+    paleBg: '#f6fbf9', rowOdd: '#FFFFFF', rowEven: '#edf7f5', border: '#b3dcd3',
+    subheadBg: '#d9f0ea', tagA: '#1a7a3b', tagB: '#2563EB', tagC: '#d97706',
     text: '#1a2840', muted: '#4B5563', white: '#FFFFFF',
 };
 
@@ -273,7 +273,7 @@ export function FoundationalReportContent_SDHPS_SDHPS({ autoPrint = true }: { au
     }
 
     return (
-        <div className="foundational-page" style={{ fontFamily: FONT_STACK, background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page" style={{ fontFamily: FONT_STACK, background: '#e4f2ef', padding: '24px 12px' }}>
 
             {/* ── PAGE 1: General Info + Attendance + All About Me ── */}
             <Page showHeader>

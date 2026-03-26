@@ -11,9 +11,9 @@ interface ReportData {
 }
 // ── style tokens matching the Foundational Stage HTML reference ──
 const C = {
-    navy: '#1B3D6F', navyMid: '#244d8a', gold: '#C8922A', goldLight: '#f0c060',
-    paleBg: '#F5F8FF', rowOdd: '#FFFFFF', rowEven: '#EFF4FB', border: '#c9d8ee',
-    subheadBg: '#dbe8fa', tagA: '#1a7a3b', tagB: '#2563EB', tagC: '#d97706',
+    navy: '#369e87', navyMid: '#2c826f', gold: '#C8922A', goldLight: '#f0c060',
+    paleBg: '#f6fbf9', rowOdd: '#FFFFFF', rowEven: '#edf7f5', border: '#b3dcd3',
+    subheadBg: '#d9f0ea', tagA: '#1a7a3b', tagB: '#2563EB', tagC: '#d97706',
     text: '#1a2840', muted: '#4B5563', white: '#FFFFFF',
 };
 
@@ -117,7 +117,7 @@ export default function ReportTemplate_X_SDHPS({ reportData }: { reportData: Rep
     };
 
     return (
-        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#dde8f5', padding: '24px 12px' }}>
+        <div className="foundational-page content" style={{ fontFamily: "'Nunito', 'Segoe UI', Arial, sans-serif", fontSize: 13, color: C.text, background: '#e4f2ef', padding: '24px 12px' }}>
             <div className="print-page" style={{
                 width: '100%', maxWidth: '210mm', minHeight: '293mm', margin: '0 auto 36px', background: C.white,
                 borderRadius: 4, boxShadow: '0 4px 24px rgba(0,0,0,0.12)', overflow: 'hidden',
@@ -279,7 +279,7 @@ export default function ReportTemplate_X_SDHPS({ reportData }: { reportData: Rep
                                                     <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Total Marks Obtained</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{maxTotalAvg > 0 ? `${grandTotalAvg.toFixed(1)} / ${maxTotalAvg}` : ''}</td>
                                                 </tr>
-                                                <tr className="domain-header" style={{ background: '#d1e0f7' }}>
+                                                <tr className="domain-header" style={{ background: '#d9f0ea' }}>
                                                     <td colSpan={9} style={{ textAlign: 'right', paddingRight: '15px' }}>Overall Percentage</td>
                                                     <td style={{ fontWeight: 800, color: C.navy }}>{pAvg ? `${pAvg}%` : ''}</td>
                                                 </tr>

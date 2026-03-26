@@ -33,12 +33,12 @@ function LoginForm() {
         const token = sessionStorage.getItem('hpc_token');
         const role = sessionStorage.getItem('hpc_role');
         if (token && role) {
-            if (role === 'ADMIN') router.push('/admin');
+            if (role === 'ADMIN' || role === 'SUPER_ADMIN') router.push('/admin');
             else if (role === 'OFFICE') router.push('/office');
             else if (role === 'TEACHER') router.push('/teacher');
             else if (role === 'PARENT') router.push('/parent');
         }
-    }, []);
+    }, [router]);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -66,7 +66,7 @@ function LoginForm() {
             sessionStorage.setItem('hpc_user', JSON.stringify(data.user)); // Store user info if useful
 
             // Redirect based on role
-            if (data.role === 'ADMIN') {
+            if (data.role === 'ADMIN' || data.role === 'SUPER_ADMIN') {
                 router.push('/admin');
             } else if (data.role === 'OFFICE') {
                 router.push('/office');

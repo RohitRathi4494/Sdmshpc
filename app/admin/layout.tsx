@@ -19,7 +19,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
         const role = sessionStorage.getItem(USER_ROLE_KEY);
 
-        if (!token || role !== 'ADMIN') {
+        if (!token || (role !== 'ADMIN' && role !== 'SUPER_ADMIN')) {
             router.push('/login');
         } else {
             setAuthorized(true);
@@ -97,10 +97,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                         {navItems.find(i => i.href === pathname)?.label || 'System Administration'}
                     </h2>
                     <div className="flex items-center space-x-4">
-                        <div className="px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-xs font-semibold uppercase tracking-wide">
-                            Admin Mode
+                        <div className={`px-3 py-1 ${sessionStorage.getItem(USER_ROLE_KEY) === 'SUPER_ADMIN' ? 'bg-purple-100 text-purple-800' : 'bg-indigo-100 text-indigo-800'} rounded-full text-xs font-semibold uppercase tracking-wide`}>
+                            {sessionStorage.getItem(USER_ROLE_KEY) === 'SUPER_ADMIN' ? 'Super Admin Mode' : 'Admin Mode'}
                         </div>
-                        <div className="w-8 h-8 bg-indigo-600 rounded-full flex items-center justify-center text-white font-bold">
+                        <div className={`w-8 h-8 ${sessionStorage.getItem(USER_ROLE_KEY) === 'SUPER_ADMIN' ? 'bg-purple-600' : 'bg-indigo-600'} rounded-full flex items-center justify-center text-white font-bold`}>
                             A
                         </div>
                     </div>

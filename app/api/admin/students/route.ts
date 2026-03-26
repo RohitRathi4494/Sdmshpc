@@ -7,7 +7,7 @@ export async function GET(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE && user.role !== UserRole.SUPER_ADMIN)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }
@@ -20,18 +20,33 @@ export async function GET(request: Request) {
         const class_id = searchParams.get('class_id');
         const section_id = searchParams.get('section_id');
         const visibility_status = searchParams.get('visibility_status'); // 'ACTIVE', 'WITHDRAWN', or null (all)
+        const target_tenant_id = searchParams.get('tenant_id');
 
+        // Tenant Isolation Logic
+        let effective_tenant_id: number | null = user.tenant_id;
+        let is_global_search = false;
+
+        if (user.role === UserRole.SUPER_ADMIN) {
+            if (target_tenant_id) {
+                effective_tenant_id = parseInt(target_tenant_id);
+                is_global_search = false;
+            } else {
+                is_global_search = true;
+            }
+        }
+
+        const tenantClause = is_global_search ? '1=1' : `s.tenant_id = $1`;
         let query = '';
-        const values: any[] = [user.tenant_id];
+        let values: any[] = is_global_search ? [] : [effective_tenant_id];
 
         if (status === 'unenrolled' && academic_year_id) {
             // Find students NOT in student_enrollments for this year
             query = `
                 SELECT s.* 
                 FROM students s
-                WHERE s.tenant_id = $1 AND NOT EXISTS (
+                WHERE ${tenantClause} AND NOT EXISTS (
                     SELECT 1 FROM student_enrollments se 
-                    WHERE se.student_id = s.id AND se.academic_year_id = $2 AND se.tenant_id = $1
+                    WHERE se.student_id = s.id AND se.academic_year_id = $${values.length + 1} AND se.tenant_id = s.tenant_id
                 )
                 ORDER BY s.student_name ASC
             `;
@@ -40,15 +55,16 @@ export async function GET(request: Request) {
             // Find students in specific class/year
             let sectionClause = '';
             if (section_id) {
-                sectionClause = `AND se.section_id = $4`;
+                sectionClause = `AND se.section_id = $${values.length + 3}`;
             }
 
             query = `
-                SELECT s.*, se.roll_no, se.section_id, c.class_name
+                SELECT s.*, se.roll_no, se.section_id, c.class_name, t.school_code
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE s.tenant_id = $1 AND se.class_id = $2 AND se.academic_year_id = $3 ${sectionClause} ${visibility_status ? `AND s.status = $${section_id ? 5 : 4}` : ''}
+                JOIN tenants t ON s.tenant_id = t.id
+                WHERE ${tenantClause} AND se.class_id = $${values.length + 1} AND se.academic_year_id = $${values.length + 2} ${sectionClause} ${visibility_status ? `AND s.status = $${values.length + (section_id ? 4 : 3)}` : ''}
                 ORDER BY se.roll_no ASC, s.student_name ASC
             `;
             values.push(parseInt(class_id), parseInt(academic_year_id));
@@ -56,26 +72,26 @@ export async function GET(request: Request) {
             if (visibility_status) values.push(visibility_status);
 
         } else if (academic_year_id) {
-            // [NEW] Find ALL students enrolled in the academic year (regardless of class)
-            // Useful for Fee Collection search
+            // Find ALL students enrolled in the academic year
             query = `
-                SELECT s.*, se.roll_no, se.section_id, c.class_name
+                SELECT s.*, se.roll_no, se.section_id, c.class_name, t.school_code
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE s.tenant_id = $1 AND se.academic_year_id = $2 ${visibility_status ? `AND s.status = $3` : ''}
+                JOIN tenants t ON s.tenant_id = t.id
+                WHERE ${tenantClause} AND se.academic_year_id = $${values.length + 1} ${visibility_status ? `AND s.status = $${values.length + 2}` : ''}
                 ORDER BY c.display_order ASC, s.student_name ASC
             `;
             values.push(parseInt(academic_year_id));
             if (visibility_status) values.push(visibility_status);
 
         } else {
-            // Default: List all students (maybe limit?)
+            // Default: List all students
             if (visibility_status) {
-                query = 'SELECT * FROM students WHERE tenant_id = $1 AND status = $2 ORDER BY id DESC LIMIT 100';
+                query = `SELECT s.*, t.school_code FROM students s JOIN tenants t ON s.tenant_id = t.id WHERE ${tenantClause} AND s.status = $${values.length + 1} ORDER BY s.id DESC LIMIT 100`;
                 values.push(visibility_status);
             } else {
-                query = 'SELECT * FROM students WHERE tenant_id = $1 ORDER BY id DESC LIMIT 100';
+                query = `SELECT s.*, t.school_code FROM students s JOIN tenants t ON s.tenant_id = t.id WHERE ${tenantClause} ORDER BY s.id DESC LIMIT 100`;
             }
         }
 
@@ -86,12 +102,8 @@ export async function GET(request: Request) {
             data: rows,
         });
 
-        return NextResponse.json({
-            success: true,
-            data: rows,
-        });
-
     } catch (error: any) {
+        console.error('List students error:', error);
         return NextResponse.json(
             { success: false, error_code: 'DB_ERROR', message: error.message },
             { status: 500 }
@@ -104,7 +116,7 @@ export async function POST(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE && user.role !== UserRole.SUPER_ADMIN)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }
@@ -115,14 +127,11 @@ export async function POST(request: Request) {
         const {
             admission_no, student_name, father_name, mother_name, dob,
             class_id, section_id, academic_year_id,
-            // New Fields
             admission_date, gender, blood_group, category,
             address, phone_no, emergency_no,
             aadhar_no, ppp_id, apaar_id, srn_no,
             board_roll_x, board_roll_xii, education_reg_no,
-            // Senior Secondary Fields
             stream, subject_count,
-            // Fee Flag
             is_new_student
         } = body;
 
@@ -137,31 +146,20 @@ export async function POST(request: Request) {
         try {
             await client.query('BEGIN');
 
-            // 0. Auto-generate Student Code if new (simple logic: SC + Year + Random/Sequence)
-            // For now, using Random 4 digits + Year.
-            const currentYear = new Date().getFullYear();
-            const randomSuffix = Math.floor(1000 + Math.random() * 9000); // 4 digit random
-            // Ideally should check uniqueness, but for now simple generation. 
-            // Better: SC + AdmissionNo if distinct? Or just random.
-            // User requested "auto generated by the system".
-            const student_code = `SC${currentYear}${randomSuffix}`;
+            const tenantForInsertion = user.role === UserRole.SUPER_ADMIN && body.tenant_id ? parseInt(body.tenant_id) : user.tenant_id;
 
-            // 1. Insert Student
-            // Note: Removed ON CONFLICT UPDATE for now to ensure we don't accidentally overwrite if admission_no matches but it's a different person intended.
-            // But usually admission_no IS unique. If it exists, should we error or update?
-            // Existing logic was Upsert. I will keep it as Insert and let it fail on duplicate admission_no, 
-            // OR if user wants upsert, we need to be careful with student_code (don't overwrite existing).
-            // Let's stick to INSERT and return error if exists, safest for "Add New".
-
-            // Check if admission_no exists
-            const existingCheck = await client.query('SELECT id FROM students WHERE admission_no = $1 AND tenant_id = $2', [admission_no, user.tenant_id]);
+            const existingCheck = await client.query('SELECT id FROM students WHERE admission_no = $1 AND tenant_id = $2', [admission_no, tenantForInsertion]);
             if (existingCheck.rows.length > 0) {
                 await client.query('ROLLBACK');
                 return NextResponse.json(
-                    { success: false, error_code: 'DUPLICATE_ADMISSION_NO', message: 'Admission number already exists' },
+                    { success: false, error_code: 'DUPLICATE_ADMISSION_NO', message: 'Admission number already exists in this school' },
                     { status: 400 }
                 );
             }
+
+            const currentYear = new Date().getFullYear();
+            const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+            const student_code = `SC${currentYear}${randomSuffix}`;
 
             const insertStudentQuery = `
                 INSERT INTO students (
@@ -181,17 +179,16 @@ export async function POST(request: Request) {
                 address || '', phone_no || '', emergency_no || '',
                 aadhar_no || '', ppp_id || '', apaar_id || '', srn_no || '',
                 board_roll_x || '', board_roll_xii || '', education_reg_no || '',
-                stream || null, subject_count || 5, is_new_student === true, user.tenant_id
+                stream || null, subject_count || 5, is_new_student === true, tenantForInsertion
             ]);
 
             const studentId = studentRes.rows[0].id;
 
-            // 2. Enroll if class/section provided
             if (class_id && section_id && academic_year_id) {
                 await client.query(`
                     INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, tenant_id)
                     VALUES ($1, $2, $3, $4, $5)
-                `, [studentId, class_id, section_id, academic_year_id, user.tenant_id]);
+                `, [studentId, class_id, section_id, academic_year_id, tenantForInsertion]);
             }
 
             await client.query('COMMIT');

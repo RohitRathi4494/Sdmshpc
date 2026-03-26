@@ -7,6 +7,7 @@ const createSectionSchema = z.object({
     class_id: z.number().int().positive(),
     section_name: z.string().min(1),
     class_teacher_id: z.number().int().positive().nullable().optional(),
+    tenant_id: z.number().int().positive().optional(),
 });
 
 export async function POST(request: Request) {
@@ -14,7 +15,7 @@ export async function POST(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE && user.role !== UserRole.SUPER_ADMIN)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }
@@ -32,13 +33,14 @@ export async function POST(request: Request) {
         }
 
         const { class_id, section_name, class_teacher_id } = result.data;
+        const tenant_id = (user.role === UserRole.SUPER_ADMIN && body.tenant_id) ? parseInt(body.tenant_id) : user.tenant_id;
 
         const query = `
-      INSERT INTO sections (class_id, section_name, class_teacher_id, tenant_id)
-      VALUES ($1, $2, $3, $4)
-      RETURNING id, class_id, section_name, class_teacher_id
-    `;
-        const { rows } = await db.query(query, [class_id, section_name, class_teacher_id || null, user.tenant_id]);
+            INSERT INTO sections (class_id, section_name, class_teacher_id, tenant_id)
+            VALUES ($1, $2, $3, $4)
+            RETURNING id, class_id, section_name, class_teacher_id
+        `;
+        const { rows } = await db.query(query, [class_id, section_name, class_teacher_id || null, tenant_id]);
 
         return NextResponse.json({
             success: true,
@@ -58,7 +60,7 @@ export async function GET(request: Request) {
         const token = extractToken(request.headers.get('Authorization'));
         const user = await verifyAuth(token);
 
-        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE)) {
+        if (!user || (user.role !== UserRole.ADMIN && user.role !== UserRole.OFFICE && user.role !== UserRole.SUPER_ADMIN)) {
             return NextResponse.json(
                 { success: false, error_code: 'FORBIDDEN', message: 'Access denied' },
                 { status: 403 }
@@ -67,17 +69,33 @@ export async function GET(request: Request) {
 
         const { searchParams } = new URL(request.url);
         const class_id = searchParams.get('class_id');
+        const target_tenant_id = searchParams.get('tenant_id');
+
+        // Tenant Isolation Logic
+        let effective_tenant_id: number | null = user.tenant_id;
+        let is_global_search = false;
+
+        if (user.role === UserRole.SUPER_ADMIN) {
+            if (target_tenant_id) {
+                effective_tenant_id = parseInt(target_tenant_id);
+            } else {
+                is_global_search = true;
+            }
+        }
+
+        const tenantClause = is_global_search ? '1=1' : `s.tenant_id = $1`;
+        let values: any[] = is_global_search ? [] : [effective_tenant_id];
 
         let query = `
-            SELECT s.*, u.full_name as teacher_name 
+            SELECT s.*, u.full_name as teacher_name, t.school_code
             FROM sections s
-            LEFT JOIN users u ON s.class_teacher_id = u.id AND u.tenant_id = $1
-            WHERE s.tenant_id = $1
+            LEFT JOIN users u ON s.class_teacher_id = u.id AND (is_global_search OR u.tenant_id = s.tenant_id)
+            JOIN tenants t ON s.tenant_id = t.id
+            WHERE ${tenantClause}
         `;
-        const values: any[] = [user.tenant_id];
 
         if (class_id) {
-            query += ' AND s.class_id = $2';
+            query += ` AND s.class_id = $${values.length + 1}`;
             values.push(parseInt(class_id, 10));
         }
 

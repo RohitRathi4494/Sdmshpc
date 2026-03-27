@@ -86,10 +86,12 @@ export async function GET(request: Request) {
         const tenantClause = is_global_search ? '1=1' : `s.tenant_id = $1`;
         let values: any[] = is_global_search ? [] : [effective_tenant_id];
 
+        const teacherTenantClause = is_global_search ? '1=1' : 'u.tenant_id = s.tenant_id';
+
         let query = `
             SELECT s.*, u.full_name as teacher_name, t.school_code
             FROM sections s
-            LEFT JOIN users u ON s.class_teacher_id = u.id AND (is_global_search OR u.tenant_id = s.tenant_id)
+            LEFT JOIN users u ON s.class_teacher_id = u.id AND (${teacherTenantClause})
             JOIN tenants t ON s.tenant_id = t.id
             WHERE ${tenantClause}
         `;

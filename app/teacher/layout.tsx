@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { getActiveAcademicYear } from '../lib/actions';
+import { ApiClient } from '../lib/api-client';
 import ChangePasswordModal from '../components/auth/ChangePasswordModal';
 
 // Mock Auth Context for this implementation since we don't have full Auth Provider
@@ -20,8 +20,16 @@ export default function TeacherLayout({ children }: { children: React.ReactNode 
 
     useEffect(() => {
         const fetchYear = async () => {
-            const year = await getActiveAcademicYear();
-            setAcademicYear(year.name);
+            try {
+                const token = sessionStorage.getItem(ACCESS_TOKEN_KEY) || undefined;
+                const yearsData = await ApiClient.get<any[]>('/admin/academic-years', token);
+                const activeYear = yearsData?.find((y: any) => y.is_active) || yearsData?.[0];
+                if (activeYear && activeYear.year_name) {
+                    setAcademicYear(activeYear.year_name);
+                }
+            } catch (error) {
+                console.error("Failed to fetch academic year", error);
+            }
         };
         fetchYear();
     }, []);

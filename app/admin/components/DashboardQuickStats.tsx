@@ -9,12 +9,13 @@ interface StatsData {
     totalTeachers: number | string;
 }
 
-export default function DashboardQuickStats({ initialSession }: { initialSession: string }) {
+export default function DashboardQuickStats() {
     const [stats, setStats] = useState<StatsData>({
         totalStudents: '--',
         totalClasses: '--',
         totalTeachers: '--'
     });
+    const [sessionName, setSessionName] = useState<string>('--');
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -25,6 +26,16 @@ export default function DashboardQuickStats({ initialSession }: { initialSession
                 
                 if (response && response.success) {
                     setStats(response.data);
+                }
+
+                try {
+                    const yearsData = await ApiClient.get<any[]>('/admin/academic-years', token);
+                    const activeYear = yearsData?.find((y: any) => y.is_active) || yearsData?.[0];
+                    if (activeYear && activeYear.year_name) {
+                        setSessionName(activeYear.year_name);
+                    }
+                } catch (e) {
+                    console.error("Failed to fetch session for stats");
                 }
             } catch (error) {
                 console.error("Failed to fetch dashboard stats:", error);
@@ -53,7 +64,9 @@ export default function DashboardQuickStats({ initialSession }: { initialSession
                     <span className="text-sm text-gray-500">Active Classes</span>
                 </div>
                 <div className="text-center p-4 bg-gray-50 rounded-lg">
-                    <span className="block text-3xl font-bold text-indigo-600">{initialSession}</span>
+                    <span className="block text-3xl font-bold text-indigo-600">
+                        {loading ? <span className="animate-pulse">...</span> : sessionName}
+                    </span>
                     <span className="text-sm text-gray-500">Current Session</span>
                 </div>
             </div>

@@ -1,12 +1,9 @@
 import Link from 'next/link';
-import { getActiveAcademicYear } from '../lib/actions';
 import DashboardQuickStats from './components/DashboardQuickStats';
 
 export const dynamic = 'force-dynamic';
 
 export default async function AdminDashboard() {
-    const academicYear = await getActiveAcademicYear();
-
     const cards = [
         { title: 'Academic Analytics', href: '/admin/analytics', icon: '📈', desc: 'View class performance and attendance trends', color: 'bg-rose-500' },
         { title: 'Academic Years', href: '/admin/academic-years', icon: '📅', desc: 'Manage sessions and activate current year', color: 'bg-blue-500' },
@@ -39,7 +36,7 @@ export default async function AdminDashboard() {
                 ))}
             </div>
 
-            <DashboardQuickStats initialSession={academicYear.name} />
+            <DashboardQuickStats />
         </div>
     );
 }

@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { ApiClient } from '@/app/lib/api-client';
-import { getActiveAcademicYear } from '@/app/lib/actions';
 
 interface StudentReport {
     co_scholastic: any[];
@@ -48,9 +47,10 @@ export default function CoScholasticEntryPage() {
 
                 // 0. Fetch Active Year ID
                 try {
-                    const yearData = await getActiveAcademicYear();
-                    if (yearData && yearData.id) {
-                        setYearId(yearData.id);
+                    const yearsData = await ApiClient.get<any[]>('/admin/academic-years', token);
+                    const activeYear = yearsData?.find((y: any) => y.is_active) || yearsData?.[0];
+                    if (activeYear && activeYear.id) {
+                        setYearId(activeYear.id);
                     }
                 } catch (e) {
                     console.error("Failed to fetch active year", e);
@@ -74,9 +74,8 @@ export default function CoScholasticEntryPage() {
                 // Let's assume the Layout/Context sets the year, but we don't have context here.
                 // I will fetch the year first, THEN the report.
 
-                const activeYear = await getActiveAcademicYear();
-                const currentYearId = activeYear.id || 1;
-                setYearId(currentYearId);
+                // The yearId is either the active year fetched above or defaults to 1
+                const currentYearId = yearId || 1;
 
                 const report = await ApiClient.get<StudentReport>(`/reports/student/${studentId}?academic_year_id=${currentYearId}`, token);
                 setReportData(report);

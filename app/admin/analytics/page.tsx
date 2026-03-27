@@ -2,7 +2,6 @@
 
 import React, { useState, useEffect } from 'react';
 import { ApiClient } from '@/app/lib/api-client';
-import { getActiveAcademicYear } from '@/app/lib/actions';
 import {
     BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip as RechartsTooltip, Legend, ResponsiveContainer,
     LineChart, Line
@@ -45,14 +44,16 @@ export default function AnalyticsDashboard() {
             try {
                 const token = sessionStorage.getItem('hpc_token') || undefined;
 
-                const [activeYear, classData, termData] = await Promise.all([
-                    getActiveAcademicYear(),
+                const [yearsData, classData, termData] = await Promise.all([
+                    ApiClient.get<any[]>('/admin/academic-years', token).catch(() => []),
                     ApiClient.get<ClassData[]>('/teacher/classes', token), // Borrowing teacher API which returns structural data or we can assume admin has access
                     ApiClient.get<TermData[]>('/admin/terms', token).catch(() => [{ id: 1, term_name: 'Term I' }, { id: 2, term_name: 'Term II' }]) // Fallback if API doesn't exist yet
                 ]);
 
+                const activeYear = yearsData?.find((y: any) => y.is_active) || yearsData?.[0];
+
                 if (activeYear && activeYear.id) {
-                    setYearData({ id: activeYear.id.toString(), name: activeYear.name || 'Current Year' });
+                    setYearData({ id: activeYear.id.toString(), name: activeYear.year_name || 'Current Year' });
                 }
                 setClasses(classData);
                 setTerms(termData);

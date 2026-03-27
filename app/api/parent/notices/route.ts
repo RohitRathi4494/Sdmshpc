@@ -22,7 +22,7 @@ export async function GET(request: Request) {
         const studentId = parseInt(user.user_id);
 
         // 1. Get Active Academic Year
-        const yearRes = await db.query('SELECT id FROM academic_years WHERE is_active = true LIMIT 1');
+        const yearRes = await db.query('SELECT id FROM academic_years WHERE is_active = true AND tenant_id = $1 LIMIT 1', [user.tenant_id]);
         if (yearRes.rows.length === 0) {
             console.error('No active academic year found');
             return NextResponse.json(
@@ -36,9 +36,9 @@ export async function GET(request: Request) {
         const enrollmentQuery = `
             SELECT class_id 
             FROM student_enrollments 
-            WHERE student_id = $1 AND academic_year_id = $2
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
         `;
-        const enrollmentRes = await db.query(enrollmentQuery, [studentId, activeYearId]);
+        const enrollmentRes = await db.query(enrollmentQuery, [studentId, activeYearId, user.tenant_id]);
 
         let classId: number | null = null;
 
@@ -46,7 +46,7 @@ export async function GET(request: Request) {
             classId = enrollmentRes.rows[0].class_id;
         } else {
             // Fallback to students table if no enrollment (legacy support or new admission)
-            const studentRes = await db.query('SELECT class_id FROM students WHERE id = $1', [studentId]);
+            const studentRes = await db.query('SELECT class_id FROM students WHERE id = $1 AND tenant_id = $2', [studentId, user.tenant_id]);
             if (studentRes.rows.length > 0) {
                 classId = studentRes.rows[0].class_id;
             }

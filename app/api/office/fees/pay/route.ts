@@ -32,7 +32,7 @@ export async function POST(request: Request) {
         }
 
         // Get active academic year
-        const ayRes = await db.query('SELECT id FROM academic_years WHERE is_active = true LIMIT 1');
+        const ayRes = await db.query('SELECT id FROM academic_years WHERE is_active = true AND tenant_id = $1 LIMIT 1', [user.tenant_id]);
         const academic_year_id = ayRes.rows[0]?.id || null;
 
         const batch_id = generateUUID();

@@ -8,16 +8,24 @@ const pool = new Pool({
 async function checkConstraints() {
     try {
         const query = `
-            SELECT conname, conrelid::regclass, contype
-            FROM pg_constraint
-            WHERE contype = 'u'
-            AND conrelid::regclass::text IN (
-                'users', 'students', 'classes', 'sections', 'subjects', 'academic_years'
-            );
+            SELECT table_name 
+            FROM information_schema.columns 
+            WHERE table_schema = 'public' AND column_name = 'tenant_id'
         `;
         const res = await pool.query(query);
-        console.log("Constraints:", res.rows);
-    } catch (e) {
+        console.log("Tables WITH tenant_id:");
+        res.rows.forEach(r => console.log(r.table_name));
+
+        const queryAll = `
+            SELECT table_name 
+            FROM information_schema.tables 
+            WHERE table_schema = 'public' 
+              AND table_type = 'BASE TABLE'
+              AND table_name NOT IN (SELECT table_name FROM information_schema.columns WHERE table_schema = 'public' AND column_name = 'tenant_id')
+        `;
+        const resAll = await pool.query(queryAll);
+        console.log("\nTables WITHOUT tenant_id (Global):");
+        resAll.rows.forEach(r => console.log(r.table_name));
         console.error(e);
     } finally {
         await pool.end();

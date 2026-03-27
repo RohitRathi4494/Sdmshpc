@@ -25,9 +25,9 @@ export async function GET(request: Request) {
             JOIN fee_heads fh ON fs.fee_head_id = fh.id
             JOIN classes c ON fs.class_id = c.id
             JOIN academic_years ay ON fs.academic_year_id = ay.id
-            WHERE 1=1
+            WHERE c.tenant_id = $1
         `;
-        const params: any[] = [];
+        const params: any[] = [user.tenant_id];
 
         if (classId) {
             params.push(classId);

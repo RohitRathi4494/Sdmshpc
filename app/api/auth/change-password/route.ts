@@ -38,8 +38,8 @@ export async function POST(request: Request) {
         const { currentPassword, newPassword } = result.data;
 
         // 1. Fetch user to get current password hash
-        const userQuery = 'SELECT id, password_hash FROM users WHERE id = $1';
-        const userRes = await db.query(userQuery, [userAuth.user_id]);
+        const userQuery = 'SELECT id, password_hash FROM users WHERE id = $1 AND tenant_id = $2';
+        const userRes = await db.query(userQuery, [userAuth.user_id, userAuth.tenant_id]);
 
         if (userRes.rows.length === 0) {
             return NextResponse.json(
@@ -63,7 +63,7 @@ export async function POST(request: Request) {
         const newHash = await bcrypt.hash(newPassword, 10);
 
         // 4. Update password
-        await db.query('UPDATE users SET password_hash = $1 WHERE id = $2', [newHash, userAuth.user_id]);
+        await db.query('UPDATE users SET password_hash = $1 WHERE id = $2 AND tenant_id = $3', [newHash, userAuth.user_id, userAuth.tenant_id]);
 
         return NextResponse.json({
             success: true,

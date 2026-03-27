@@ -17,9 +17,9 @@ export async function GET(request: Request) {
         const { rows } = await db.query(`
             SELECT id, username, full_name, is_active, created_at
             FROM users
-            WHERE role = 'OFFICE'
+            WHERE role = 'OFFICE' AND tenant_id = $1
             ORDER BY full_name ASC
-        `);
+        `, [user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows });
     } catch (error: any) {
@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         }
 
         // Check username uniqueness
-        const check = await db.query('SELECT id FROM users WHERE username = $1', [username]);
+        const check = await db.query('SELECT id FROM users WHERE username = $1 AND tenant_id = $2', [username, user.tenant_id]);
         if (check.rows.length > 0) {
             return NextResponse.json({ success: false, message: 'Username already exists' }, { status: 409 });
         }
@@ -51,10 +51,10 @@ export async function POST(request: Request) {
         const passwordHash = await bcrypt.hash(password, 10);
 
         const { rows } = await db.query(`
-            INSERT INTO users (username, password_hash, full_name, role, is_active)
-            VALUES ($1, $2, $3, 'OFFICE', true)
+            INSERT INTO users (username, password_hash, full_name, role, is_active, tenant_id)
+            VALUES ($1, $2, $3, 'OFFICE', true, $4)
             RETURNING id, username, full_name, is_active, created_at
-        `, [username, passwordHash, full_name]);
+        `, [username, passwordHash, full_name, user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows[0] }, { status: 201 });
     } catch (error: any) {

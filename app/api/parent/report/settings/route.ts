@@ -26,10 +26,10 @@ export async function GET(request: Request) {
         const studentQuery = `
             SELECT se.class_id 
             FROM student_enrollments se
-            WHERE se.student_id = $1 AND se.academic_year_id = $2
+            WHERE se.student_id = $1 AND se.academic_year_id = $2 AND se.tenant_id = $3
             LIMIT 1
         `;
-        const studentRes = await db.query(studentQuery, [parseInt(user.user_id), parseInt(academic_year_id)]);
+        const studentRes = await db.query(studentQuery, [parseInt(user.user_id), parseInt(academic_year_id), user.tenant_id]);
 
         if (studentRes.rows.length === 0) {
             return NextResponse.json({ success: true, data: [] }); // No enrollment, no reports

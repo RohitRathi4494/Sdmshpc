@@ -30,9 +30,9 @@ export async function POST(request: Request) {
             SELECT s.id, s.student_name
             FROM students s
             JOIN student_enrollments se ON s.id = se.student_id
-            WHERE se.class_id = $1 AND se.academic_year_id = $2
+            WHERE se.class_id = $1 AND se.academic_year_id = $2 AND s.tenant_id = $3 AND se.tenant_id = $3
             ORDER BY s.student_name ASC
-        `, [class_id, academic_year_id]);
+        `, [class_id, academic_year_id, user.tenant_id]);
 
         if (students.length === 0) {
             return NextResponse.json({ success: true, message: 'No students found to assign roll numbers' });
@@ -46,8 +46,8 @@ export async function POST(request: Request) {
             return db.query(`
                 UPDATE student_enrollments
                 SET roll_no = $1
-                WHERE student_id = $2 AND class_id = $3 AND academic_year_id = $4
-            `, [rollNo, student.id, class_id, academic_year_id]);
+                WHERE student_id = $2 AND class_id = $3 AND academic_year_id = $4 AND tenant_id = $5
+            `, [rollNo, student.id, class_id, academic_year_id, user.tenant_id]);
         });
 
         await Promise.all(promises);

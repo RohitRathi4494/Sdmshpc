@@ -34,8 +34,8 @@ export async function PUT(request: Request, { params }: { params: { id: string }
         }
 
         query = query.slice(0, -2); // remove trailing ", "
-        query += ` WHERE id = $${idx} AND role = 'OFFICE' RETURNING id, username, full_name, is_active`;
-        values.push(staffId);
+        query += ` WHERE id = $${idx} AND role = 'OFFICE' AND tenant_id = $${idx + 1} RETURNING id, username, full_name, is_active`;
+        values.push(staffId, user.tenant_id);
 
         const { rows } = await db.query(query, values);
 

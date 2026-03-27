@@ -53,18 +53,18 @@ export async function POST(request: Request) {
             // 1. Clear existing mappings for this student for the academic year
             const clearQuery = `
                 DELETE FROM student_subjects 
-                WHERE student_id = $1 AND academic_year_id = $2
+                WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
             `;
-            await client.query(clearQuery, [student_id, academic_year_id]);
+            await client.query(clearQuery, [student_id, academic_year_id, user.tenant_id]);
 
             // 2. Insert new subjects
             const insertQuery = `
-                INSERT INTO student_subjects (student_id, class_id, subject_id, academic_year_id, subject_type)
-                VALUES ($1, $2, $3, $4, $5)
+                INSERT INTO student_subjects (student_id, class_id, subject_id, academic_year_id, subject_type, tenant_id)
+                VALUES ($1, $2, $3, $4, $5, $6)
             `;
 
             for (const sub of subjects) {
-                await client.query(insertQuery, [student_id, class_id, sub.subject_id, academic_year_id, sub.subject_type]);
+                await client.query(insertQuery, [student_id, class_id, sub.subject_id, academic_year_id, sub.subject_type, user.tenant_id]);
             }
 
             await client.query('COMMIT');
@@ -119,9 +119,9 @@ export async function GET(request: Request) {
                 SELECT ss.student_id, ss.subject_id, ss.subject_type
                 FROM student_subjects ss
                 JOIN student_enrollments se ON ss.student_id = se.student_id
-                WHERE se.class_id = $1 AND ss.academic_year_id = $2
+                WHERE se.class_id = $1 AND ss.academic_year_id = $2 AND ss.tenant_id = $3 AND se.tenant_id = $3
             `;
-            const { rows } = await db.query(query, [parseInt(class_id), parseInt(academic_year_id)]);
+            const { rows } = await db.query(query, [parseInt(class_id), parseInt(academic_year_id), user.tenant_id]);
             return NextResponse.json({ success: true, data: rows });
         }
 
@@ -136,9 +136,9 @@ export async function GET(request: Request) {
         const query = `
             SELECT subject_id, subject_type
             FROM student_subjects 
-            WHERE student_id = $1 AND academic_year_id = $2
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
         `;
-        const { rows } = await db.query(query, [parseInt(student_id), parseInt(academic_year_id)]);
+        const { rows } = await db.query(query, [parseInt(student_id), parseInt(academic_year_id), user.tenant_id]);
 
         return NextResponse.json({ success: true, data: rows });
 

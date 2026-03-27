@@ -37,9 +37,9 @@ export async function GET(request: Request) {
                  AND se.academic_year_id = (SELECT id FROM academic_years WHERE is_active = true LIMIT 1)
             LEFT JOIN classes c ON se.class_id = c.id
             LEFT JOIN sections sec ON se.section_id = sec.id
-            WHERE date(fp.payment_date) = $1
+            WHERE date(fp.payment_date) = $1 AND s.tenant_id = $2
             ORDER BY fp.payment_date DESC
-        `, [queryDate]);
+        `, [queryDate, user.tenant_id]);
 
         const transactions = result.rows;
 

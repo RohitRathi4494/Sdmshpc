@@ -27,10 +27,10 @@ export async function GET(request: Request) {
             LEFT JOIN student_enrollments se ON s.id = se.student_id
             LEFT JOIN classes c ON se.class_id = c.id
             LEFT JOIN academic_years ay ON se.academic_year_id = ay.id
-            WHERE s.id = $1 AND (ay.is_active = true OR ay.id IS NULL)
+            WHERE s.id = $1 AND s.tenant_id = $2 AND (ay.is_active = true OR ay.id IS NULL)
             ORDER BY ay.is_active DESC NULLS LAST
             LIMIT 1
-        `, [studentId]);
+        `, [studentId, user.tenant_id]);
 
         if (studentRes.rows.length === 0) {
             return NextResponse.json({ success: false, message: 'Student not found' }, { status: 404 });

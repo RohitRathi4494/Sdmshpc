@@ -30,10 +30,10 @@ export async function GET(request: Request, { params }: { params: { studentId: s
             LEFT JOIN classes c ON se.class_id = c.id
             LEFT JOIN sections sec ON se.section_id = sec.id
             LEFT JOIN academic_years ay ON se.academic_year_id = ay.id
-            WHERE s.id = $1 AND (ay.is_active = true OR ay.id IS NULL)
+            WHERE s.id = $1 AND s.tenant_id = $2 AND (ay.is_active = true OR ay.id IS NULL)
             ORDER BY ay.is_active DESC NULLS LAST
             LIMIT 1
-        `, [studentId]);
+        `, [studentId, user.tenant_id]);
 
         if (!studentRes.rows[0]) {
             return NextResponse.json({ success: false, message: 'Student not found' }, { status: 404 });

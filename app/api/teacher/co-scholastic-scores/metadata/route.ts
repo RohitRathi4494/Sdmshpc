@@ -34,10 +34,10 @@ export async function GET(request: Request) {
                 FROM students s
                 JOIN student_enrollments se ON s.id = se.student_id
                 JOIN classes c ON se.class_id = c.id
-                WHERE s.id = $1
+                WHERE s.id = $1 AND s.tenant_id = $2
                 ORDER BY se.academic_year_id DESC LIMIT 1
             `;
-            const classResult = await db.query(classQuery, [studentId]);
+            const classResult = await db.query(classQuery, [studentId, user.tenant_id]);
             const className = classResult.rows[0]?.class_name?.toUpperCase() || '';
 
             if (className === 'IX' || className === '9') {

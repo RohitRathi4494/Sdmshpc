@@ -28,9 +28,9 @@ export async function GET(req: NextRequest) {
             SELECT s.id, s.admission_no, s.student_name, se.roll_no
             FROM students s
             JOIN student_enrollments se ON s.id = se.student_id
-            WHERE se.class_id = $1 AND se.academic_year_id = $2
+            WHERE se.class_id = $1 AND se.academic_year_id = $2 AND se.tenant_id = $3
         `;
-        const queryParams: any[] = [classId, academicYearId];
+        const queryParams: any[] = [classId, academicYearId, auth.tenant_id];
 
         if (sectionId) {
             studentQuery += ` AND se.section_id = $3`;
@@ -54,16 +54,16 @@ export async function GET(req: NextRequest) {
         const subjectsQuery = `
             SELECT DISTINCT s.subject_name 
             FROM subjects s
-            LEFT JOIN class_subjects cs ON s.id = cs.subject_id AND cs.class_id = $1 AND cs.academic_year_id = $2
-            LEFT JOIN scholastic_scores ss ON s.id = ss.subject_id AND ss.student_id = ANY($3) AND ss.academic_year_id = $2
-            WHERE cs.id IS NOT NULL OR ss.id IS NOT NULL
+            LEFT JOIN class_subjects cs ON s.id = cs.subject_id AND cs.class_id = $1 AND cs.academic_year_id = $2 AND cs.tenant_id = $4
+            LEFT JOIN scholastic_scores ss ON s.id = ss.subject_id AND ss.student_id = ANY($3) AND ss.academic_year_id = $2 AND ss.tenant_id = $4
+            WHERE (cs.id IS NOT NULL OR ss.id IS NOT NULL)
             ORDER BY s.subject_name
         `;
 
         // Need student IDs for the scores check
         const studentIds = students.map(s => s.id);
 
-        const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId, studentIds]);
+        const subjectsRes = await db.query(subjectsQuery, [classId, academicYearId, studentIds, auth.tenant_id]);
         const subjects = subjectsRes.rows.map(r => r.subject_name);
 
         // b. Terms (Filter if param provided)
@@ -99,10 +99,11 @@ export async function GET(req: NextRequest) {
             JOIN assessment_components ac ON ss.component_id = ac.id
             WHERE ss.student_id = ANY($1)
             AND ss.academic_year_id = $2
+            AND ss.tenant_id = $3
         `;
 
 
-        const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
+        const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId, auth.tenant_id]);
         const scores = scoresRes.rows;
 
         // 4. Construct Excel Data & Styles

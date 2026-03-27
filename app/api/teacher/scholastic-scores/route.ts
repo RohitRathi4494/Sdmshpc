@@ -53,9 +53,9 @@ export async function POST(request: Request) {
         const { student_id, subject_id, component_id, term_id, marks, grade, academic_year_id } = result.data;
 
         // Check Assessment Lock
-        const classId = await getStudentClass(student_id, academic_year_id);
+        const classId = await getStudentClass(student_id, academic_year_id, user.tenant_id);
         if (classId) {
-            const isLocked = await checkAssessmentLock(academic_year_id, classId, term_id, component_id);
+            const isLocked = await checkAssessmentLock(academic_year_id, classId, term_id, component_id, user.tenant_id);
             if (isLocked) {
                 return NextResponse.json(
                     { success: false, error_code: 'ASSESSMENT_LOCKED', message: "This assessment has been locked by the administrator. Marks cannot be modified." },
@@ -72,7 +72,7 @@ export async function POST(request: Request) {
             const queryNoGrade = `
                 INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id, tenant_id)
                 VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-                ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
+                ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id, tenant_id)
                 DO UPDATE SET marks = EXCLUDED.marks, grade = EXCLUDED.grade
                 RETURNING id
             `;
@@ -122,7 +122,7 @@ export async function POST(request: Request) {
                 const queryWithGrade = `
                     INSERT INTO scholastic_scores (student_id, subject_id, component_id, term_id, marks, grade, academic_year_id, tenant_id)
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-                    ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id)
+                    ON CONFLICT (student_id, subject_id, component_id, term_id, academic_year_id, tenant_id)
                     DO UPDATE SET marks = EXCLUDED.marks, grade = EXCLUDED.grade
                     RETURNING id
                 `;

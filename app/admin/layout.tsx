@@ -15,9 +15,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     const [authorized, setAuthorized] = useState(false);
     const [isPasswordModalOpen, setIsPasswordModalOpen] = useState(false);
 
+    const [schoolCode, setSchoolCode] = useState('SDMS');
+
     useEffect(() => {
         const token = sessionStorage.getItem(ACCESS_TOKEN_KEY);
         const role = sessionStorage.getItem(USER_ROLE_KEY);
+        
+        // Simplest way to get school code without new API: parse JWT if needed, 
+        // or just store it during login. Since I already updated login to return it, 
+        // I should check if it's in sessionStorage or fetch it.
+        // For now, I'll assume we can get it from the token or a quick info call.
+        // Let's check session storage first.
+        const storedCode = sessionStorage.getItem('hpc_school_code');
+        if (storedCode) setSchoolCode(storedCode);
 
         if (!token || (role !== 'ADMIN' && role !== 'SUPER_ADMIN')) {
             router.push('/login');
@@ -52,7 +62,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
             {/* Sidebar */}
             <aside className={`bg-gray-900 text-white shadow-xl transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
                 <div className="p-4 flex items-center justify-between border-b border-gray-700 shrink-0">
-                    <h1 className={`font-bold text-xl text-indigo-400 ${!isSidebarOpen && 'hidden'}`}>SDMS EduPulse Admin</h1>
+                    <h1 className={`font-bold text-xl text-indigo-400 ${!isSidebarOpen && 'hidden'}`}>{schoolCode} EduPulse Admin</h1>
                     <button onClick={() => setSidebarOpen(!isSidebarOpen)} className="p-1 hover:bg-gray-700 rounded text-gray-400">
                         {isSidebarOpen ? '◀' : '▶'}
                     </button>

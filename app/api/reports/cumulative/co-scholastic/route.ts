@@ -27,9 +27,9 @@ export async function GET(req: NextRequest) {
             SELECT s.id, s.admission_no, s.student_name, se.roll_no
             FROM students s
             JOIN student_enrollments se ON s.id = se.student_id
-            WHERE se.class_id = $1 AND se.academic_year_id = $2
+            WHERE se.class_id = $1 AND se.academic_year_id = $2 AND se.tenant_id = $3
         `;
-        const queryParams: any[] = [classId, academicYearId];
+        const queryParams: any[] = [classId, academicYearId, auth.tenant_id];
 
         if (sectionId) {
             studentQuery += ` AND se.section_id = $3`;
@@ -61,10 +61,11 @@ export async function GET(req: NextRequest) {
             JOIN terms t ON css.term_id = t.id
             WHERE css.student_id = ANY($1)
             AND css.academic_year_id = $2
+            AND css.tenant_id = $3
             ORDER BY dom.id, sub.id
         `;
 
-        const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId]);
+        const scoresRes = await db.query(scoresQuery, [studentIds, academicYearId, auth.tenant_id]);
         const scores = scoresRes.rows;
 
         // 3. Pivot Data

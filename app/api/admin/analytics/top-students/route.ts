@@ -31,9 +31,11 @@ export async function GET(request: Request) {
             WHERE se.class_id = $1
               AND se.academic_year_id = $2
               AND sc.academic_year_id = $2
+              AND sc.tenant_id = $3
+              AND se.tenant_id = $3
               AND sc.marks IS NOT NULL
         `;
-        const params: any[] = [class_id, academic_year_id];
+        const params: any[] = [class_id, academic_year_id, authUser.tenant_id];
 
         if (section_id) {
             params.push(section_id);

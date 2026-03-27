@@ -29,7 +29,7 @@ export async function GET(request: Request) {
         const subject_id = searchParams.get('subject_id');
 
         // First, check if this class is XI or XII
-        const classQuery = await db.query('SELECT class_name FROM classes WHERE id = $1', [class_id]);
+        const classQuery = await db.query('SELECT class_name FROM classes WHERE id = $1 AND tenant_id = $2', [class_id, user.tenant_id]);
         const className = classQuery.rows[0]?.class_name || '';
         const isXiOrXii = className.includes('XI') || className.includes('11') || className.includes('XII') || className.includes('12');
 
@@ -42,10 +42,10 @@ export async function GET(request: Request) {
 
         // If it's Class XI/XII and a subject is selected, MUST join student_subjects
         if (isXiOrXii && subject_id) {
-            query += ` JOIN student_subjects ss ON ss.student_id = s.id AND ss.academic_year_id = se.academic_year_id AND ss.subject_id = $4 `;
+            query += ` JOIN student_subjects ss ON ss.student_id = s.id AND ss.academic_year_id = se.academic_year_id AND ss.subject_id = $4 AND ss.tenant_id = $5 `;
         }
 
-        query += ` WHERE se.class_id = $1 AND se.academic_year_id = $2 AND (s.status IS NULL OR s.status = 'ACTIVE') `;
+        query += ` WHERE se.class_id = $1 AND se.academic_year_id = $2 AND se.tenant_id = $5 AND (s.status IS NULL OR s.status = 'ACTIVE') `;
         const params: any[] = [class_id, academic_year_id];
 
         if (section_id) {
@@ -59,6 +59,9 @@ export async function GET(request: Request) {
         if (isXiOrXii && subject_id) {
             params.push(subject_id);
         }
+        
+        // Add tenant_id as $5
+        params.push(user.tenant_id);
 
         // Fix null comparison if section_id wasn't provided but subject_id was
         query = query.replace('AND se.section_id = $3', section_id ? 'AND se.section_id = $3' : '');

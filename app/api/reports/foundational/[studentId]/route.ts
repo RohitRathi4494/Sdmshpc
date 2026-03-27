@@ -28,6 +28,18 @@ export async function GET(
         const academic_year_id = searchParams.get('academic_year_id') || '1';
         const studentId = parseInt(params.studentId);
 
+        let effective_tenant_id = user.tenant_id;
+        
+        // If it's an internal PDF request, we trust the tenant_id from searchParams
+        // but it MUST have the internalToken to reach this part.
+        if (token === internalToken && searchParams.get('tenant_id')) {
+            effective_tenant_id = parseInt(searchParams.get('tenant_id')!);
+        }
+
+        if (!effective_tenant_id) {
+            return NextResponse.json({ success: false, message: 'Tenant context missing' }, { status: 400 });
+        }
+
         // Student details
         const studentRes = await db.query(`
             SELECT
@@ -37,11 +49,11 @@ export async function GET(
                 se.roll_no,
                 c.class_name, sec.section_name
             FROM students s
-            LEFT JOIN student_enrollments se ON se.student_id = s.id AND se.academic_year_id = $2
-            LEFT JOIN classes c ON c.id = se.class_id
-            LEFT JOIN sections sec ON sec.id = se.section_id
-            WHERE s.id = $1
-        `, [studentId, academic_year_id]);
+            LEFT JOIN student_enrollments se ON se.student_id = s.id AND se.academic_year_id = $2 AND se.tenant_id = $3
+            LEFT JOIN classes c ON c.id = se.class_id AND c.tenant_id = $3
+            LEFT JOIN sections sec ON sec.id = se.section_id AND sec.tenant_id = $3
+            WHERE s.id = $1 AND s.tenant_id = $3
+        `, [studentId, academic_year_id, effective_tenant_id]);
         const student = studentRes.rows[0];
         if (!student) return NextResponse.json({ success: false, message: 'Student not found' }, { status: 404 });
 
@@ -56,22 +68,22 @@ export async function GET(
                 working_days AS total,
                 days_present AS present
             FROM attendance_records
-            WHERE student_id = $1 AND academic_year_id = $2
-        `, [studentId, academic_year_id]).catch(() => ({ rows: [] }));
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
+        `, [studentId, academic_year_id, effective_tenant_id]).catch(() => ({ rows: [] }));
 
         // Skill ratings
         const ratingsRes = await db.query(`
             SELECT term, domain, skill_key, rating
             FROM foundational_skill_ratings
-            WHERE student_id = $1 AND academic_year_id = $2
-        `, [studentId, academic_year_id]);
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
+        `, [studentId, academic_year_id, effective_tenant_id]);
 
         // Text fields
         const textRes = await db.query(`
             SELECT term, field_key, field_value
             FROM foundational_text_fields
-            WHERE student_id = $1 AND academic_year_id = $2
-        `, [studentId, academic_year_id]);
+            WHERE student_id = $1 AND academic_year_id = $2 AND tenant_id = $3
+        `, [studentId, academic_year_id, effective_tenant_id]);
 
         return NextResponse.json({
             success: true,

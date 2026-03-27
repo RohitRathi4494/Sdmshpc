@@ -1,27 +1,11 @@
 import Link from 'next/link';
 import { getActiveAcademicYear } from '../lib/actions';
-import { db } from '@/app/lib/db';
+import DashboardQuickStats from './components/DashboardQuickStats';
 
 export const dynamic = 'force-dynamic';
 
-async function getDashboardStats() {
-    try {
-        const studentRes = await db.query('SELECT COUNT(*) FROM students');
-        const classRes = await db.query('SELECT COUNT(*) FROM classes');
-
-        return {
-            totalStudents: studentRes.rows[0].count,
-            trainClasses: classRes.rows[0].count
-        };
-    } catch (e) {
-        console.error("Stats error", e);
-        return { totalStudents: '--', trainClasses: '--' };
-    }
-}
-
 export default async function AdminDashboard() {
     const academicYear = await getActiveAcademicYear();
-    const stats = await getDashboardStats();
 
     const cards = [
         { title: 'Academic Analytics', href: '/admin/analytics', icon: '📈', desc: 'View class performance and attendance trends', color: 'bg-rose-500' },
@@ -55,23 +39,7 @@ export default async function AdminDashboard() {
                 ))}
             </div>
 
-            <div className="mt-12 bg-white rounded-xl shadow-sm p-6 border border-gray-100">
-                <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <span className="block text-3xl font-bold text-indigo-600">{stats.totalStudents}</span>
-                        <span className="text-sm text-gray-500">Total Students</span>
-                    </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <span className="block text-3xl font-bold text-indigo-600">{stats.trainClasses}</span>
-                        <span className="text-sm text-gray-500">Active Classes</span>
-                    </div>
-                    <div className="text-center p-4 bg-gray-50 rounded-lg">
-                        <span className="block text-3xl font-bold text-indigo-600">{academicYear.name}</span>
-                        <span className="text-sm text-gray-500">Current Session</span>
-                    </div>
-                </div>
-            </div>
+            <DashboardQuickStats initialSession={academicYear.name} />
         </div>
     );
 }

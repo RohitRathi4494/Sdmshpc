@@ -61,8 +61,8 @@ export async function GET(request: Request) {
             query = `
                 SELECT s.*, se.roll_no, se.section_id, c.class_name, t.school_code
                 FROM students s
-                JOIN student_enrollments se ON s.id = se.student_id
-                JOIN classes c ON se.class_id = c.id
+                JOIN student_enrollments se ON s.id = se.student_id AND se.tenant_id = s.tenant_id
+                JOIN classes c ON se.class_id = c.id AND c.tenant_id = s.tenant_id
                 JOIN tenants t ON s.tenant_id = t.id
                 WHERE ${tenantClause} AND se.class_id = $${values.length + 1} AND se.academic_year_id = $${values.length + 2} ${sectionClause} ${visibility_status ? `AND s.status = $${values.length + (section_id ? 4 : 3)}` : ''}
                 ORDER BY se.roll_no ASC, s.student_name ASC
@@ -76,8 +76,8 @@ export async function GET(request: Request) {
             query = `
                 SELECT s.*, se.roll_no, se.section_id, c.class_name, t.school_code
                 FROM students s
-                JOIN student_enrollments se ON s.id = se.student_id
-                JOIN classes c ON se.class_id = c.id
+                JOIN student_enrollments se ON s.id = se.student_id AND se.tenant_id = s.tenant_id
+                JOIN classes c ON se.class_id = c.id AND c.tenant_id = s.tenant_id
                 JOIN tenants t ON s.tenant_id = t.id
                 WHERE ${tenantClause} AND se.academic_year_id = $${values.length + 1} ${visibility_status ? `AND s.status = $${values.length + 2}` : ''}
                 ORDER BY c.display_order ASC, s.student_name ASC
@@ -188,6 +188,7 @@ export async function POST(request: Request) {
                 await client.query(`
                     INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, tenant_id)
                     VALUES ($1, $2, $3, $4, $5)
+                    ON CONFLICT (student_id, academic_year_id, tenant_id) DO UPDATE SET class_id = EXCLUDED.class_id, section_id = EXCLUDED.section_id
                 `, [studentId, class_id, section_id, academic_year_id, tenantForInsertion]);
             }
 

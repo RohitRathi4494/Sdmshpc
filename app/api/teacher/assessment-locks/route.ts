@@ -31,7 +31,7 @@ export async function GET(request: Request) {
         }
 
         if (!classId && studentId) {
-            const resolvedClassId = await getStudentClass(parseInt(studentId), parseInt(academicYearId));
+            const resolvedClassId = await getStudentClass(parseInt(studentId), parseInt(academicYearId), user.tenant_id);
             if (resolvedClassId) {
                 classId = resolvedClassId.toString();
             }
@@ -50,9 +50,10 @@ export async function GET(request: Request) {
             WHERE academic_year_id = $1 
               AND class_id = $2 
               AND term_id = $3 
+              AND tenant_id = $4
               AND is_locked = true
         `;
-        const { rows } = await db.query(query, [academicYearId, classId, termId]);
+        const { rows } = await db.query(query, [academicYearId, classId, termId, user.tenant_id]);
 
         const lockedComponentIds = rows.map(r => r.component_id);
 

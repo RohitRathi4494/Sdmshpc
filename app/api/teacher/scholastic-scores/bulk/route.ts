@@ -40,9 +40,9 @@ export async function POST(request: Request) {
 
         if (scores.length > 0) {
             const firstScore = scores[0];
-            const classId = await getStudentClass(firstScore.student_id, firstScore.academic_year_id);
+            const classId = await getStudentClass(firstScore.student_id, firstScore.academic_year_id, user.tenant_id);
             if (classId) {
-                const isLocked = await checkAssessmentLock(firstScore.academic_year_id, classId, firstScore.term_id, firstScore.component_id);
+                const isLocked = await checkAssessmentLock(firstScore.academic_year_id, classId, firstScore.term_id, firstScore.component_id, user.tenant_id);
                 if (isLocked) {
                     return NextResponse.json(
                         { success: false, error_code: 'ASSESSMENT_LOCKED', message: "This assessment has been locked by the administrator. Marks cannot be modified." },

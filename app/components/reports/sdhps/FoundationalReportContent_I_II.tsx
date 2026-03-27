@@ -196,7 +196,7 @@ function Page({ children, showHeader = false }: { children: React.ReactNode; sho
 // ─────────────────────────────────────────────────────────────────────────────
 // MAIN CONTENT COMPONENT
 // ─────────────────────────────────────────────────────────────────────────────
-export function FoundationalReportContent_I_II_SDHPS_SDHPS({ autoPrint = true }: { autoPrint?: boolean }) {
+export function FoundationalReportContent_I_II_SDHPS({ autoPrint = true }: { autoPrint?: boolean }) {
     const searchParams = useSearchParams();
     const studentIdParam = searchParams.get('student_id') || searchParams.get('studentId') || '';
     const tokenParam = searchParams.get('token') || '';

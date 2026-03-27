@@ -22,13 +22,13 @@ export async function GET(request: Request) {
                    s.id as section_id, s.section_name
             FROM classes c
             JOIN sections s ON c.id = s.class_id
+            WHERE c.tenant_id = $1 AND s.tenant_id = $1
         `;
 
-        const values = [];
+        const values: any[] = [user.tenant_id];
 
         if (user.role === UserRole.TEACHER) {
-            query += ` WHERE s.class_teacher_id = $1`;
-            // Ensure user_id is integer
+            query += ` AND s.class_teacher_id = $2`;
             values.push(parseInt(user.user_id));
         }
 

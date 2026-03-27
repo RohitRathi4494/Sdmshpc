@@ -64,6 +64,7 @@ function LoginForm() {
             sessionStorage.setItem('hpc_token', data.token);
             sessionStorage.setItem('hpc_role', data.role);
             sessionStorage.setItem('hpc_user', JSON.stringify(data.user)); // Store user info if useful
+            sessionStorage.setItem('hpc_school_code', schoolCode.toUpperCase());
 
             // Redirect based on role
             if (data.role === 'ADMIN' || data.role === 'SUPER_ADMIN') {

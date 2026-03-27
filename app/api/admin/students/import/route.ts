@@ -109,8 +109,8 @@ export async function POST(request: Request) {
             return NextResponse.json({ success: false, message: 'No active academic year found' }, { status: 400 });
         }
 
-        const classesRes = await db.query('SELECT id, class_name FROM classes');
-        const sectionsRes = await db.query('SELECT id, section_name, class_id FROM sections');
+        const classesRes = await db.query('SELECT id, class_name FROM classes WHERE tenant_id = $1', [user.tenant_id]);
+        const sectionsRes = await db.query('SELECT id, section_name, class_id FROM sections WHERE tenant_id = $1', [user.tenant_id]);
 
         // Create Lookups (Case insensitive)
         const classMap = new Map<string, number>(); // lowercase name -> id
@@ -181,7 +181,7 @@ export async function POST(request: Request) {
 
             // 5. Duplicate Check - Database Check
             if (row.admission_no && rowErrors.length === 0 || (!rowErrors.find(e => e.includes('Duplicate admission number')))) {
-                const dupCheck = await db.query('SELECT id FROM students WHERE admission_no = $1', [row.admission_no.toString().trim()]);
+                const dupCheck = await db.query('SELECT id FROM students WHERE admission_no = $1 AND tenant_id = $2', [row.admission_no.toString().trim(), user.tenant_id]);
                 if (dupCheck.rows.length > 0) {
                     rowErrors.push(`Admission number already exists in system: ${row.admission_no}`);
                 }
@@ -245,8 +245,8 @@ export async function POST(request: Request) {
                         INSERT INTO students 
                         (admission_no, student_name, father_name, mother_name, dob, admission_date, 
                          blood_group, gender, address, phone_no, emergency_no, category, 
-                         aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no, student_code, stream, subject_count) 
-                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22) 
+                         aadhar_no, ppp_id, apaar_id, srn_no, board_roll_x, board_roll_xii, education_reg_no, student_code, stream, subject_count, tenant_id) 
+                        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23) 
                         RETURNING id`,
                         [
                             row.admission_no, row.student_name, row.father_name, row.mother_name || '', row.dob, admissionDate,
@@ -254,7 +254,8 @@ export async function POST(request: Request) {
                             row.aadhar_no || '', row.ppp_id || '', row.apaar_id || '', row.srn_no || '', row.board_roll_x || '', row.board_roll_xii || '', row.education_reg_no || '',
                             row.student_code || '',
                             row.stream || null,
-                            row.subject_count || 5
+                            row.subject_count || 5,
+                            user.tenant_id
                         ]
                     );
                     const studentId = studentRes.rows[0].id;
@@ -262,8 +263,8 @@ export async function POST(request: Request) {
                     // 2. Enroll Student
                     // Note: roll_no is intentionally omitted here to allow for auto-assignment later section-wise
                     await client.query(
-                        'INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id) VALUES ($1, $2, $3, $4)',
-                        [studentId, row.class_id, row.section_id, activeYearId]
+                        'INSERT INTO student_enrollments (student_id, class_id, section_id, academic_year_id, tenant_id) VALUES ($1, $2, $3, $4, $5)',
+                        [studentId, row.class_id, row.section_id, activeYearId, user.tenant_id]
                     );
                 }
 
